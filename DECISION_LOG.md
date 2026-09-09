@@ -22,7 +22,7 @@ Each entry includes:
 **Decision**: TypeScript monorepo with Express backend and Next.js frontend separation  
 **Rationale**: Type safety, developer experience, and scalability for FLOW Blueprint visualization  
 **Impact**: All future code contributions must follow TypeScript strict mode  
-**Status**: Active
+**Status**: Superseded by Decision #003
 
 ### Decision #002 - Telemetry Collection Strategy
 **Date**: 2026-09-09  
@@ -30,6 +30,14 @@ Each entry includes:
 **Decision**: Client-side telemetry collection with server-side aggregation  
 **Rationale**: Real-time diagnostics and performance monitoring for FLOW applications  
 **Impact**: All telemetry data flows through designated collection endpoints  
+**Status**: Superseded by Decision #003
+
+### Decision #003 - P0 Application Boundary
+**Date**: 2026-09-09
+**Category**: Architecture
+**Decision**: Build P0 as one Next.js App Router application. Defer an Express backend until telemetry storage, retention, and access are approved.
+**Rationale**: The current repository has no backend, no application routes, and no approved telemetry destination. A single application proves the diagnostic flow without inventing infrastructure.
+**Impact**: Survey answers remain in browser memory. Revision 3 output stays labeled as an illustrative scenario. No production route or deployment is part of P0.
 **Status**: Active
 
 ---
@@ -44,4 +52,3 @@ Each entry includes:
 
 ## Future Decisions
 *To be filled as the project evolves*
-
