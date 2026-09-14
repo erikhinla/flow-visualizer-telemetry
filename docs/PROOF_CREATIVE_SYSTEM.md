@@ -13,7 +13,7 @@ This isn't a scoring specification or a prompt. NotebookLM should use it as sour
 - PROOF Trace replaces AI Infrastructure Assessment. This is the same scoped examination, with one intake and one case.
 - The 15-question Momentum Map belongs to PROOF. The 8-question personal Scan is separate. Both show the math.
 - The original 69-second PROOF film’s narration is excluded. No replacement narration is approved or included.
-- Existing TBTX footage, campaign photography and route artwork are the selected visual sources. Scrollcraft drives the review. Dolls, illustrated figures and cartoon images are excluded. It Only Looks Automated is excluded as both asset and design direction.
+- Existing TBTX footage, campaign photography and route artwork are the selected visual sources. Scrollcraft drives the review. The doll and cartoon-poster direction is excluded. It Only Looks Automated is excluded as both asset and design direction. The later, specifically accepted films retain their own visual elements.
 - The working map is answer based. Traced observations and modeled scenarios must remain visibly distinct.
 
 ## Locked identity

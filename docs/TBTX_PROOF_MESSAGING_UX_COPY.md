@@ -243,7 +243,7 @@ The human handoff creates recognition. The six work-task films make that recogni
 | BBM | Give growth a working route | Visible completion sequence; product detail after access is granted | The actual product, its purpose and the next action |
 | erikhbush.com | Make the process feel documented | Real work, dated field notes and original project evidence | Attempts, artifacts, revisions and the purpose behind them |
 
-I exclude **It Only Looks Automated** as both an asset and a design reference. Dolls, illustrated figures, cartoon images, supporting-beam sculptures, distressed machinery and literal human-carry imagery do not guide this design. The generated lettering adaptations of those posters are rejected.
+I exclude **It Only Looks Automated** as both an asset and a design reference. The rejected dolls, cartoon posters and supporting-beam sculptures do not guide this design. The later approved films, including the office handoff, retain their own imagery and accepted wording. The generated lettering adaptations of those posters are rejected.
 
 ### Type, color and motion
 
@@ -1439,7 +1439,7 @@ The public pages returned by the web reader still contain older kit and route la
 4. **DDD:** Erik funds the first month. Every optional $7.77 contribution earns one additional month; Erik matches every contribution. No automatic renewal. The anonymous family network is deferred.
 5. **Trace:** It is the renamed AI Infrastructure Assessment, not a separate second service.
 6. **BBM:** Growth names are confirmed. CARE stays internal. BBAI completion must be recorded before page and product access is granted.
-7. **Design:** Use Scrollcraft and the selected existing TBTX film and campaign assets. No dolls, illustrated figures or cartoons. It Only Looks Automated is excluded as an asset and design direction. The generated refinery hero and poster adaptations are rejected.
+7. **Design:** Use Scrollcraft and the selected existing TBTX film and campaign assets. The rejected doll and cartoon-poster direction is excluded. The later approved films keep their own visual elements. It Only Looks Automated is excluded as an asset and design direction. The generated refinery hero and poster adaptations are rejected.
 8. **Language and sound:** Replace the product-language noun “load” with “work” or “effort.” The original 69-second PROOF film’s voiceover is rejected and excluded. Filenames, technical loading terms and stable code IDs are preserved for compatibility.
 
 ### What still needs a live implementation decision
