@@ -1,5 +1,36 @@
 # Visualizer Master
 
+## Product decisions confirmed on 14 September 2026
+
+- **Creative priority:** Recognition and emotional impact first. The latest three PROOF concept films are accepted with their current wording for this stage, including the older Forensics descriptor where present. New copy uses Finder. The rejected 69-second narration remains excluded.
+
+- **B2B visual direction:** Use the six subsequently selected work-task campaign films, with people and fog in the scene. The files and task placements are recorded in the messaging document and asset manifest. The rejected poster/sculpture direction stays excluded.
+
+- **Approved film mapping:** `defog-daily-hero.mp4` belongs to B2B / Map. `ddd-r5-picture-sfx.mp4` belongs to B2C / Scan. These specific films are approved; the rejected illustrated posters remain excluded.
+
+- **Excluded direction:** It Only Looks Automated is excluded as an asset and as a design direction, including its dolls and supporting-beam sculpture style. The later, specifically approved films retain their own visual elements.
+
+This addendum takes precedence over older product terminology and offer descriptions below. The historical question texts, values, stable IDs and equations remain unchanged.
+
+- Public name: **PROOF Fog & Friction Finder**. Finder replaces the older Forensics descriptor.
+- **PROOF Trace** replaces **AI Infrastructure Assessment**. One scoped service, one case and one intake. Trace informs **BizBlueprint**, followed by BBAI implementation and verification.
+- **Momentum Map:** the initial useful business readout within PROOF, based on the 15 questions in this master. Give that result before asking for contact details. Saving the case and requesting Trace earn the lead.
+- **Personal Scan:** 8 independent questions from the TBTX website, maximum 16. It does not use PROOF’s model or rigor. **Show the math** on both paths: round(100 × total / 16) for Scan; round(100 × total / 30) for Map. Preserve selected option identity, not just point values.
+- **DDD:** Erik/TBTX funds the first month. Each optional one-time **$7.77** contribution earns **one additional month**, and Erik matches every contribution. No automatic renewal. Start simple; defer the anonymous sponsor-family network. Sharing stays optional.
+- **BBM:** page and products remain gated until an authorized BBAI completion review. Completing Map alone is insufficient. Products: Reddit Account Growth Package (**A.I.R., Karma Kickstarter, Custom Reddit Playbook**), **RevAnew**, **ArVA (Architected Voice Agent)**. **CARE**, Conversion Architecture Revenue Engine, is the internal method; optional public line: “Earn trust before the first sales call.”
+- **Creative:** use the existing website’s **Scrollcraft** runtime and existing TBTX/PROOF campaign assets. The invented refinery hero and static generic mockups are rejected. Momentum governs the sequence and interaction; explanations expand in place. Stand up stays inside the required entry choice.
+- **Copy:** replace the product-language noun “load” with “work” or “effort,” whichever fits. Technical source identifiers and original asset filenames remain stable. Formal publication titles stay verbatim for traceability.
+- **Sound:** the existing 69-second PROOF film’s voiceover is rejected. Do not reuse it. This update does not claim a replacement recording.
+
+### Repository distinction and evidence
+
+The website exists at `erikhinla/tbtx-next-ecosystem`; its TBTX page imports ScrollcraftTBTXExperience. This separate PROOF repository at starting commit `1d9239b` contains the master, configuration and a placeholder UI telemetry collector. Its render/interaction/error/performance/state events are app diagnostics, not observed business repair work. Backend delivery is not established.
+
+The [updated messaging and UX document](../../docs/TBTX_PROOF_MESSAGING_UX_COPY.md) records exact copy, gating, scoring disclosures and remaining implementation requirements. Designs are review proposals; account permissions, payment allocation, observed Trace findings and publishing integrations require their own runtime evidence.
+
+---
+
+
 **Friction & Fog: purpose, experience, logic, mathematics, marketing, FAQs, and ecosystem integration**  
 **Consolidated:** 6 September 2026  
 **Document version:** 1.1  
@@ -55,7 +86,7 @@ A Digital Fog campaign example requires three conditions: AI materially changed 
 
 | Kind | What it establishes | What it does not establish |
 | --- | --- | --- |
-| Questionnaire answers | What someone reports about how work runs | Measured workload, revenue loss, or failure probability |
+| Questionnaire answers | What someone reports about how work runs | Measured work effort, revenue loss, or failure probability |
 | Scenario inputs | What happens inside an explicitly chosen model | A business's actual condition or an achieved improvement |
 | Workflow observations | What records show within a defined scope and period | A universal result or causal effect without further comparison |
 
@@ -216,7 +247,7 @@ The archetype comes from those four selected pressures, in this precedence order
 3. Otherwise `start`, `loop`, or `next` → `executionStall`.
 4. Otherwise → `fragmentedWorkflow`.
 
-These stable IDs control routing. Display wording must not replace them as logic. Q5's `learning` is different from Q14's `loop`. Q4=0 means “None yet,” so the internal `toolOverload` label does not prove actual overload. With no pressures, the default can still be `fragmentedWorkflow`; that also does not establish fragmentation.
+These stable IDs control routing. Display wording must not replace them as logic. Q5's `learning` is different from Q14's `loop`. Q4=0 means “None yet,” so the internal `toolOverload` label does not prove actual tool-related friction. With no pressures, the default can still be `fragmentedWorkflow`; that also does not establish fragmentation.
 
 ### Team-hours scenario
 
@@ -358,7 +389,7 @@ flowchart TD
     B -->|Yes| D[Count arrivals and missing-context repairs]
     D --> E[Calculate handling time and available capacity]
     E --> F{Demand relative to capacity}
-    F -->|At or above capacity| G[Track growing workload and local constraint]
+    F -->|At or above capacity| G[Track growing work and local constraint]
     F -->|Below capacity| H[Measure waits; use a queue model if assumptions fit]
     G --> I[Inspect the missing connection and required review]
     H --> I
@@ -702,7 +733,7 @@ The Master's approved Finance example is:
 > **AUTOMATION SAVED EVERYONE TIME.**  
 > **(Billing is still trying to find it.)**
 
-The PDF’s “10X production” and “40-hour tax” headline has no supporting measurements in the source set. Public claims about workload and improvement must follow the selected workflow and its evidence. Section 6 explains the applicable flow and queueing relationships; none establishes an inevitable company-wide collapse.
+The PDF’s “10X production” and “40-hour tax” headline has no supporting measurements in the source set. Public claims about effort and improvement must follow the selected workflow and its evidence. Section 6 explains the applicable flow and queueing relationships; none establishes an inevitable company-wide collapse.
 
 ### Visual system and social continuity
 
