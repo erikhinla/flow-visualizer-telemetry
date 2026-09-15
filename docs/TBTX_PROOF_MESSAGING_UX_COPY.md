@@ -2,16 +2,15 @@
 
 ## Current visual decision, 14 September 2026
 
-I exclude the rejected doll and cartoon-poster direction. The later, specifically approved films retain their own visual elements. **It Only Looks Automated is excluded both as an asset and as a design direction**, including its supporting-beams sculpture, distressed machinery and literal human-carry metaphor. The lettering edits made from those references are rejected and are not part of the review deliverable.
+The latest review uses wall-to-wall moving video, oversized hooks and descriptions that appear on selection. PROOF's public method explains connections, context, integrity, dynamics and evidence. It doesn't distribute the private coefficient calculator. DDD is a guided 20-minute session with device-local persistence and exports. Join the De-Fog Family is the giving invitation.
 
-I use the existing TBTX title film, campaign photography, route artwork and the six B2B work-task films Erik selected. PROOF uses charcoal, legible type, restrained copper and movement tied to real answer state. I do not use the separate 69-second PROOF film or its rejected narration in this review. The later approved 15- and 25-second PROOF films are distinct sources. The old DDD campaign still is excluded. The two films Erik later approved are selected in the placements recorded below. The design chapter below records the same selection.
 ## Messaging, journeys, design direction, and exact copy
 
 **14 September 2026 · Updated product decisions and design proposal for Erik H Bush**
 
 I want more room to make, create, and live to good purpose. This system starts with the work getting in the way, makes the cause visible, and gives each person one useful next action.
 
-**Status:** The copy and schematic below are drafted. They are not a claim that the products, account gates, funding, payments, telemetry, or publishing connections are implemented. This document proposes changes beside the existing master. It does not replace it.
+**Status:** The copy and schematic below are drafted. They are not a claim that the products, account gates, funding, payments, telemetry, or publishing connections are implemented. This document proposes changes beside the existing master. It doesn't replace it.
 
 **Reading key:** Quoted text is proposed customer-facing copy. Tables marked “Behavior” describe implementation. Braced fields such as `{first_investigation}` are populated from a real result. They are not sample findings. Where a state requires evidence, that condition is stated outside the public copy.
 
@@ -23,10 +22,10 @@ I want more room to make, create, and live to good purpose. This system starts w
 | Stand up | Keep it inside the required choice gate, after the story | It works as a small commitment once its meaning is clear. “Start Here” remains the campaign invitation. |
 | PROOF | Give it the primary position on BBAI | It makes the business problem concrete before asking someone to consider implementation. |
 | Momentum Map | Make it the initial, useful readout within the PROOF experience | One business question session should produce one coherent result that can deepen as evidence is added. |
-| PROOF evidence | Separate answers, assumptions, illustrations, proposals, and observations | Questionnaire results do not become operational measurements because the interface looks like an instrument. |
+| PROOF evidence | Separate answers, assumptions, illustrations, proposals, and observations | Questionnaire results don't become operational measurements because the interface looks like an instrument. |
 | Lead generation | Show the initial result before asking for contact details | A useful result earns the next step. A blurred result sells the withholding. |
 | BBAI | Use evidence to define the BizBlueprint, then build and check the changes | Diagnosis, prescription, implementation, and verification have different jobs. |
-| BBM | Show the later stage and its lock on BBAI; protect its page and products | Completing a questionnaire does not establish that the business can carry a growth programme. |
+| BBM | Show the later stage and its lock on BBAI; protect its page and products | Completing a questionnaire doesn't establish that the business can carry a growth programme. |
 | Personal route | Scan → result → DDD introduction video → funded month → daily action | The video connects recognition to use. It should not become another obstacle. |
 | Pay it forward | Offer $7.77 separately from the person's access | Receiving a funded month should not create a debt or a pressured checkout. |
 | erikhbush.com | Make it a public field journal for makers and creators | It documents the attempt, the evidence, and the changes of mind. |
@@ -36,7 +35,7 @@ I want more room to make, create, and live to good purpose. This system starts w
 
 I use **PROOF Fog & Friction Finder**, as Erik selected on 14 September. Finder describes the work without overstating what the answers establish. The older Forensics descriptor is retired in new copy and revised artwork.
 
-**PROOF Trace replaces AI Infrastructure Assessment.** I agree with the change: Trace names the action more clearly. It remains one scoped assessment, one case and one intake. BizBlueprint converts the finding into operating design; BBAI implements and checks the agreed changes.
+**PROOF Trace replaces AI Infrastructure Assessment.** I agree with the change: Trace names the action more clearly. It remains one scoped assessment, one case and one intake. After engagement, BizBlueprint becomes the paid fix plan drawn from the diagnostic findings. The Quad Keystones and infrastructure alignment belong inside that planning work. BBAI implements and checks the agreed changes; governed execution follows.
 
 The existing line stays:
 
@@ -70,6 +69,19 @@ I would not put a separate, repeated “PROOF quiz” behind the Momentum Map. I
 
 This is the current master wording. “Free the Fog” is an older version.
 
+### Recognition before explanation
+
+I use **pain → consequence → relief → momentum** across the site, films and channel copy. Each piece starts with a situation I can recognize, makes its consequence concrete, offers a fitting way through, and ends with an action I can take. I keep technical detail in the explanation that opens when it is useful.
+
+| Movement | Proposed first-person copy | Job |
+| --- | --- | --- |
+| Pain | “The draft is done. I’m still finding what it needs.” | Recognize the extra work. |
+| Consequence | “The next thing I wanted to make is still waiting.” | Make the consequence human without inventing a cost. |
+| Relief | “I can put the missing piece in view.” | Explain what becomes clearer. |
+| Momentum | “Choose one task to follow.” | Give that clarity somewhere to go. |
+
+These are creative lines, not testimonials. A numerical cost appears only when its inputs, scope and calculation support it.
+
 ### The order in which a person should understand it
 
 | Read | Message job | Example |
@@ -96,6 +108,16 @@ The first two example lines are proposed creative, not a testimonial or measured
 | BizBlueprint | Specify what to change, in what order, and how to check it | Give the next piece of work a clearer path. | Review the proposed changes |
 | BizBot Mrktng | Address a specific growth problem after BBAI completion | Give new interest a clear next step. | Explore my growth options |
 | erikhbush.com | Follow the making, evidence, and revisions | Making a life in the AI era. | Read the field notes |
+
+### Product sequence and the paid transition
+
+Digital De-Fog Daily can create recognition for both business and personal audiences. The business route continues through the free Momentum Map into **PROOF Fog & Friction Finder**, the diagnostic product. The **Visualizer is the engine inside Finder**. I don't introduce it as another offer or another intake.
+
+The Map supplies structured answers. Finder turns supported patterns and relationships into a useful diagnostic view; a PROOF Trace examines scoped work. The result explains what may be happening, where, why it matters, what to investigate first, and what comes next. An answer-based cause or cost remains a hypothesis until supporting evidence is available.
+
+The commercial transition is explicit: **diagnostic findings → agreed engagement → paid BizBlueprint fix plan → Quad Keystones and infrastructure alignment → implementation and checks → governed execution**. I agree on Trace scope and terms separately before that examination starts. This sequence doesn't promise that every diagnostic service is free. The initial Map is free.
+
+The personal route retains its separate eight-question Scan, then the DDD introduction and daily space. The broader journey doesn't merge those questions into PROOF.
 
 ### Channel roles
 
@@ -145,9 +167,13 @@ These are editorial choices, not claims about platform algorithms or guaranteed 
            Funded-month access          Keep result       Trace one task
                     │                   Optional save     Evidence + consent
             DDD daily interface                              │
-                    │                               BizBlueprint
+                    │                               Agree engagement
+                    │                                      │
+                    │                               Paid BizBlueprint
+                    │                               + infrastructure alignment
             One clearing action                              │
                     │                               BBAI implementation
+                    │                               + governed execution
            Optional $7.77                                    │
             pay it forward                         Completion review
                                                              │
@@ -167,7 +193,7 @@ A relevant journal link into TBTX still respects the TBTX entry gate.
 | PROOF Trace | Access to a scoped investigation and its private evidence | Agreed scope, relevant access consent, and commercial terms where applicable | The initial readout and a clear explanation of what a Trace adds |
 | BBM | Growth page, product details, pricing, purchase, and activation | Recorded BBAI completion review for that business | A visible locked stage on BBAI and a plain explanation of the prerequisite |
 
-“Stand up” is a choice in the story. It is not security for private results or paid products. A hidden or blurred button cannot enforce the BBM gate. Private pages and product access need a real account permission check.
+“Stand up” is a choice in the story. It isn't security for private results or paid products. A hidden or blurred button can't enforce the BBM gate. Private pages and product access need a real account permission check.
 
 ### Return visits and direct links
 
@@ -199,7 +225,7 @@ Existing `/scan`, `/map`, `/tbtx/map`, and `/tbtx/kit` links need explicit redir
 
 ### Approved films and placement, 14 September 2026
 
-Erik explicitly selected `defog-daily-hero.mp4` for **B2B / Momentum Map** and `ddd-r5-picture-sfx.mp4` for **B2C / Scan**. The filenames do not decide the audience. These specific film approvals govern their use, including the established campaign character within the footage. They do not restore the rejected doll, cartoon-poster or mechanical-sculpture design direction. The 69-second PROOF film’s narration remains excluded.
+Erik explicitly selected `defog-daily-hero.mp4` for **B2B / Momentum Map** and `ddd-r5-picture-sfx.mp4` for **B2C / Scan**. The filenames don't decide the audience. These specific film approvals govern their use, including the established campaign character within the footage. They don't restore the rejected doll, cartoon-poster or mechanical-sculpture design direction. The 69-second PROOF film’s narration remains excluded.
 
 The review places the B2B film before the Map questions and the B2C film between the Scan result and DDD. Both have playback controls, start without autoplay, and allow continuation without watching. Proposed companion copy is labeled as proposed copy, not a transcript.
 
@@ -217,16 +243,16 @@ Erik supplied six additional campaign clips as the B2B visual direction: specifi
 | `5bfb4442-8715-4243-9ec8-c33b91cd0cb9` | Finding a final meeting summary | B2B task examples |
 | `da6240f5-c90c-46f6-9088-e27daad87096` | Keeping strategy work in view | B2B task examples |
 
-The task examples open on request. Selecting a recognizable scene leads to the Map through the entry gate; it does not assign points or change the question set. The full original filenames and file hashes are recorded in the review’s asset manifest. The clinical scene supplies no medical guidance or claim of diagnostic validation.
+The task examples open on request. Selecting a recognizable scene leads to the Map through the entry gate; it doesn't assign points or change the question set. The full original filenames and file hashes are recorded in the review’s asset manifest. The clinical scene supplies no medical guidance or claim of diagnostic validation.
 
 
 ### Creative priority and accepted film wording, 14 September 2026
 
-I judge recognition and emotional impact before finishing detail. Vivid human scenes, fog in the scene, irony and a slightly absurd expression of a truthful work problem lead the design. I do not flatten that intention into a compliance-style diagram or a generic software page.
+I judge recognition and emotional impact before finishing detail. Vivid human scenes, fog in the scene, irony and a slightly absurd expression of a truthful work problem lead the design. I don't flatten that intention into a compliance-style diagram or a generic software page.
 
-Erik selected three additional PROOF concept films and explicitly accepted existing wording errors, including Forensics in place of Finder, for this stage. I preserve the supplied films. New surrounding copy uses Finder and work or effort. The accepted films do not reopen the rejected *It Only Looks Automated* direction.
+Erik selected three additional PROOF concept films and explicitly accepted existing wording errors, including Forensics in place of Finder, for this stage. I preserve the supplied films. New surrounding copy uses Finder and work or effort. The accepted films don't reopen the rejected *It Only Looks Automated* direction.
 
-`grok-imagine-PROOFmp4.mp4` leads the PROOF section: an office handoff turns the extra responsibility into a vivid, absurd object. The two 25-second `grok-video-6947b0b5-242e-46b8-919c-66d503437dbf` cuts remain available as optional concept films. They have different file hashes and remain distinct. Their existing sound can be played by choice. This approval does not apply to the rejected narration in the separate 69-second PROOF film.
+`grok-imagine-PROOFmp4.mp4` leads the PROOF section: an office handoff turns the extra responsibility into a vivid, absurd object. The two 25-second `grok-video-6947b0b5-242e-46b8-919c-66d503437dbf` cuts remain available as optional concept films. They have different file hashes and remain distinct. Their existing sound can be played by choice. This approval doesn't apply to the rejected narration in the separate 69-second PROOF film.
 
 The human handoff creates recognition. The six work-task films make that recognition specific. The Map lets the person examine their own answers. Finishing corrections follow once that sequence works.
 
@@ -243,14 +269,14 @@ The human handoff creates recognition. The six work-task films make that recogni
 | BBM | Give growth a working route | Visible completion sequence; product detail after access is granted | The actual product, its purpose and the next action |
 | erikhbush.com | Make the process feel documented | Real work, dated field notes and original project evidence | Attempts, artifacts, revisions and the purpose behind them |
 
-I exclude **It Only Looks Automated** as both an asset and a design reference. The rejected dolls, cartoon posters and supporting-beam sculptures do not guide this design. The later approved films, including the office handoff, retain their own imagery and accepted wording. The generated lettering adaptations of those posters are rejected.
+I exclude **It Only Looks Automated** as both an asset and a design reference. The rejected dolls, cartoon posters and supporting-beam sculptures don't guide this design. The later approved films, including the office handoff, retain their own imagery and accepted wording. The generated lettering adaptations of those posters are rejected.
 
 ### Type, color and motion
 
 The review uses the existing TBTX film’s own title treatment. PROOF is a large typographic identifier with its descriptor on a separate line. Actions sit near the statement they act on. Explanations open on request.
 
 - Canvas: `#111317`; PROOF field: `#191a20`; main text: `#f2f0e9`; secondary text: `#b9b9b5`.
-- Copper `#d49b72` identifies the PROOF connection. Violet supports the personal daily space. Color does not establish an evidence category by itself.
+- Copper `#d49b72` identifies the PROOF connection. Violet supports the personal daily space. Color doesn't establish an evidence category by itself.
 - Scrollcraft advances the existing TBTX film, holds the choice in view, moves the method sequence and gives the PROOF language a restrained drift.
 - The PROOF answer record starts empty. Its 15 marks change only when an actual Map answer is selected. It shows points accumulated so far and waits for all answers before calculating a score.
 - On narrow or short screens, PROOF uses ordinary vertical flow. Type, action and evidence remain readable without shrinking a desktop composition.
@@ -267,399 +293,172 @@ The review uses the existing TBTX film’s own title treatment. PROOF is a large
 | `door-b2c-827v2.jpg` | Personal entry | Existing route artwork |
 | `door-b2b-827v2.jpg` | Business entry | Existing route artwork |
 
-The original 69-second PROOF film and its rejected voiceover are excluded. The older unselected DDD still is excluded. The two approved local films are now selected explicitly for their respective business and personal paths. Their former missing public address does not change that selection.
+The original 69-second PROOF film and its rejected voiceover are excluded. The older unselected DDD still is excluded. The two approved local films are now selected explicitly for their respective business and personal paths. Their former missing public address doesn't change that selection.
 
 ### What I retain from the supplied PROOF material
 
-I retain the Finder name, the distinction between answers and observed work, the sequence from Map to Trace, and the need to make each calculation inspectable. I do not adopt the posters as visual direction.
+I retain the Finder name, the distinction between answers and observed work, the sequence from Map to Trace, and the need to make each calculation inspectable. I don't adopt the posters as visual direction.
 
-The eighteen-page overview includes source claims about 10X output, time costs, momentum loss and physical metaphors. These do not establish measured business outcomes. The source equations remain documented with their version, units, assumptions and limitations.
+The eighteen-page overview includes source claims about 10X output, time costs, momentum loss and physical metaphors. These don't establish measured business outcomes. The source equations remain documented with their version, units, assumptions and limitations.
 
-Interface telemetry records product use. Model output calculates a scenario. Operational evidence records what happened in real work. A more precise equation does not turn one into another.
+Interface telemetry records product use. Model output calculates a scenario. Operational evidence records what happened in real work. A more precise equation doesn't turn one into another.
 
-The linked Drive project was identified as **TransformBy10X Operational Architecture**. Its project container could not be read through the connector. The supplied PDF and separately fetched master and creative source were readable. I do not treat the inaccessible container as reviewed content.
+The linked Drive project was identified as **TransformBy10X Operational Architecture**. Its project container could not be read through the connector. The supplied PDF and separately fetched master and creative source were readable. I don't treat the inaccessible container as reviewed content.
 
-## 5. TBTX homepage: schematic and exact copy
+## 5. TBTX homepage: current schematic and exact copy
 
-### Frame 1: Arrival
+The main page uses one oversized beat per scene. All explanation opens on selection. Video fills the viewport and keeps moving behind each scene. The original films remain in the gallery.
 
-**Layout:** Campaign scene holds the frame. Main hook and parenthetical form one unit. The mantle and door sit in a separate block. No product catalogue above the fold.
-
-**Lockup 1:**
-
-> AI CREATED A JOB.
->
-> (NOBODY WANTED.)
-
-**Lockup 2:**
-
-> Managing Digital Fog
->
-> **Start Here**
-
-**Action:** Start Here moves to the story/stakes and entry choice. It does not bypass the gate.
-
-### Frame 2: Recognition
-
-> The output arrived. The rest still needs someone.
->
-> Finding the right version. Rebuilding the context. Checking what changed. Chasing the next step.
->
-> AI agents and tools can change the quantity, speed, and flow of work. When the setup around them doesn't keep pace, people fill the gaps.
->
-> That's Digital Fog.
-
-### Frame 3: The gate
-
-> Where do you stand?
->
-> A small choice. A place to begin.
-
-| Choice | Supporting copy | Selected state |
+| Scene | Visible copy | Direction |
 | --- | --- | --- |
-| **Sit out** | “I'm leaving this here for now.” | “That's where I'll leave it. I can come back when I want.” |
-| **Sit back** | “I'd like to watch first.” | “I'll watch the introduction, then choose.” |
-| **Stand up** | “I'm ready to find one place to start.” | Opens Digital Fog-Free and the appropriate next route. |
+| Arrival | AI created a job. (Nobody wanted.) | Free the next move |
+| Recognition | Done. Still my job. | Sound familiar? |
+| Gate | Where do I stand? | Sit out / Sit back / Stand up |
+| Routes | My day. / My business. | Start Scan / Start Map |
+| PROOF | PROOF / Fog & Friction Finder | Start Map / ∑ Show the Math |
+| BBAI | Find it. / Fix it. / Grow. | Inside Trace / From plan to practice / After BBAI completion |
+| DDD | Digital De-Fog Daily / Less to carry. / First month is on me. | Start DDD / Inside DDD / Join the De-Fog Family |
+| Close | More room to make. | My field notes / Erik, in progress |
 
-Below Sit out and Sit back states:
+Stand up opens the two paths. Sit back opens the gallery without opening intake. Sit out leaves intake closed. The review remembers entry within the browser session. This is an entry choice, not account authorization.
 
-> **Choose again**
+Selected recognition copy:
 
-Below the choice group:
-
-> Stand up opens the next step. No account needed for this choice.
-
-Sit back may expose the introductory film on the public side of the gate. It does not unlock the protected routes. No countdown, ridicule, prediction of failure, or forced video completion.
-
-### Frame 4: Digital Fog-Free
-
-> More room to make. More room to live.
+> The output arrived. The job didn't finish.
 >
-> When the next step, the context, and the responsibility are clear, less depends on holding it all in your head.
+> I'm finding the version, remembering the decision, checking the answer and working out who goes next.
 >
-> Start with one part of life or work. See what needs attention. Make room for what matters.
+> That's useful work to notice. PROOF starts with where it happens, then follows a real task.
 
-### Frame 5: Choose the route
+## 6. Personal Scan, video and DDD: current exact copy
 
-> Where should I begin?
-
-**Personal:**
-
-> My life
->
-> The tabs, messages, and loose ends I'm carrying.
->
-> **Start Scan**
-
-**Business:**
-
-> My business
->
-> The searching, chasing, and handoffs work depends on.
->
-> **Explore BizBuilders AI**
-
-**Later stage, visible but closed:**
-
-> BizBot Mrktng
->
-> Growth comes after the foundation.
->
-> Available after the BizBuilders AI phase is complete.
-
-The locked BBM stage has no product catalogue or purchase link here. A labelled “Why it's locked” control explains the sequence without opening the product page.
-
-### Frame 6: About bridge
-
-> I'm building this in public.
->
-> TBTX is part of my attempt to make more room for purpose, passion, and service in the AI era. I'm documenting the work, the setbacks, and what changes along the way.
->
-> **Follow the work at erikhbush.com**
-
-**Post-entry navigation:** My life · My business · My daily space · About me · Sign in. “My daily space” appears when relevant. BBM appears with a lock only in the business context.
-
-## 6. Personal Scan, video, and DDD: exact copy
-
-### Scan landing
-
-> Digital Fog Scan
->
-> Find one place to begin.
->
-> A few questions about the searching, switching, and loose ends in your digital day.
->
-> Your answers will point to a starting place. Then Digital De-Fog Daily will help you turn it into one small action.
->
-> **Start Scan**
-
-**Question wrapper:**
-
-> Question {current} of {total}
->
-> Choose the answer closest to your day.
->
-> **Back** · **Next**
-
-**Missing answer:**
-
-> Choose an answer to continue.
-
-**Final question button:**
-
-> See my starting point
-
-The personal Scan has eight independent questions, confirmed by Erik. It preserves its own 0/1/2 values and two bands. PROOF uses the attached fifteen-question business set. Both show their calculations; neither borrows the other’s evidentiary claims.
+The Scan retains the eight source questions and their original options. One question appears at a time. No answer is preselected. “Y?” opens a unique, neutral note about that question’s subject. It reveals no points, preferred answer or predicted interpretation. Scoring details stay with the completed result. The result appears before any payment request.
 
 ### Personal readout
 
-> Here's a place to begin.
+> Carrying it.
+
+or
+
+> Clear enough.
 >
-> {personal_pattern}
+> I don't have to sort my whole life today.
 >
-> Based on your answers.
->
-> **One small move**
->
-> {personal_first_action}
->
-> **Watch the Digital De-Fog Daily introduction**
+> Try Digital De-Fog Daily ↗
 
-**Secondary:**
+Show the math opens the score, total, denominator, rounding and bands. The answer list opens one level deeper. The score reflects self-reported answers, not a diagnosis or measured productivity.
 
-> Review my answers
+### DDD introduction
 
-**Sharing control:**
+Start DDD opens the DDD introduction or resumes a saved session directly. The personal Scan is a separate entry path, not a prerequisite for DDD.
 
-> Share Scan
-
-**Share text:**
-
-> A place to start with the digital loose ends. Digital Fog Scan, from TBTX.
-
-Sharing links to the entry experience. It does not expose answers or personal notes by default.
-
-### Exact personal result branches for the current repository bands
-
-These strings are proposed replacements for the current two-band copy. The existing personal band selection is retained.
-
-**CARRYING IT:**
-
-> My answers point to loose ends taking up room in my day.
->
-> Pick one thing I keep returning to. Put its next step somewhere I can find again.
-
-**CLEAR ENOUGH:**
-
-> My answers suggest my setup is mostly keeping pace.
->
-> Pick one loose end and give it a clear next step. A small check can still be useful.
-
-Both continue to the DDD introduction. Neither is a diagnosis of the person's health or a measurement of time lost.
-
-### Video page
+The approved B2C picture-sfx film fills the window and plays muted.
 
 > Digital De-Fog Daily
 >
-> One loose end. One useful next step.
+> One less thing following me around.
 >
-> Start with the thing that's taking up more room than it should.
+> Make room ↗
+
+### Guided session
+
+I use the 20-minute sequence already present in the original DDD page. The suggested timing is 2 + 6 + 8 + 4 minutes. A person can pause or move forward when ready. The timer never creates a score or a claim of time saved.
+
+**Choose, 2 minutes**
+
+> Not the whole mess. One spot.
 >
-> **Play introduction**
+> Desktop / Downloads / Inbox / Tabs / Notes / A project
 >
-> **Read the transcript**
+> Start here ↗
+
+The Scan can suggest a surface from an actual selected answer. The person can change it. The selected surface changes the prompts and action examples.
+
+**Sort, 6 minutes**
+
+> Give it a decision.
 >
-> **Open my daily space**
-
-The video appears first. The person can read or continue without completing it. No autoplay with sound.
-
-### Introduction video script, proposed new narration
-
-This is proposed narration. It has not been matched to or recorded over the existing video.
-
-> A tool produces another draft. A message adds another request. Somewhere between them, I'm supposed to remember what happens next.
+> One thing in front of me
 >
-> That extra remembering, finding, and reconnecting can become a job of its own.
+> Keep / Move / Let go / Decide later
 >
-> Digital De-Fog Daily starts small.
+> Choose my next move ↗
+
+The decision log supports undo. It records intention; the person makes any file, message or tab change in the original app. It requires one decision before moving forward.
+
+**Act, 8 minutes**
+
+> One thing I can finish.
 >
-> One thing I'm carrying. One thing that matters. One action I can take next.
+> My next visible action
 >
-> I can start with the pattern from my Scan, or with what's on my mind today.
+> I'll call it finished when…
 >
-> I don't have to clear everything to begin.
+> Leave a way back ↗
+
+Selected help:
+
+> Find one file. Name one folder. Send one reply. The first step can be almost embarrassingly small.
+
+**Return, 4 minutes**
+
+> Leave myself a way back.
 >
-> I just need somewhere to put the next step.
-
-When a funded month has actually been allocated, the closing card can add:
-
-> First month is on me.
+> Where I'll find it
 >
-> **Open my daily space**
-
-### Funded-month entry
-
-**Erik’s invitation, after the funded offer can actually be activated:**
-
-> First month is on me.
+> I did it / My next move / Waiting on someone
 >
-> I’m covering a month of Digital De-Fog Daily to help make room for the next useful action.
+> Keep this session ↗
+
+The saved record preserves the action, finish condition, location, decisions, status and session timer. It returns after a page refresh. History remains on the device and can be exported or cleared.
+
+### Completion
+
+The headline follows the person's selected status:
+
+> One thing off my mind.
+
+or
+
+> I know my next move.
+
+or
+
+> I know what's waiting.
+
+Actions:
+
+> Keep a copy ↗
 >
-> **Start my free month**
-
-**Optional contribution:**
-
-> I can pay $7.77 forward.
+> Put it on my calendar ↗
 >
-> Erik matches every contribution. Each contribution adds one free month to my DDD access.
+> Another small start ↗
 >
-> **Pay it forward · $7.77**
+> Join the De-Fog Family ↗
+
+The calendar action downloads a reminder for the person to import. No reminder is silently scheduled. No session is shared or used as a sponsor story.
+
+### Giving invitation
+
+> Good grows by giving.
 >
-> One payment. No automatic renewal.
+> $7.77 helps someone start. I match it. The De-Fog Family grows.
 
-**Confirmed offer:** Erik/TBTX funds the first month. Every $7.77 contribution earns the contributor one additional month, and Erik matches each contribution. The first month does not depend on a stranger’s payment or a shared story.
+Selected offer detail:
 
-**Proposed calendar behavior:** The first calendar month starts when the person activates their space. Each confirmed contribution adds a calendar month from the later of the current access end or the payment time. For a shorter month, use its final valid day. Display the exact end date before purchase. These mechanics are a proposal, not a payment integration.
-
-The payment, contributor’s access credit, Erik’s match obligation and recipient allocation are separate records. Retry handling must prevent duplicate payments, credits and matches. Record a match obligation separately from a funded match. Do not say a recipient has received a month until allocation is confirmed. Refund and reversal behavior needs implementation before checkout.
-
-**Account step:**
-
-> Keep my daily space
+> First month is on me. Each $7.77 contribution funds someone's Digital De-Fog Daily, and I match it. I add another month of DDD access for you, too.
 >
-> Email address
->
-> **Send my sign-in link**
->
-> I’ll use this address to open my space. Updates are a separate choice.
+> No automatic renewal. No public donor list. No story required.
 
-**Optional, unchecked consent:**
+Existing payment destinations: Venmo at `https://venmo.com/erikhbush?txn=pay&amount=7.77&note=Digital%20De-Fog%20Daily` and Cash App at `https://cash.app/$erikhbush/7.77`. Link uses the user-supplied Stripe checkout at `https://buy.stripe.com/dRm3cw1CDg4D7UR9VI8og01`. Payment verification and account access remain unconnected.
 
-> Send me occasional notes from Erik.
+The local review identifies that these are real payment links and that it can't verify a transfer or add funded account access. Session persistence and exports work locally; accounts, payment verification, month allocation and match accounting remain integration work. No tax-deductible donation claim is made.
 
-**Activation failure:**
+The public experience doesn't publish donor names. Payment-provider visibility is separate and depends on that provider and its settings. The private sponsor family network remains deferred.
 
-> My month hasn’t started yet. Please try again.
->
-> **Try again** · **Keep my Scan result**
+## 7. BBAI redesigned around PROOF: selected detail copy
 
-### DDD daily interface
-
-**Header:**
-
-> Digital De-Fog Daily
->
-> {day_and_date}
->
-> My month is covered through {access_end_date}.
-
-**Opening:**
-
-> What am I carrying today?
->
-> Put one loose end here.
-
-**Field placeholder:**
-
-> The thing I keep coming back to…
-
-**Next prompt:**
-
-> What matters about it?
-
-**Field placeholder:**
-
-> What would this make room for?
-
-**Next prompt:**
-
-> What's one action I can take?
-
-**Field placeholder:**
-
-> A next step I can actually name.
-
-**Primary action:**
-
-> Keep this next step
-
-**Confirmation after successful save:**
-
-> My next step is here when I need it.
-
-**Return visit:**
-
-> Where did I leave it?
->
-> {saved_next_step}
->
-> **I did it** · **Make it smaller** · **Leave it for later**
-
-**Completion:**
-
-> One loose end has a next step.
->
-> What would I like to make room for now?
-
-**When storage fails:**
-
-> This didn't save. Copy it somewhere safe, then try again.
-
-No confetti, streak loss, or “you fell behind” state is needed. A person can return without being graded for leaving.
-
-### Pay-it-forward panel, after the first useful action
-
-> Keep the door open for someone else.
->
-> I can contribute $7.77 toward someone else’s month. Erik matches it, and I get one additional month of DDD.
->
-> **Pay it forward · $7.77**
->
-> **Continue my month**
-
-**After confirmed payment and access credit:**
-
-> My $7.77 contribution was received. My DDD access now runs through {access_end_date}.
-
-**Payment confirmed but access credit pending:**
-
-> My contribution was received. My extra month is still being added. I don’t need to pay again.
-
-**Match obligation recorded, not yet funded:**
-
-> Erik’s $7.77 match is recorded and awaiting allocation.
-
-**Only after funding and recipient allocation:**
-
-> My contribution and Erik’s match have been allocated to funded access.
-
-**Payment failure:**
-
-> The payment didn’t go through. My current access hasn’t changed.
-
-**Expiry without another entitlement:**
-
-> My covered month has ended.
->
-> My notes are still available to read and export.
->
-> **Export my notes**
->
-> **Pay $7.77 forward for another month**
-
-Read/export access after expiry is proposed and must work before that copy appears. There is no automatic subscription or payment. Declining a contribution does not shorten current access.
-
-### Anonymous sharing
-
-I would launch the simple funding model first. The sponsor-family network adds relationship records, moderation and privacy work before it adds a useful daily action. It is deferred.
-
-If sharing is added, it gets its own unchecked consent and a preview of the exact words to be shared. Removing a name does not guarantee anonymity. Private notes, question answers and workplace details stay private unless the person explicitly chooses suitable material. Sharing is independent of access and contributions.
-
-> Share a short, anonymous note about what I’m freeing.
->
-> I choose the words before anything is shared. My access does not depend on sharing.
-
-## 7. BBAI redesigned around PROOF: schematic and exact copy
+The dedicated BizBuilders page is `bizbuilders.html`. PROOF leads its full-screen hero. The review exposes Find it / Fix it / Grow as the first-order beats. The explanatory material below belongs inside selected detail surfaces, not stacked on the main page.
 
 ### Frame 1: Business problem + PROOF
 
@@ -721,11 +520,11 @@ If sharing is added, it gets its own unchecked consent and a preview of the exac
 >
 > **3. Plan the change**
 >
-> The BizBlueprint names what to change, who owns it, and how the change will be checked.
+> Once we agree to work together, I turn the diagnostic findings into the paid BizBlueprint fix plan: what changes, who owns it, and how we check it.
 >
 > **4. Build and check**
 >
-> Put the agreed changes into use. Follow the work again.
+> Align the infrastructure, put the agreed changes into use, and follow the work again. Establish how it will run, who owns it, and how exceptions are handled.
 >
 > **5. Open the growth path**
 >
@@ -741,7 +540,7 @@ Stage 5 is visibly locked before completion. Stage labels are descriptive, not p
 >
 > BizBuilders AI helps turn the agreed findings into that working setup.
 
-In the deeper explanation, Context Architecture, PROOF Trace, and governed execution can be named where they answer a buyer's question. They do not compete with PROOF in the hero.
+In the deeper explanation, Context Architecture, PROOF Trace, and governed execution can be named where they answer a buyer's question. They don't compete with PROOF in the hero.
 
 ### Frame 6: Next action
 
@@ -749,7 +548,9 @@ In the deeper explanation, Context Architecture, PROOF Trace, and governed execu
 >
 > **Start Map**
 
-## 8. PROOF page, Map, and evidence copy
+## 8. PROOF page, Map, and selected evidence copy
+
+PROOF and Fog & Friction Finder lead the screen. Start Map and Show the Math are the visible actions. The method opens before intake and carries the theory, assumptions, integrity and evidence explanation. Detailed copy below stays behind intentional selection.
 
 ### PROOF method page
 
@@ -851,6 +652,10 @@ PROOF / MOMENTUM MAP                 Based on my answers
 Department detail opens only on request.
 ```
 
+The human readout comes first. A score and band support the explanation inside Show the math; they don't replace it. Each of the six readout fields must link to the answers, model assumptions or traced evidence that supports it. If cost has not been established, I show what still needs checking rather than inventing hours or money.
+
+The current interaction review demonstrates answer totals and bands only. The full six-part Finder readout remains an implementation requirement.
+
 The words “may” and “based on my answers” belong in the finding itself, not hidden in a footer. Unknowns remain visible. An unsupported conclusion is omitted rather than padded with confidence.
 
 ### Result copy template
@@ -940,7 +745,7 @@ No pattern automatically creates a business-wide conclusion, measured savings, o
 >
 > **Return to my Map**
 
-A result email is transactional if requested. It is not permission for a sales sequence.
+A result email is transactional if requested. It isn't permission for a sales sequence.
 
 ### PROOF Trace request
 
@@ -962,7 +767,7 @@ A result email is transactional if requested. It is not permission for a sales s
 >
 > The scope, access, price, and next step will be agreed before an investigation begins.
 
-A future connected-telemetry offer must name the supported systems, permissions, coverage, collection period, retention, and limits when those capabilities exist. This document does not claim they do.
+A future connected-telemetry offer must name the supported systems, permissions, coverage, collection period, retention, and limits when those capabilities exist. This document doesn't claim they do.
 
 ### Evidence labels, exact public copy
 
@@ -974,14 +779,14 @@ A future connected-telemetry offer must name the supported systems, permissions,
 | **Proposed** | “A next action to consider.” |
 | **Observed** | “Documented in the work that was traced.” |
 
-Internal equivalents are survey derived, assumed, illustrative, proposed, and observed. “Observed” records include source, task, date or time window, and coverage. A measured delay must distinguish elapsed waiting from active repair time. A model's implied change is not a measured improvement.
+Internal equivalents are survey derived, assumed, illustrative, proposed, and observed. “Observed” records include source, task, date or time window, and coverage. A measured delay must distinguish elapsed waiting from active repair time. A model's implied change isn't a measured improvement.
 
 ## 9. BBM: the lock, page, and products
 
 ### Visible lock on BBAI
 
 ```text
-PROOF → Trace → BizBlueprint → Build + check → 🔒 BizBot Mrktng
+PROOF → Trace → Agreed engagement → Paid BizBlueprint → Align infrastructure → Build + check → Governed execution → 🔒 BizBot Mrktng
                                                   Opens after BBAI completion
 ```
 
@@ -1001,9 +806,9 @@ PROOF → Trace → BizBlueprint → Build + check → 🔒 BizBot Mrktng
 
 ### Proposed completion rule
 
-A completed Map, high questionnaire score, payment, or watched video does not unlock BBM. The business must have a recorded completion review against its agreed BBAI scope. At minimum, that review should identify the incoming request's destination, responsible owner, required context, next action, and the evidence that the agreed flow worked. Erik or an authorized reviewer records completion; the account permission changes after that record exists.
+A completed Map, high questionnaire score, payment, or watched video doesn't unlock BBM. The business must have a recorded completion review against its agreed BBAI scope. At minimum, that review should identify the incoming request's destination, responsible owner, required context, next action, and the evidence that the agreed flow worked. Erik or an authorized reviewer records completion; the account permission changes after that record exists.
 
-Scope-specific checks can be stricter. The questionnaire cannot grant this permission. If a business returns after a material change, re-review is an operational decision, not an invented universal score threshold.
+Scope-specific checks can be stricter. The questionnaire can't grant this permission. If a business returns after a material change, re-review is an operational decision, not an invented universal score threshold.
 
 ### Direct URL without access
 
@@ -1015,7 +820,7 @@ Scope-specific checks can be stricter. The questionnaire cannot grant this permi
 >
 > **Sign in to my account**
 
-This response does not include hidden product content in the page or data response.
+This response doesn't include hidden product content in the page or data response.
 
 ### Completion notification, only after verified approval
 
@@ -1065,13 +870,13 @@ No promise of purchased karma, guaranteed votes, reach, or account status. Actua
 
 ### CARE, the internal method
 
-**CARE: Conversion Architecture Revenue Engine.** It is the internal method for turning useful conversations into trust, leads and revenue. It is not a fourth public product tile.
+**CARE: Conversion Architecture Revenue Engine.** It is the internal method for turning useful conversations into trust, leads and revenue. It isn't a fourth public product tile.
 
 Optional public promise:
 
 > Earn trust before the first sales call.
 
-Erik confirmed the Reddit Account Growth Package, including **A.I.R., Karma Kickstarter and Custom Reddit Playbook**, plus **RevAnew** and **ArVA (Architected Voice Agent)**. Confirmed names do not establish pricing, fulfillment or a working checkout.
+Erik confirmed the Reddit Account Growth Package, including **A.I.R., Karma Kickstarter and Custom Reddit Playbook**, plus **RevAnew** and **ArVA (Architected Voice Agent)**. Confirmed names don't establish pricing, fulfillment or a working checkout.
 
 ### Product not yet available inside an unlocked BBM account
 
@@ -1079,7 +884,7 @@ Erik confirmed the Reddit Account Growth Package, including **A.I.R., Karma Kick
 >
 > **Let me know when it is**
 
-Unlocking BBM does not make every proposed product operational. No invented prices, testimonials, customer outcomes, or demo labels.
+Unlocking BBM doesn't make every proposed product operational. No invented prices, testimonials, customer outcomes, or demo labels.
 
 ## 10. About me and erikhbush.com
 
@@ -1113,7 +918,7 @@ Related field notes / optional email subscription
 
 **Navigation:** Field notes · What I'm making · About · Follow along.
 
-This site stays public. The TBTX entry choice applies when someone enters the TBTX experience. It does not make a reader perform a commitment ritual to read Erik's journal.
+This site stays public. The TBTX entry choice applies when someone enters the TBTX experience. It doesn't make a reader perform a commitment ritual to read Erik's journal.
 
 ### Homepage exact copy
 
@@ -1196,6 +1001,14 @@ These are proposed concepts, not existing merchandise. Prices, materials, fulfil
 
 ## 11. Social engine and starter copy
 
+### Existing operating context
+
+I use the **existing post-8/16 Social Matrix** for planning. The starter copy below supplies material for that matrix; it doesn't create a replacement. The operating flow is strategy → Social Matrix → approved copy → assets → Postiz → publish → results → learning. No publishing connection or live schedule is established by this document.
+
+The supplied context identifies an existing **Manus IM Skill**, created through Codespaces, with a repository and local folder. Before changing that asset pipeline, I need to locate and inspect the existing implementation, run it within an agreed task, and repair what prevents its use. Its current location and runtime have not been verified in this design review.
+
+erikhbush.com records meaningful project events: attempts, failures, corrections, tests and finished work. A future Hermes capture mechanism should use actual events and evidence. The site's documentary purpose doesn't depend on that mechanism already running.
+
 ### Editorial structure
 
 I would begin with four recurring kinds of source story:
@@ -1243,7 +1056,7 @@ A useful starting experiment is one substantive field note a week with a few nat
 >
 > For people who've tried this, which part was hardest to observe without creating more work for the team?
 
-This is a draft for an appropriate community, subject to its actual rules and context. It is not a request to automate repetitive posting or to invent participation.
+This is a draft for an appropriate community, subject to its actual rules and context. It isn't a request to automate repetitive posting or to invent participation.
 
 ### Facebook
 
@@ -1364,55 +1177,61 @@ Use only when the recipient has a confirmed funded month. These are email drafts
 
 The account identity supplied for this work is **@erikhbush**, associated with **erihinla@gmail.com**. The address belongs in the private operating record, not automatically in public bio copy.
 
-**Proposed handoff:** Source field note and evidence → Hermes-assisted draft → Erik's approval of the actual version → channel adaptation → approval of named releases → Postiz → platform receipt → journal record.
+**Proposed handoff within the existing Social Matrix:** Strategy and source evidence → matrix item → Hermes-assisted draft → channel adaptation → Erik’s approval of the actual copy → final assets and approved release → Postiz → platform receipt → results, learning and journal record.
 
 Each item needs: source URL or artifact, claim basis, intended audience, approved copy version, final media, target account, destination link, alt text or captions, scheduled time, approval record, and the resulting post ID when published.
 
-The supplied brief says Hermes is on the netcup VPS and is trying to set up Postiz. That is user-reported context. This task has not verified the connection, channel authorization, a scheduled job, or a published post. Drafting capability does not establish publishing capability.
+The supplied brief says Hermes is on the netcup VPS and is trying to set up Postiz. That is user-reported context. This task has not verified the connection, channel authorization, a scheduled job, or a published post. Drafting capability doesn't establish publishing capability.
 
-## Show the math: visible calculation contract
+## Show the Math: public reasoning contract
 
-This disclosure is available before intake and beside every result, without an email gate. It lists every chosen answer and point value, total, denominator, rounding and band. Preserve question ID and selected option index. Equal point values do not make two answers identical.
+Before intake, the ∑ symbol opens five lenses: Connections, Context, Integrity, Dynamics and Evidence. I show why the method asks what it asks and where its claims stop. I don't hand out the private weighting tables, coefficients, pressure-ordering implementation or scenario-engine code.
 
-### Personal Scan
+### Connections
 
-> I answered eight questions. Each answer carries 0, 1 or 2 points.
+> More hands. More handoffs.
 >
-> My total is {raw_total} out of 16.
+> I look at the coordination a task asks of people, not just the number of people assigned to it.
+
+The public interactive example counts possible pairwise connections using n(n−1)/2. Five people give 10; ten give 45. Brooks's communication and coordination observations inform the questions. Possible connections aren't observed handoffs or measured labor. Real task paths, frequency and missing context still need evidence.
+
+### Context
+
+> Same task. Different reality.
 >
-> round(100 × {raw_total} ÷ 16) = {score}
+> “Waiting for approval” tells me where work paused. The version, owner and decision history help me understand why.
+
+A selected example lets the reader mark current version, decision owner, required inputs, approval history, next action and access as available or unknown. The interpretation changes with what is known. It doesn't infer blame or a measured delay from missing data. The work item, accepted completion, relevant roles, time window, source and version define the dataset.
+
+### Integrity
+
+> Unknown isn't zero.
 >
-> 0 to 49: Carrying it. 50 to 100: Clear enough.
->
-> This is a reflection prompt based on my answers. It does not measure productivity, health or hours lost.
+> I keep the uncertainty visible so a clean-looking score can't hide an unanswered question.
 
-Source: `scan-personal.ts`, blob `b34114ad4320eca877f7a867be07e91a1351df3d`; normalization verified in `DiagnosticEngine.tsx`, blob `15f505e55f43ded0b8633f5fff9ed6c17a21b57a`. Seven points gives 44; eight gives 50. The visible personal result uses personalBands. The optional existing onComplete callback incorrectly selects a business profile for either path; that integration must be corrected when migrating. The new review keeps both paths separate.
+Retain answer and option identity, including equal-point answers that tell different stories. Keep missing, zero and not applicable distinct. Use consistent units and boundaries; separate active effort and waiting. Count each handoff once, allocate shared capacity once and preserve a true-zero boundary in the model. Include intervention effort and maintenance. Review and judgment aren't automatically wasted work.
 
-### PROOF Momentum Map
+### Dynamics
 
-> I answered fifteen questions. Each answer carries 0, 1 or 2 points.
->
-> My total is {raw_total} out of 30.
->
-> round(100 × {raw_total} ÷ 30) = {score}
->
-> 0 to 24: Fragmented. 25 to 49: Stalled. 50 to 74: Scaling. 75 to 100: Compounding.
->
-> This describes my answer pattern. It does not measure business health or prove lost capacity.
+> Busy isn't the same as moving.
 
-Raw boundaries are 0 to 7, 8 to 14, 15 to 22 and 23 to 30. Each question contributes at most two points; no hidden multiplier changes the total. The separate pressure shortlist orders tagged zero-point answers, then one-point answers, in question order, up to four. Existing archetype mismatches remain documented in the master. An empty pressure list does not establish fragmentation. “None yet” for tools does not prove tool-related friction.
+The method distinguishes active processing, waiting, variation, capacity and accepted completion. Kingman's queueing approximation requires suitable observations and assumptions. Little's Law relates average items, throughput and time within a consistent system boundary. Schick, Gordon and Haka ground information pressure in processing demands and available time. These public foundations don't independently validate PROOF's private coefficients or establish empirical calibration.
 
-### Scenario and observed-work disclosures
+### Evidence
 
-> A scenario uses assumptions. A trace examines evidence from the work. I can see which is which.
+> A useful claim needs a trail.
 
-Preset coordination-hours bands are illustrative, not benchmarks. A scoped estimate uses `repair hours = items × affected share × repair minutes / 60`. An observation uses `repair hours = sum(active person-minutes) / 60`. Keep units, scope, period, source and assumptions visible. Keep elapsed waiting separate from active effort and avoid double counting.
+Reported answers describe a person's view of work. Modeled outputs retain their assumptions. Observed evidence comes from a documented Trace. The proposed next investigation carries its task, owner, evidence and unanswered questions. A survey isn't converted into measured hours, cash savings or ROI.
 
-Illustrative example: 120 packages/week × 30% × 15 minutes ÷ 60 = 9 hours/week. This is not a client result.
+### Inspectable answer arithmetic
 
-If the revision-3 visual model remains, show its actual constants: `O = 0.2 + 0.15 × (Q4 + Q8)`; `I = 1 − h/100`; optional modifier `I_eff = 0.25 × I`; `D = sqrt(u × d)`; `F = O × I_eff × (1 − h/200)`; `M = min(100, (100/1.5) × max(0, F × D)^1.8)`; visual height `= 30 × M/100` feet. Constants, department weights and modifier remain uncalibrated. The later h/300 formula is a distinct version. A stronger tool answer can raise the modeled effort while raising the answer score. At h=100, zero is a model boundary, not evidence of friction-free operations.
+Both paths retain their source questions and options. Every selected answer and point value appears with the result, along with total, denominator, rounding and band. The result waits for a complete valid set. The method demonstration never changes questionnaire answers. Each question has its own neutral “Y?” note keyed by question ID. The notes explain the subject without revealing points or suggesting an answer. They don’t change question text, options, values or the model.
 
-An incomplete set returns no score. Unknown stays unknown. The running calculation and displayed explanation share one source. The new review demonstrates the two answer scores only, not the operational or archetype models.
+Personal: 8 answers × maximum 2 points = 16. Score = round(100 × total ÷ 16). Carrying it: 0–49. Clear enough: 50–100.
+
+Business: 15 answers × maximum 2 points = 30. Score = round(100 × total ÷ 30). Fragmented: 0–24. Stalled: 25–49. Scaling: 50–74. Compounding: 75–100.
+
+The complete implementation remains documented in the private master. This marketing review runs answer scoring, the public network example and a context demonstration. It doesn't collect operational telemetry or produce a full evidence-backed diagnostic report.
 
 ## 12. Source reconciliation and remaining product decisions
 
@@ -1420,11 +1239,11 @@ An incomplete set returns no score. Unknown stays unknown. The running calculati
 
 | Source | What I used | Boundary |
 | --- | --- | --- |
-| [TBTX_MASTER.md](https://drive.google.com/file/d/1BZKt_ER-ol8YW420qRibSPJX2y8iuRpU/view) | Campaign, entry gate, brand sequence, DDD name, voice, and Build Fog-Free wording | Version shown is 2026.09.02. This proposal does not overwrite it. |
-| [PROOF_CREATIVE_SYSTEM.md](https://drive.google.com/file/d/1eAWydvl4kDBUJUfQ0kRDanV8IG4G9LDu/view) | Current PROOF identity, method, evidence labels, readout order, and design territories | Finder supersedes the earlier descriptor. The latest user decisions exclude the illustrated posters from the design direction. |
+| [TBTX_MASTER.md](https://drive.google.com/file/d/1BZKt_ER-ol8YW420qRibSPJX2y8iuRpU/view) | Campaign, entry gate, brand sequence, DDD name, voice, and Build Fog-Free wording | Version shown is 2026.09.02. This proposal doesn't overwrite it. |
+| [PROOF_CREATIVE_SYSTEM.md](https://drive.google.com/file/d/1eAWydvl4kDBUJUfQ0kRDanV8IG4G9LDu/view) | Current PROOF identity, method, evidence labels, readout order, and design territories | Finder supersedes the earlier descriptor. The general illustrated-poster direction is excluded. The subsequently attached How Proof Finds the Fog diagram is accepted as concept artwork, not scoring authority. |
 | [Personal question source](https://github.com/erikhinla/tbtx-next-ecosystem/blob/main/src/config/scan-personal.ts) | Existing personal questions and answer language | Eight questions, confirmed independent of PROOF by Erik; result normalization is by 16. |
 | [Business question source](https://github.com/erikhinla/tbtx-next-ecosystem/blob/main/src/config/diagnostic-tbtx.ts) | Existing fifteen business questions | The attached VISUALIZER_MASTER.md supplies the selected 15-question PROOF contract, values 0/1/2 and maximum 30. |
-| [Search-visible TBTX homepage](https://transformby10x.ai/) | Older public page content for comparison | The web reader returned a cached page. It is not reliable evidence of the current production deployment. |
+| [Search-visible TBTX homepage](https://transformby10x.ai/) | Older public page content for comparison | The web reader returned a cached page. It isn't reliable evidence of the current production deployment. |
 | [Search-visible BBAI page](https://transformby10x.ai/bizbuilders-ai) | Existing product presentation for comparison | Same cached-page limitation. |
 | Supplied Proof Overview Summary.pdf | Finder name, industrial instrument visuals, diagrams, and the distinctions between model output and evidence | Eighteen pages reviewed. Its embedded claims remain source claims, not independently verified product results. |
 | This request | PROOF-first BBAI, hard BBM gate, funded DDD month, $7.77 option, personal site, social scope | Takes priority as the brief for the proposal. |
@@ -1435,8 +1254,8 @@ The public pages returned by the web reader still contain older kit and route la
 
 1. **Naming:** PROOF Fog & Friction Finder. Finder replaces Forensics in new material.
 2. **Questions:** Personal Scan has eight independent questions. PROOF Map has fifteen. Each uses its own 0/1/2 values and visible math.
-3. **Evidence:** The master separates reported answers, scenario assumptions and observed work. The PROOF repository’s UI telemetry collector is a placeholder. It does not establish operational measurement or a connected backend.
-4. **DDD:** Erik funds the first month. Every optional $7.77 contribution earns one additional month; Erik matches every contribution. No automatic renewal. The anonymous family network is deferred.
+3. **Evidence:** The master separates reported answers, scenario assumptions and observed work. The PROOF repository’s UI telemetry collector is a placeholder. It doesn't establish operational measurement or a connected backend.
+4. **DDD:** Erik funds the first month. Every optional $7.77 contribution earns one additional month; Erik matches every contribution. No automatic renewal. The De-Fog Family giving invitation is selected. The private sponsor network is deferred.
 5. **Trace:** It is the renamed AI Infrastructure Assessment, not a separate second service.
 6. **BBM:** Growth names are confirmed. CARE stays internal. BBAI completion must be recorded before page and product access is granted.
 7. **Design:** Use Scrollcraft and the selected existing TBTX film and campaign assets. The rejected doll and cartoon-poster direction is excluded. The later approved films keep their own visual elements. It Only Looks Automated is excluded as an asset and design direction. The generated refinery hero and poster adaptations are rejected.
@@ -1444,7 +1263,7 @@ The public pages returned by the web reader still contain older kit and route la
 
 ### What still needs a live implementation decision
 
-Trace needs agreed scope, delivery, access and commercial terms. BBAI needs a completion record and named reviewer for each engagement. DDD needs implemented calendar dates, payments, match accounting, refunds, persistence and export. The revised introduction needs a suitable recording. These details do not block design and copy.
+Trace needs agreed scope, delivery, access and commercial terms. BBAI needs a completion record and named reviewer for each engagement. DDD needs account access dates, payment verification, match accounting and refunds. Device-local persistence, text export and calendar export are implemented in the review. The approved introduction film is used muted. These details don't block design and copy.
 
 ### Repository and preview boundaries
 
@@ -1452,21 +1271,21 @@ The website exists in **erikhinla/tbtx-next-ecosystem**. Its homepage uses `Scro
 
 **erikhinla/flow-visualizer-telemetry** is the separate PROOF repository. At starting commit `1d9239b`, it contains the master, configuration and a UI-event collector with placeholder flushing. The absence of an app directory there says nothing about whether the TBTX website exists.
 
-The new Scrollcraft review uses the website’s runtime and original campaign media. It demonstrates motion, entry choices, both answer calculations, nested explanations, the DDD offer and the BBM lock. It does not implement accounts, payment collection, the PROOF pressure engine, completed Trace evidence or server-enforced BBM access.
+The new Scrollcraft review uses the website’s runtime and original campaign media. It demonstrates motion, entry choices, both answer calculations, nested explanations, the DDD offer and the BBM lock. It implements device-local DDD persistence and exports. It doesn’t implement accounts, payment verification, funded-month allocation, the PROOF pressure engine, completed Trace evidence or server-enforced BBM access.
 
 ### What counts as implementation evidence later
 
-- The entry gate carries the intended destination, supports return visits, and does not open through Sit out or Sit back.
+- The entry gate carries the intended destination, supports return visits, and doesn't open through Sit out or Sit back.
 - Scan and Map use their selected question sets and return evidence-labelled results without invented measurements.
 - The DDD video has captions/transcript; actual month allocation controls the funded copy; confirmed contributions add exactly one month each and declining preserves existing access.
 - DDD notes really save, return, and export as promised.
-- A private PROOF case is available only to its authorized users. A request is not labelled as a completed trace.
+- A private PROOF case is available only to its authorized users. A request isn't labelled as a completed trace.
 - BBM page and product access are enforced for the account, including direct URLs and data requests.
 - Any claim of a live channel connection or post has a corresponding platform record.
 
 ## 13. Preserved question copy
 
-The following appendix preserves the question and answer text fetched from the current repository. The eight-question personal and fifteen-question business paths are selected. Their wording and values remain preserved; this is not a claim of scientific validation or deployment.
+The following appendix preserves the question and answer text fetched from the current repository. The eight-question personal and fifteen-question business paths are selected. Their wording and values remain preserved; this isn't a claim of scientific validation or deployment.
 
 ### Personal Scan: existing eight questions
 
@@ -1633,3 +1452,39 @@ The following appendix preserves the question and answer text fetched from the c
 - Reactive
 - Building
 - Compounding
+
+## Full-bleed video and method overlay, 14 September 2026
+
+The approved PROOF film now fills its section edge to edge. The arrival film also covers its stage. Task examples and optional concept films expand to the page width; the player dialogues use the full window width. Original source films stay unchanged. New surrounding copy uses Finder.
+
+The primary actions use directional type, an advancing underline and arrow movement. The existing Scrollcraft runtime supplies pointer attraction on the PROOF controls. Reduced motion removes that attraction and the ornamental transitions; touch and keyboard don't depend on hover.
+
+Show the Math appears as a mathematical symbol beside PROOF before intake and again before the first business question. It opens a full-window overlay with answer normalization, pressure ordering, revision-3 equations and constants, an isolated sample calculator, and the operational relationships used to explain a scoped Trace. The sample doesn't alter Map answers. The results retain their own answer-by-answer arithmetic disclosure.
+
+The supplied folder has been reorganized. Current creative sources are in `EHB PRODUCTION/01_TBTX/CREATIVE_ASSETS`. Original provenance paths stay in the earlier records; a separate current-location inventory records the move. A file being present doesn't reopen a rejected direction.
+
+
+## 14 September: BBAI depth and BBM offer preview
+
+The selected “Give the fix somewhere to live” panel now links the supplied 15-page Architecting_AI_Momentum.pdf with a cover preview. The separate 10.mp4 attachment is a five-second portrait clip, not the architecture presentation; it was not substituted for that presentation.
+
+The business page adds “Make the work hold together” with selected explanations for the Quad Keystones: Folders, Markdown, Scripts, Protocols. FLOW Agent AS appears only inside the delivery explanation. Recommendation: retain the engine where the agreed work needs it, keep FAAS as internal shorthand, and describe permissions, checks and recorded results rather than a separate branded offer. No live runtime claim is added.
+
+The user requested products to show. BBM now previews Reddit Account Growth Package (A.I.R., Karma Kickstarter, Custom Reddit Playbook), RevAnew and ArVA. This supersedes hiding all product descriptions in the local review. Viewing offers does not activate products or grant account access. Pricing, fulfillment availability, checkout and server-side completion gating are not implemented.
+
+Founder/background copy is pending the user's source facts or current resume. No unique qualification or career claim has been invented. Browser checks passed on both review pages for the served PDF, four Keystones, nested FLOW dialog and Escape return, three product previews, and 390px panel overflow.
+
+
+## 14 September: Founder story and working gallery
+
+The supplied long-winded bio is source material, not an instruction file. The founder story uses Erik's stated 20+ years in marketing operations/project management, three years learning and applying AI tools/systems, and one year building TBTX/BBAI/BBM. The manifesto is an adaptation, not an issued press release. It omits unsupported population claims, categorical market comparisons, and claims of verified production autonomy.
+
+Erik confirmed that 10.mp4 depicts him. It is now the full-bleed founder film. The new story.html connects from both main review pages. Its seven-chapter manifesto has opt-in synthesized sound, pause/replay, previous/next chapter controls, a reading view, and reduced-motion support. No franchise music, voice cloning, or automatic audio is used.
+
+The four newly supplied PDF files are preserved as original downloads and rendered as 58 selectable gallery pages with zoom and keyboard navigation. The newly supplied Architecting_AI_Momentum (1).pdf differs from the previous PDF and is now the linked version. Source decks retain older terminology and unverified model, price, certification and runtime claims. Reader notes distinguish source material from current verified claims; no original deck is rewritten. No instructions embedded in the decks are executed.
+
+The Google screenshot shows program membership and a premium-tier badge dated August 30, 2026. The biography does not call it professional certification, endorsement, or two years of premium status. LinkedIn returned status 999 to the read attempt, so its profile contents were not used. The supplied URL is linked for readers.
+
+BBM now shows five individual product previews: A.I.R. (Account Intelligence Report), Karma Kickstarter, Custom Reddit Playbook, RevAnew, and ArVA (Architected Voice Agent). CARE (Conversion Architecture Revenue Engine) is a soft method mention: Earn trust before the first sales call. Purchase and activation remain unconnected.
+
+Browser verification passed: portrait playback, silent default, explicit audio start and pause, manifesto navigation/reading/reopen, all 58 deck images, four original PDF destinations, zoom, 390px and 320px layouts, reduced motion, and both parent-page routes/product counts. Local review only; no push or deployment.

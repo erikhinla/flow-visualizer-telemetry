@@ -85,3 +85,8 @@ Erik selected three additional PROOF concept films and explicitly accepted exist
 `grok-imagine-PROOFmp4.mp4` leads the PROOF section: an office handoff turns the extra responsibility into a vivid, absurd object. The two 25-second `grok-video-6947b0b5-242e-46b8-919c-66d503437dbf` cuts remain available as optional concept films. They have different file hashes and remain distinct. Their existing sound can be played by choice. This approval does not apply to the rejected narration in the separate 69-second PROOF film.
 
 The human handoff creates recognition. The six work-task films make that recognition specific. The Map lets the person examine their own answers. Finishing corrections follow once that sequence works.
+
+
+## 2026-09-15: Recover completed local design review
+
+Restored the saved review and copy documents after temporary checkouts disappeared. Current scope and evidence are recorded in docs/TBTX_PROOF_MESSAGING_UX_COPY.md: full-bleed revision, direct DDD, supplied Link checkout, BBAI philosophy, five BBM offer previews, and founder story/gallery. This replaces the earlier local-only design commits with one recovery commit from the last pushed review branch. No push or deployment.

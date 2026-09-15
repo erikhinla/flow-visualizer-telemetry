@@ -15,6 +15,10 @@ This isn't a scoring specification or a prompt. NotebookLM should use it as sour
 - The original 69-second PROOF film’s narration is excluded. No replacement narration is approved or included.
 - Existing TBTX footage, campaign photography and route artwork are the selected visual sources. Scrollcraft drives the review. The doll and cartoon-poster direction is excluded. It Only Looks Automated is excluded as both asset and design direction. The later, specifically accepted films retain their own visual elements.
 - The working map is answer based. Traced observations and modeled scenarios must remain visibly distinct.
+- Recognition leads: pain → consequence → relief → momentum. I begin with the lived task and keep deeper explanation available on request.
+- Finder is the diagnostic product. Visualizer is its underlying engine, not a separate offer.
+- The free Map precedes diagnosis and an agreed engagement. BizBlueprint is the paid fix plan created from findings after engagement. Quad Keystones and infrastructure alignment inform implementation, checks and governed execution.
+- The human readout explains the situation, likely cause, location, consequence, first investigation and next action. A score supports that explanation; each finding needs an answer, assumption or observed source.
 
 ## Locked identity
 
@@ -38,7 +42,7 @@ Don't rename PROOF or return to FLOW Blueprint. A blueprint shows how something 
 
 In PROOF, **Response** means the human response that keeps work moving when the process drops something. The searching, chasing, checking, remembering, reconnecting, translating, and rebuilding inside that response create the Human Repair Work. That is the human tax, not the remedy PROOF prescribes.
 
-Output enters a Process. When the Process and Operating Capacity can't carry it, people Respond by filling the gaps. When that response becomes a repeated repair work, Fog forms. When people can no longer carry it, Friction appears.
+Output enters a Process. When the Process and Operating Capacity can't carry it, people Respond by filling the gaps. When that response becomes repeated repair work, Fog forms. When people can no longer carry it, Friction appears.
 
 ## What PROOF does
 
@@ -384,3 +388,13 @@ Erik selected three additional PROOF concept films and explicitly accepted exist
 `grok-imagine-PROOFmp4.mp4` leads the PROOF section: an office handoff turns the extra responsibility into a vivid, absurd object. The two 25-second `grok-video-6947b0b5-242e-46b8-919c-66d503437dbf` cuts remain available as optional concept films. They have different file hashes and remain distinct. Their existing sound can be played by choice. This approval does not apply to the rejected narration in the separate 69-second PROOF film.
 
 The human handoff creates recognition. The six work-task films make that recognition specific. The Map lets the person examine their own answers. Finishing corrections follow once that sequence works.
+
+## Current screen and method contract, 14 September 2026
+
+Full bleed means the entire visible viewport, including phones. Approved video continues behind the text and in the background of selected explanations. Main-page video autoplays muted; playback controls belong in the gallery. The visible motion toggle is removed. First-order copy is a billboard hook or directional action. Description belongs in a selected overlay.
+
+The method overlay establishes depth through connections, task-specific context, score integrity, operational dynamics and evidence. It shows the public coordination network example and answer-score arithmetic. It explains the research assumptions and data requirements. Private model coefficients, department-weight tables and executable scenario recipes stay out of the served marketing review. Established research isn't presented as empirical validation of PROOF.
+
+The newly supplied `proof grok 2.mp4` matches the already approved second concept film. It supplies the moving method backdrop; the full original remains in the gallery. `grok-imagine-PROOFmp4.mp4` supplies the PROOF peak excerpt. `How_Proof_Finds_The_Fog.png` is now specifically accepted as concept artwork. Its old labels and visible text errors don't supersede the 15-question contract.
+
+The DDD invitation is Join the De-Fog Family. The session remains Digital De-Fog Daily or DDD. Copy is direct and familiar: First month is on me. Good grows by giving. The anonymous public experience doesn't imply anonymity from a payment provider or recipient.
