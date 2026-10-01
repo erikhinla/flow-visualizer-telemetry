@@ -1,3 +1,4 @@
+import { AGENCY_BALANCE } from './agency';
 import { getDepartment } from './departments';
 import { manifestation } from './manifestation';
 import { compareScenario } from './operational';
@@ -100,6 +101,7 @@ export function buildRecord(input: PortableRecordInput) {
           note: 'Uncalibrated scenario index. Height is an artistic scale, not a physical or financial measurement.',
         }
       : null,
+    balance: AGENCY_BALANCE[input.departmentId],
     action: {
       change: department.action.change,
       ownerRole: department.action.ownerRole,

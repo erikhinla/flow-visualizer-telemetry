@@ -12,11 +12,12 @@ export const FORMING_RHO = 0.7;
 export const CLOSING_RHO = 0.9;
 
 export const BAND_COPY: Record<BandId, string> = {
-  open: 'This scenario has spare margin and no modeled repair.',
-  fog: 'People can still absorb the repair. Delivery can look healthy while they do.',
-  forming: 'The margin is thinning. Waiting grows faster than the repair that caused it.',
-  closing: 'A small further increase in repair or volume meets a steep wait.',
-  seized: 'Required hours exceed the role. Unfinished work accumulates.',
+  open: 'This desk has spare margin and no modeled reconstruction.',
+  fog: 'The desk is absorbing the reconstruction. The work can still ship.',
+  forming: 'The margin is thinning. Waiting grows faster than the chase that caused it.',
+  closing:
+    'A small rise in volume or missing context meets a steep wait. Flights and approvals are exposed.',
+  seized: 'Required hours exceed the desk. Unfinished jobs accumulate.',
   unavailable:
     'Demand is positive and available capacity is zero. Pressure is not a finite percentage.',
   unknown: 'A required input is missing or out of range. The result stays unknown.',

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Balance } from './Balance';
 import { useSession } from './SessionProvider';
 import { trace } from '../lib/diagnostics';
 import { formatHours, formatPressure, formatWait, reviewDate } from '../lib/format';
@@ -57,9 +58,10 @@ export function RecordExperience() {
       </p>
 
       <section>
-        <h2>The repair</h2>
+        <h2>The reconstruction</h2>
         <p>
-          {department.repairRole} absorbs it: {department.repair}
+          {department.repairRole} absorbs it: {department.repair} Craft and required review are not
+          included in these hours.
         </p>
         <p className={`band-word band-${baseline.band}`}>
           <span>{baseline.band}</span>
@@ -67,7 +69,7 @@ export function RecordExperience() {
         </p>
         <dl className="record-stats">
           <div>
-            <dt>Repair hours</dt>
+            <dt>Reconstruction hours</dt>
             <dd>{formatHours(baseline.repairHours)}</dd>
           </div>
           <div>
@@ -99,7 +101,7 @@ export function RecordExperience() {
 
       {record.map ? (
         <section>
-          <h2>Map reading</h2>
+          <h2>Scan</h2>
           <p>
             {record.map.profile}. {record.map.profileStatement} Raw score {record.map.rawScore} of
             30, answer index {record.map.answerIndex}. Preset range{' '}
@@ -117,15 +119,23 @@ export function RecordExperience() {
         </section>
       ) : (
         <section>
-          <h2>Map reading</h2>
-          <p>The Map is unfinished, so this record does not invent a score.</p>
-          <Link href="/map">Finish the Map</Link>
+          <h2>Scan</h2>
+          <p>The scan is unfinished, so this record does not invent a score.</p>
+          <Link href="/map">Finish the scan</Link>
         </section>
       )}
 
+      <Balance
+        departmentId={department.id}
+        change={department.action.change}
+        comesBack={record.scenario.repairDeltaHours}
+        ongoing={session.inputs.ongoingHours}
+        net={record.scenario.netReleasedHours}
+        pressureWithOngoing={record.scenario.pressureWithOngoing}
+      />
+
       <section>
-        <h2>The change</h2>
-        <p>{department.action.change}</p>
+        <h2>Who carries it</h2>
         <p>
           Owner role: {department.action.ownerRole}. Bring back: {department.action.evidence} Review
           date: {due ?? `in ${department.action.reviewInDays} days`}.

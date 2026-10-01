@@ -20,97 +20,95 @@ const q = (
 });
 
 /**
- * Saved Momentum Map, September 6 2026.
- * Point values are unchanged. Option ids keep equal-valued choices distinct.
- * Pressure ids follow the saved value table: both choices with the same
- * point value share that value's pressure id.
+ * Agency wording on the 6 September 2026 point values and pressure ids.
+ * Scoring is unchanged. Option ids keep equal-valued choices distinct.
  */
 export const QUESTIONS: readonly Question[] = [
-  q(1, 'Where does your business lose momentum most often?', [
-    ['Starting things', 0, 'start'],
-    ['Switching between tools', 1, 'handoff'],
-    ['Waiting on others', 1, 'handoff'],
-    ['Finishing', 2, null],
+  q(1, 'Where does campaign work lose momentum most often?', [
+    ['Getting the work started', 0, 'start'],
+    ['Switching tools or desks', 1, 'handoff'],
+    ['Waiting on the client or another desk', 1, 'handoff'],
+    ['Finishing and getting it live', 2, null],
   ]),
-  q(2, 'How does your team know what to work on next?', [
+  q(2, 'How does the team know the next deliverable?', [
     ['We figure it out as we go', 0, 'next'],
     ['We have informal priorities', 1, 'priorities'],
-    ["We've got a system, but it isn't always followed", 1, 'priorities'],
-    ['We have a clear routing process', 2, null],
+    ['We have a system, but it is not always followed', 1, 'priorities'],
+    ['Every job has a clear next step', 2, null],
   ]),
-  q(3, 'Where does your team keep the knowledge it needs?', [
+  q(3, 'Where do the brief, the approval, and the feedback live?', [
     ["In people's heads", 0, 'memory'],
-    ['In scattered docs and chats', 0, 'memory'],
-    ['In a loosely organized system', 1, 'scattered'],
-    ['In a structured, accessible system', 2, null],
+    ['In scattered docs, decks, and chats', 0, 'memory'],
+    ['In a loose folder or project', 1, 'scattered'],
+    ['In one record the next desk can open', 2, null],
   ]),
-  q(4, 'How many AI agents and tools do you use?', [
+  q(4, 'How many AI tools are in the making, the media, or the reporting?', [
     ['None yet', 0, 'tools'],
     ['One or two, lightly', 1, null],
-    ["Several, but they aren't connected", 1, null],
-    ['Several, connected and producing consistent output', 2, null],
+    ['Several, and they are not connected', 1, null],
+    ['Several, connected, with consistent output', 2, null],
   ]),
-  q(5, 'When a project ends, what happens to what was learned?', [
-    ['It disappears with the project', 0, 'learning'],
-    ['Some notes get saved somewhere', 1, null],
-    ['We debrief but nothing formal', 1, null],
-    ['We capture it and it improves future work', 2, null],
+  q(5, 'When a campaign ends, what happens to what the team learned?', [
+    ['It leaves with the campaign', 0, 'learning'],
+    ['Some notes are saved somewhere', 1, null],
+    ['We debrief, but nothing is formal', 1, null],
+    ['We capture it, and the next campaign is better', 2, null],
   ]),
-  q(6, 'How does your business handle missed leads or unanswered inquiries?', [
-    ['They usually fall through the cracks', 0, 'followup'],
-    ['We follow up manually when we remember', 0, 'followup'],
+  q(6, 'How does the agency handle a missed lead, RFP, or client ask?', [
+    ['It usually falls through', 0, 'followup'],
+    ['Someone follows up when they remember', 0, 'followup'],
     ['We have a loose process', 1, 'loose-followup'],
-    ['We have automated follow-up', 2, null],
+    ['Follow-up runs without relying on memory', 2, null],
   ]),
-  q(7, 'How clear is ownership when something needs to get done?', [
-    ['Unclear - it often falls through', 0, 'ownership'],
-    ['It depends on who is available', 1, 'informal-owner'],
-    ['We have informal ownership', 1, 'informal-owner'],
-    ['Every task has a clear owner and routing rule', 2, null],
+  q(7, 'How clear is ownership when a deliverable must move?', [
+    ['Unclear — it often falls through', 0, 'ownership'],
+    ['It depends on who is free', 1, 'informal-owner'],
+    ['Ownership is informal', 1, 'informal-owner'],
+    ['Every deliverable has an owner and a routing rule', 2, null],
   ]),
-  q(8, 'How do AI agents and tools fit into your work?', [
-    ['Experimenting with no system', 0, 'ai'],
-    ['Using tools but results are inconsistent', 1, null],
-    ['Running workflows but they are fragmented', 1, null],
-    ['Using AI agents and tools with clear rules and oversight', 2, null],
+  q(8, 'How do AI tools sit inside the work?', [
+    ['Experiments, with no operating rules', 0, 'ai'],
+    ['In use, but the output is inconsistent', 1, null],
+    ['Workflows run, but they are fragmented', 1, null],
+    ['In use, with rules and a person accountable', 2, null],
   ]),
-  q(9, 'How does your business make decisions under pressure?', [
+  q(9, 'How are decisions made when a client or a flight is pressing?', [
     ['Whoever speaks loudest', 0, 'decisions'],
-    ['By whoever is available', 0, 'decisions'],
-    ['Using loose guidelines', 1, null],
-    ['Using documented decision rules', 2, null],
+    ['Whoever is available', 0, 'decisions'],
+    ['By loose guidelines', 1, null],
+    ['By a written decision rule', 2, null],
   ]),
-  q(10, 'How much of your revenue depends on manual follow-up or human memory?', [
+  q(10, 'How much revenue still depends on someone remembering to follow up?', [
     ['Almost all of it', 0, 'revenue'],
     ['Most of it', 0, 'revenue'],
     ['Some of it', 1, 'some-manual'],
-    ['Very little - systems handle most of it', 2, null],
+    ['Very little — the system carries most of it', 2, null],
   ]),
-  q(11, 'How often does your team repeat work that has already been done?', [
+  q(11, 'How often does a desk remake or re-find work that already existed?', [
     ['Frequently', 0, 'repeat'],
     ['Often', 0, 'repeat'],
     ['Sometimes', 1, 'sometimes-repeat'],
-    ['Rarely - we have reusable systems', 2, null],
+    ['Rarely — masters and decisions are reusable', 2, null],
   ]),
-  q(12, 'What happens when a key person is unavailable?', [
-    ['Work stops', 0, 'key-person'],
-    ['Things slow down significantly', 0, 'key-person'],
-    ["We manage, but it's painful", 1, null],
-    ['The system continues without disruption', 2, null],
+  q(12, 'What happens when the person who holds the client or the craft is out?', [
+    ['The work stops', 0, 'key-person'],
+    ['It slows sharply', 0, 'key-person'],
+    ['The team copes, painfully', 1, null],
+    ['The work continues', 2, null],
   ]),
-  q(13, 'How visible is your pipeline or lead flow at any given moment?', [
-    ['Not visible at all', 0, 'pipeline'],
-    ['Partially visible', 1, 'partial-pipe'],
+  q(13, 'How visible are live jobs, flights, and approvals right now?', [
+    ['Not visible', 0, 'pipeline'],
+    ['Partly visible', 1, 'partial-pipe'],
     ['Mostly visible', 1, 'partial-pipe'],
-    ['Fully visible with real-time tracking', 2, null],
+    ['Visible as they change', 2, null],
   ]),
-  q(14, 'How does your business improve from what it executes?', [
+  q(14, 'How does the agency get better at the work it ships?', [
     ["It doesn't", 0, 'loop'],
-    ['Informally, through conversation', 1, null],
-    ['We review occasionally', 1, null],
-    ['We review results and update how we work', 2, null],
+    ['Informally, in conversation', 1, null],
+    ['We review sometimes', 1, null],
+    ['We review results and change how the next job runs', 2, null],
   ]),
-  q(15, 'Which word best describes how work runs today?', [
+  q(15, 'Which word best describes the studio today?', [
     ['Chaos', 0, 'shape'],
     ['Reactive', 0, 'shape'],
     ['Building', 1, null],
@@ -119,43 +117,43 @@ export const QUESTIONS: readonly Question[] = [
 ];
 
 export const PRESSURE_LABEL: Record<PressureId, string> = {
-  start: 'Work stalls before it starts',
-  handoff: 'Momentum drops when work changes tools or hands',
-  next: 'The next action is figured out in the moment',
+  start: 'Jobs stall before the work starts',
+  handoff: 'Momentum drops between tools, desks, or the client',
+  next: 'The next deliverable is figured out in the moment',
   priorities: 'Priorities exist, but only informally',
-  memory: 'Knowledge the work needs lives in people',
-  scattered: 'The record of the work is loosely organized',
-  tools: 'AI tools are not in the work yet',
-  learning: 'What a project learned leaves with the project',
-  followup: 'Inquiries fall through or wait on memory',
+  memory: 'The brief, the approval, or the feedback lives in people',
+  scattered: 'The job record is loosely organized',
+  tools: 'AI tools are not in the making, media, or reporting yet',
+  learning: 'What a campaign taught the team leaves with the campaign',
+  followup: 'Leads, RFPs, or client asks fall through or wait on memory',
   'loose-followup': 'Follow-up has a loose process',
-  ownership: 'Ownership is unclear when something must move',
-  'informal-owner': 'Ownership depends on who is around',
-  ai: 'AI is in use without operating rules',
-  decisions: 'Pressure decisions have no written rule',
-  revenue: 'Revenue still depends on manual follow-up',
+  ownership: 'Ownership is unclear when a deliverable must move',
+  'informal-owner': 'Ownership depends on who is free',
+  ai: 'AI is in the work without operating rules',
+  decisions: 'Pressured client or flight decisions have no written rule',
+  revenue: 'Revenue still depends on someone remembering to follow up',
   'some-manual': 'Some revenue still depends on manual follow-up',
-  repeat: 'The team repeats work that was already done',
-  'sometimes-repeat': 'Repeat work still shows up',
-  'key-person': 'A missing person stops or severely slows the work',
-  pipeline: 'The pipeline cannot be seen',
-  'partial-pipe': 'The pipeline is only partly visible',
-  loop: 'Finished work does not change how work runs',
-  shape: 'Work is described as chaos or reaction',
+  repeat: 'Desks remake or re-find work that already existed',
+  'sometimes-repeat': 'Repeat production still shows up',
+  'key-person': 'One person out stops or sharply slows the client or the craft',
+  pipeline: 'Live jobs, flights, and approvals cannot be seen',
+  'partial-pipe': 'Live work is only partly visible',
+  loop: 'Shipped work does not change how the next job runs',
+  shape: 'The studio is described as chaos or reaction',
 };
 
 export const ARCHETYPE_LABEL: Record<ArchetypeId, string> = {
-  bottleneckOperator: 'Ownership sits with a person',
+  bottleneckOperator: 'A person is still the routing system',
   toolOverload: 'Tools or handoffs are the first place to check',
-  executionStall: 'Starting, the next step, or the learning loop stalls',
-  fragmentedWorkflow: 'The answers point toward scattered coordination',
+  executionStall: 'Starting, the next deliverable, or the learning loop stalls',
+  fragmentedWorkflow: 'The answers point to scattered campaign coordination',
 };
 
 export const PROFILE_COPY: Record<ProfileId, string> = {
-  FRAGMENTED: 'Answers suggest scattered coordination.',
-  STALLED: 'Answers suggest gaps between steps.',
-  SCALING: 'Answers suggest chances to reduce work that repeats.',
-  COMPOUNDING: 'Answers suggest keeping new tools aligned with a setup that is already connected.',
+  FRAGMENTED: 'Answers suggest the campaign is coordinated by people, not by a shared record.',
+  STALLED: 'Answers suggest gaps between brief, making, approval, and live.',
+  SCALING: 'Answers suggest repeated production and reconciliation that can come down.',
+  COMPOUNDING: 'Answers suggest new tools can stay tied to a studio that is already connected.',
 };
 
 export const PROFILE_HOURS: Record<ProfileId, { low: number; high: number }> = {

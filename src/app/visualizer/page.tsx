@@ -3,9 +3,9 @@ import { Suspense } from 'react';
 import { VisualizerExperience } from '../../components/VisualizerExperience';
 
 export const metadata: Metadata = {
-  title: 'Follow the work — Visualizer',
+  title: 'Desk — PROOF',
   description:
-    'Ten department workflows. See repair hours, capacity pressure, and the wait curve before momentum is seized.',
+    'One agency desk. Reconstruction hours, the wait before a launch or flight seizes, and a connection that keeps the review.',
 };
 
 export default function VisualizerPage() {

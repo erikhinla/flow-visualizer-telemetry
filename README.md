@@ -1,10 +1,8 @@
-# FLOW Visualizer
+# PROOF
 
-A standalone instrument for the repair work hiding inside a business workflow.
+A scan for marketing agencies. It shows the reconstruction inside one campaign workflow — approvals, versions, feedback, spend — and a connection that returns hours without cutting the review that protects the work.
 
-It follows one handoff, shows the hours people spend restoring missing context, and places that load on a waiting curve. The point is to see friction while the margin is still open — before required work exceeds the role and momentum is seized.
-
-Digital Fog is the coordination people absorb. Digital Friction is the drag that follows. This app does not turn a questionnaire into a measured loss.
+The waiting curve marks when that load is still forming and when it has seized the desk. If a fix costs more than it returns, the balance says so.
 
 ## Run
 
@@ -16,9 +14,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-- **Map** — the saved 15-question Momentum Map. Scores, pressures, and archetypes follow the September 6 rules. Unanswered questions stay unknown.
-- **Follow** — ten department workflows. Edit the sample, or keep it labeled as simulated. Compare one connection change.
-- **Record** — a readable summary and a JSON download. Assumptions travel with the numbers.
+- **Scan** — fifteen questions about how the agency runs campaign work. Scores and routing follow the saved point values. Unanswered questions stay unknown.
+- **Desk** — account, creative, production, media, and the other desks a job crosses. Edit the sample, or keep it labeled simulated. Compare one connection.
+- **Record** — reconstruction, the balance of the fix, the review that stays, and a JSON download.
 
 ## Models
 

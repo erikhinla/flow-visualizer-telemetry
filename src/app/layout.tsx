@@ -25,9 +25,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Visualizer — see the friction before it seizes the momentum',
+  title: 'PROOF — the hours before they take the launch',
   description:
-    'Follow one business handoff, see the repair people are absorbing, and tell whether the margin is still open.',
+    'An agency scan for the reconstruction inside campaign work, and a fix that returns hours without cutting the review that protects the result.',
 };
 
 export const viewport: Viewport = {

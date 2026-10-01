@@ -59,6 +59,17 @@ Each entry includes:
 
 ---
 
+### Decision #004 - PROOF for marketing agencies
+
+**Date**: 2026-10-01  
+**Category**: Product  
+**Decision**: The product name is PROOF. The scan, desks, and record speak to a marketing agency: campaign momentum, reconstruction hours, and a fix judged by hours returned, hours the fix costs, the review that stays, and the client result that must hold. Question point values and pressure ids stay as saved on 6 September 2026. Wording asks about briefs, desks, flights, and client delivery.  
+**Rationale**: A general business instrument did not tell an agency where hours leave the craft, whether the next launch can still make it, or whether a solution would trade away approval, direction, rights, or a human read of spend.  
+**Impact**: Navigation reads Scan, Desk, and Record. Each desk carries a balance: where hours go, what review stays, and what result to protect. A negative net is shown as a reason not to add the connection.  
+**Status**: Active
+
+---
+
 ## Future Decisions
 
 _To be filled as the project evolves_

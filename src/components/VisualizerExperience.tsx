@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { Balance } from './Balance';
 import { DepartmentMark } from './DepartmentMark';
 import { FlowTrack } from './FlowTrack';
 import { Readout } from './Readout';
@@ -59,8 +60,8 @@ export function VisualizerExperience() {
         </p>
         <h1>{department.gap}</h1>
         <p className="lede">
-          {department.repairRole} does this repair: {department.repair} The connection to test is{' '}
-          {department.connection}
+          {department.repairRole} absorbs it: {department.repair} The connection to test is{' '}
+          {department.connection} Necessary review is not reconstruction.
         </p>
         {department.campaignLine ? <p className="campaign">{department.campaignLine}</p> : null}
       </header>
@@ -141,7 +142,7 @@ export function VisualizerExperience() {
         <div className="fields">
           <NumberField
             id="items"
-            label="Work items"
+            label="Items in the period"
             suffix="items"
             value={session.inputs.itemCount}
             onChange={(itemCount) => editInputs({ itemCount })}
@@ -154,14 +155,14 @@ export function VisualizerExperience() {
           />
           <NumberField
             id="minutes"
-            label="Repair per affected item"
+            label="Minutes to reconstruct one"
             suffix="min"
             value={session.inputs.repairMinutes}
             onChange={(repairMinutes) => editInputs({ repairMinutes })}
           />
           <NumberField
             id="necessary"
-            label="Necessary handling"
+            label="Craft and required review"
             suffix="h"
             value={session.inputs.necessaryHours}
             onChange={(necessaryHours) => editInputs({ necessaryHours })}
@@ -175,7 +176,7 @@ export function VisualizerExperience() {
           />
           <NumberField
             id="available"
-            label="Available role-hours"
+            label="Desk hours available"
             suffix="h"
             value={session.inputs.availableHours}
             onChange={(availableHours) => editInputs({ availableHours })}
@@ -201,14 +202,14 @@ export function VisualizerExperience() {
               />
               <NumberField
                 id="next-minutes"
-                label="Repair minutes after the change"
+                label="Minutes to reconstruct after"
                 suffix="min"
                 value={session.inputs.nextRepairMinutes}
                 onChange={(nextRepairMinutes) => editInputs({ nextRepairMinutes })}
               />
               <NumberField
                 id="ongoing"
-                label="Ongoing hours to keep it"
+                label="Hours to keep the connection"
                 suffix="h"
                 value={session.inputs.ongoingHours}
                 onChange={(ongoingHours) => editInputs({ ongoingHours })}
@@ -221,13 +222,22 @@ export function VisualizerExperience() {
           className="button ghost"
           onClick={() => selectDepartment(department.id)}
         >
-          Reset this department’s sample
+          Reset this desk’s sample
         </button>
       </section>
 
+      <Balance
+        departmentId={department.id}
+        change={department.action.change}
+        comesBack={showChange ? comparison.repairDeltaHours : null}
+        ongoing={showChange ? session.inputs.ongoingHours : null}
+        net={showChange ? comparison.netReleasedHours : null}
+        pressureWithOngoing={showChange ? comparison.pressureWithOngoing : null}
+      />
+
       <section className="action-card">
-        <p className="kicker">One change</p>
-        <h2>{department.action.change}</h2>
+        <p className="kicker">Who carries it</p>
+        <h2>Same workflow. Same period. Review stays.</h2>
         <dl>
           <div>
             <dt>Owner role</dt>
@@ -307,7 +317,7 @@ export function VisualizerExperience() {
           </>
         ) : (
           <p>
-            Finish the Map to calculate this index. Unanswered questions are not treated as zero.
+            Finish the scan to calculate this index. Unanswered questions are not treated as zero.
           </p>
         )}
       </details>

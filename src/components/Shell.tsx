@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 const LINKS = [
-  { href: '/map', label: 'Map' },
-  { href: '/visualizer', label: 'Follow' },
+  { href: '/map', label: 'Scan' },
+  { href: '/visualizer', label: 'Desk' },
   { href: '/record', label: 'Record' },
 ];
 
@@ -19,8 +19,8 @@ export function Shell({ children }: { children: ReactNode }) {
       </a>
       <header className="shell">
         <Link className="wordmark" href="/">
-          <span>FLOW</span>
-          Visualizer
+          <span>PROOF</span>
+          Agency scan
         </Link>
         <nav aria-label="Primary">
           {LINKS.map((link) => {
@@ -35,8 +35,8 @@ export function Shell({ children }: { children: ReactNode }) {
       </header>
       <main id="content">{children}</main>
       <footer className="colophon">
-        <p>When AI outpaces infrastructure, you get Digital Fog.</p>
-        <p>Scenario math is labeled. It does not, by itself, measure a company.</p>
+        <p>Reconstruction is not the craft. The client decision and the required review stay.</p>
+        <p>The numbers are a scenario until the evidence is marked observed.</p>
       </footer>
     </>
   );

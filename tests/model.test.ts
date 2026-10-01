@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { getDepartment } from '../src/lib/departments';
+import { AGENCY_BALANCE } from '../src/lib/agency';
+import { DEPARTMENTS, getDepartment } from '../src/lib/departments';
 import { formatHours, formatPressure } from '../src/lib/format';
 import { manifestation } from '../src/lib/manifestation';
 import { compareScenario, evaluateScenario, repairHours } from '../src/lib/operational';
@@ -197,6 +198,18 @@ describe('operational accounting', () => {
       ongoingHours: 20,
     });
     assert.ok((comparison.netReleasedHours ?? 0) < 0);
+  });
+});
+
+describe('agency balance', () => {
+  it('pairs every desk with hours returned, review that stays, and a result to protect', () => {
+    assert.equal(DEPARTMENTS.length, 10);
+    for (const department of DEPARTMENTS) {
+      const balance = AGENCY_BALANCE[department.id];
+      assert.ok(balance.returnsTo.length > 0);
+      assert.ok(balance.keeps.length > 0);
+      assert.ok(balance.protects.length > 0);
+    }
   });
 });
 

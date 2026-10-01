@@ -1,53 +1,56 @@
 import Link from 'next/link';
+import { Balance } from '../components/Balance';
 import { FlowTrack } from '../components/FlowTrack';
 import { SeizureCurve } from '../components/SeizureCurve';
 import { getDepartment } from '../lib/departments';
 import { formatHours, formatPressure, formatWait } from '../lib/format';
-import { evaluateScenario } from '../lib/operational';
+import { compareScenario } from '../lib/operational';
 
 export default function HomePage() {
   const department = getDepartment('PR');
-  const result = evaluateScenario(department.sample);
+  const comparison = compareScenario(department.sample);
+  const result = comparison.baseline;
   const handling = result.meanServiceHours === null ? null : result.meanServiceHours * 60;
 
   return (
     <div className="home">
       <section className="hero">
-        <p className="kicker">The work between the work</p>
-        <h1>See the friction before it seizes the momentum.</h1>
+        <p className="kicker">PROOF · for marketing agencies</p>
+        <h1>See the hours before they take the launch.</h1>
         <p className="lede">
-          AI can raise the quantity, speed, and branching of work. When versions, decisions, and
-          ownership do not travel with it, people supply the missing connection by hand. Delivery
-          can still look fine. Then the margin closes.
+          A campaign can still ship while account, creative, and media spend the week reconstructing
+          approvals, versions, and spend. PROOF puts that load on one desk, then shows a connection
+          that gives time back without cutting the review that protects the work.
         </p>
         <div className="actions">
           <Link className="button" href="/map">
-            Map how work runs
+            Scan the agency
           </Link>
           <Link className="button ghost" href="/visualizer">
-            Follow one workflow
+            Open a desk
           </Link>
         </div>
       </section>
 
       <section className="hero-instrument" aria-label="Sample public relations scenario">
         <div className="instrument-head">
-          <p className="kicker">Sample · not a measured company</p>
-          <h2>Public Relations still has margin. The wait is already bending.</h2>
+          <p className="kicker">Sample · not a measured agency</p>
+          <h2>Statements are still going out. The window is already bending.</h2>
         </div>
         <FlowTrack stages={department.stages} band={result.band} accent={department.accent} />
         <div className="see-grid">
           <div className="readout">
             <p className="band-word band-forming">
               <span>Forming</span>
-              Thirty responses a week. A quarter wait on facts or an approver. The role can still
-              finish them. The model says handling is about{' '}
-              {handling === null ? 'unknown' : Math.round(handling)} minutes, and waiting before
-              handling is about {formatWait(result.waitHours)}.
+              Thirty responses a week. A quarter wait on current facts or a named approver. The desk
+              can still send them. Handling is about{' '}
+              {handling === null ? 'unknown' : Math.round(handling)} minutes. Waiting before
+              handling is about {formatWait(result.waitHours)}. The flight has not seized. It is
+              close enough to see.
             </p>
             <dl className="ledger">
               <div>
-                <dt>Repair</dt>
+                <dt>Reconstruction</dt>
                 <dd>{formatHours(result.repairHours)} h</dd>
               </div>
               <div>
@@ -55,7 +58,7 @@ export default function HomePage() {
                 <dd>{formatHours(result.requiredHours)} h</dd>
               </div>
               <div>
-                <dt>Available</dt>
+                <dt>Desk hours</dt>
                 <dd>{formatHours(department.sample.availableHours)} h</dd>
               </div>
               <div>
@@ -70,57 +73,65 @@ export default function HomePage() {
           </div>
           <SeizureCurve
             rho={result.pressure}
-            compareRho={null}
+            compareRho={comparison.changed.pressure}
             variability={department.sample.variability ?? 1}
             accent={department.accent}
           />
         </div>
+        <Balance
+          departmentId="PR"
+          change={department.action.change}
+          comesBack={comparison.repairDeltaHours}
+          ongoing={department.sample.ongoingHours}
+          net={comparison.netReleasedHours}
+          pressureWithOngoing={comparison.pressureWithOngoing}
+        />
       </section>
 
       <section className="sequence">
-        <h2>Follow the work. Then change one connection.</h2>
+        <h2>What an agency can take from the scan.</h2>
         <ol>
           <li>
             <span>01</span>
-            <strong>Follow</strong>
-            One deliverable, the next handoff, the context it needs, and what accepted means.
+            <strong>Where the hours leave the craft</strong>
+            Reconstruction, chasing, and reconciliation. Not the making, and not the review the work
+            needs.
           </li>
           <li>
             <span>02</span>
-            <strong>Expose</strong>
-            The finding, reconciling, re-entering, or chasing that a person does so the work can
-            move.
+            <strong>Whether the next flight can still make it</strong>
+            Pressure and the wait curve. Forming is a warning. Seized means the desk is already
+            behind the work.
           </li>
           <li>
             <span>03</span>
-            <strong>Change</strong>
-            One missing connection. Not a new stack. Not a blame for the department doing the
-            repair.
+            <strong>One connection, not a new stack</strong>
+            The brief, the approval, the master, the approver, or the shared definition of spend.
           </li>
           <li>
             <span>04</span>
-            <strong>Measure</strong>
-            The same workflow, the same period, before and after. Repair hours, wait, and what got
-            accepted.
+            <strong>The balance</strong>
+            Hours that come back, hours the fix costs to keep, the review that stays, and the result
+            that must not get worse.
           </li>
         </ol>
       </section>
 
       <section className="pair">
         <div>
-          <h2>Digital Fog</h2>
+          <h2>The data</h2>
           <p>
-            The coordination people absorb when output changes faster than ownership, versions,
-            decisions, and acceptance criteria. It is invisible because the work still gets
-            delivered.
+            Item count, the share missing the connection, minutes to reconstruct one, craft and
+            required review, and the hours that desk actually has. Blank stays unknown. A sample
+            stays simulated until you say otherwise.
           </p>
         </div>
         <div>
-          <h2>Digital Friction</h2>
+          <h2>The result to hold</h2>
           <p>
-            What the fog becomes: rework, dropped context, delayed decisions, and stalled delivery.
-            The instrument watches the margin so you can see that turn while the queue is still
-            finite.
+            Faster is not the goal by itself. Client approval, creative direction, rights, and a
+            human read of spend stay in the fix. If the connection costs more hours than it returns,
+            PROOF says so.
           </p>
         </div>
       </section>

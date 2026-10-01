@@ -38,7 +38,7 @@ export function Readout({
       ) : null}
       <dl className="ledger">
         <Line
-          label="Repair"
+          label="Reconstruction"
           baseline={baseline.repairHours}
           changed={changed ? changed.repairHours : undefined}
         />
@@ -82,7 +82,7 @@ export function Readout({
       </dl>
       {repairDelta !== null ? (
         <p className="delta">
-          The connection changes repair by{' '}
+          The connection changes reconstruction by{' '}
           {formatSignedHours(repairDelta === null ? null : -repairDelta)} h before upkeep.
           {netReleased === null
             ? ' Ongoing hours are unknown, so net release is unknown.'

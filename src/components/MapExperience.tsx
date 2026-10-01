@@ -80,7 +80,7 @@ export function MapExperience() {
     const department = getDepartment(suggestDepartment(score.pressures));
     return (
       <article className="map-result">
-        <p className="kicker">Answers, not a measurement</p>
+        <p className="kicker">Agency scan · answers, not a measurement</p>
         <h1>{score.profile}</h1>
         <p className="lede">{PROFILE_COPY[score.profile]}</p>
         <dl className="score-block">
@@ -145,13 +145,13 @@ export function MapExperience() {
           />
           <p>
             {formatHours(hours.low, 0)}–{formatHours(hours.high, 0)} hours per week in this preset.
-            The profile range is {range.low}–{range.high} hours per person. The Map did not measure
-            that time.
+            The profile range is {range.low}–{range.high} hours per person. PROOF did not measure
+            that time on your jobs.
           </p>
         </div>
         <div className="actions">
           <Link className="button" href="/visualizer?from=map">
-            Follow a workflow in {department.name}
+            Open the {department.name} desk
           </Link>
           <button
             type="button"
@@ -181,7 +181,7 @@ export function MapExperience() {
 
   return (
     <article className="map-ask">
-      <p className="kicker">Momentum Map · {String(question.number).padStart(2, '0')} / 15</p>
+      <p className="kicker">Agency scan · {String(question.number).padStart(2, '0')} / 15</p>
       <div className="ticks" aria-hidden="true">
         {QUESTIONS.map((item, index) => (
           <span

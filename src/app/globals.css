@@ -231,6 +231,8 @@ figcaption,
 .scenario,
 .action-card,
 .inspector,
+.see > .balance,
+.record > .balance,
 .map-result,
 .record section {
   background: linear-gradient(180deg, rgba(255, 250, 242, 0.025), transparent 28%), var(--carbon-2);
@@ -605,6 +607,58 @@ figcaption,
 
 .change-block {
   margin-top: 0.5rem;
+}
+
+.balance-grid,
+.balance-note {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.balance-grid article,
+.balance-note div {
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+}
+
+.balance-grid span,
+.balance-note h3 {
+  display: block;
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.balance-grid strong {
+  display: block;
+  margin: 0.35rem 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 2rem;
+  font-weight: 520;
+}
+
+.balance-grid p,
+.balance-note p,
+.verdict {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+.balance-grid .is-negative strong,
+.verdict.is-negative {
+  color: var(--ember);
+}
+
+@media (min-width: 800px) {
+  .balance-grid,
+  .balance-note {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .campaign {
