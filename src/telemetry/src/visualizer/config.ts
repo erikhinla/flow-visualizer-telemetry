@@ -1,6 +1,6 @@
 /**
  * Visualizer Configuration & Design Tuning Dials
- * 
+ *
  * Based on taste-skill design principles:
  * - DESIGN_VARIANCE: Layout experimentation (1-10)
  * - MOTION_INTENSITY: Animation depth (1-10)

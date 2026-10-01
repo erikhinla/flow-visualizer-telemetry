@@ -1,10 +1,13 @@
 # Decision Log
 
 ## Overview
+
 This document serves as the immutable record of all approved deviations, mathematical formulas, infrastructure constraints, and significant architectural decisions for the FLOW Blueprint Visualizer & Telemetry Tool.
 
 ## Decision Format
+
 Each entry includes:
+
 - **Date**: Decision date
 - **Category**: Type of decision (Architecture, Security, Infrastructure, Scoring, etc.)
 - **Decision**: The approved change or deviation
@@ -17,6 +20,7 @@ Each entry includes:
 ## Decisions
 
 ### Decision #001 - Repository Structure
+
 **Date**: 2026-09-09  
 **Category**: Architecture  
 **Decision**: TypeScript monorepo with Express backend and Next.js frontend separation  
@@ -25,6 +29,7 @@ Each entry includes:
 **Status**: Active
 
 ### Decision #002 - Telemetry Collection Strategy
+
 **Date**: 2026-09-09  
 **Category**: Diagnostic  
 **Decision**: Client-side telemetry collection with server-side aggregation  
@@ -35,6 +40,7 @@ Each entry includes:
 ---
 
 ## Security & Compliance Notes
+
 - All infrastructure decisions must be documented before implementation
 - Credential management: NO secrets in version control (enforced by Dependabot secret scanning)
 - All mathematical formulas used in scoring must be recorded with derivation
@@ -42,6 +48,17 @@ Each entry includes:
 
 ---
 
-## Future Decisions
-*To be filled as the project evolves*
+### Decision #003 - Standalone Visualizer
 
+**Date**: 2026-10-01  
+**Category**: Architecture  
+**Decision**: Deliver the Visualizer as a standalone Next.js application. Operational repair-hour accounting is the working measurement. The revision-3 manifestation index stays in the calculation inspector, labeled as an uncalibrated scenario. No GCP project, Secret Manager, or Cloud Run deployment is provisioned.  
+**Rationale**: The owner asked for a finished standalone app. Prod project id, safeguard confirmation, and Vercel settings in the setup record were never supplied. The master document's acceptance path is an inspectable workflow model, not a cloud deployment.  
+**Impact**: Session state lives in the browser. Telemetry accepts batches at `/api/telemetry` and holds them in process memory only. External campaign routes remain references inside the record, not live destinations.  
+**Status**: Active
+
+---
+
+## Future Decisions
+
+_To be filled as the project evolves_

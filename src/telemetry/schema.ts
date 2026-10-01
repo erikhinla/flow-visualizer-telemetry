@@ -1,6 +1,6 @@
 /**
  * Telemetry Schema for FLOW Blueprint Visualizer
- * 
+ *
  * Diagnostic rules and instrumentation points derived from VISUALIZER_MASTER.md
  * Reference: https://github.com/erikhinla/flow-visualizer-telemetry/blob/main/SETUP_RECORD.md
  */
@@ -46,19 +46,29 @@ export class TelemetryCollector {
   }
 
   private shouldFlush(): boolean {
-    // Placeholder: implement intelligent flush logic
     return this.queue.length > 100;
   }
 
-  private flush(): void {
-    // Placeholder: send to telemetry backend (Cloud Logging, Firestore, etc.)
-    if (this.config.diagnosticMode === 'development') {
-      console.log('[TELEMETRY]', this.queue);
-    }
+  /** Removes queued events. Callers decide where the batch goes. */
+  drain(): DiagnosticEvent[] {
+    const batch = this.queue;
     this.queue = [];
+    return batch;
+  }
+
+  private flush(): void {
+    const batch = this.drain();
+    if (batch.length === 0) return;
+    if (this.config.diagnosticMode === 'development') {
+      console.log('[TELEMETRY]', batch);
+    }
   }
 
   private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const nonce =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2, 11);
+    return `${Date.now()}-${nonce}`;
   }
 }
