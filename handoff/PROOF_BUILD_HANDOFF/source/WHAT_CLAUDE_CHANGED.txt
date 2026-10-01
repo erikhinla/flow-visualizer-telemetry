@@ -1,0 +1,868 @@
+===== DIFF OF EVERY FILE I CHANGED =====
+diff --git a/DECISION_LOG.md b/DECISION_LOG.md
+index c5560c9..3cea8c1 100644
+--- a/DECISION_LOG.md
++++ b/DECISION_LOG.md
+@@ -40,6 +40,14 @@ Each entry includes:
+ **Impact**: Survey answers remain in browser memory. Revision 3 output stays labeled as an illustrative scenario. No production route or deployment is part of P0.
+ **Status**: Active
+ 
++### Decision #004 - Plain-language readout layer
++**Date**: 2026-09-12
++**Category**: Presentation
++**Decision**: Add `src/lib/readout.ts`, a presentation-only layer that renders every completed diagnostic as six fixed sections in order: what you're feeling, what's causing it, where it's showing up, what it's costing, what matters first, what happens next. The report screen leads with these sections; the answer score and the fog pressure index move to the evidence boundary at the foot of the page.
++**Rationale**: A person finishing the diagnostic should leave understanding their situation, not holding a number. Leading with "FRAGMENTED" and a 0-30 dial made the score the finding.
++**Impact**: No formula, question, option identity, answer value, pressure ID, or archetype precedence changed. Each section carries the evidence class of its source (SURVEY-DERIVED, ASSUMED, ILLUSTRATIVE, PROPOSED) so a survey-derived statement is never presented as a measured business result. The cause section explains the pressure that actually resolved the archetype rather than the first pressure in question order, and states no cause at all when no pressure was triggered.
++**Status**: Active
++
+ ---
+ 
+ ## Security & Compliance Notes
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 66c11d0..2e9c6f0 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -281,9 +281,16 @@ dd { margin: 0; color: #c6c7c9; font-size: 11px; text-align: right; }
+ .instrument-dial span, .instrument-dial small { color: var(--dim); }
+ .instrument-dial small { margin-top: 4px; font-size: 8px; letter-spacing: .12em; }
+ .pressure-list { padding: 22px 0 0; }
++.pressure-list > p:last-child { margin: 12px 0 0; color: var(--dim); font-size: 12px; }
+ .pressure-list > div { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+ .pressure-list span { padding: 7px 9px; border-left: 2px solid var(--red); background: #13161a; color: #b7b9bc; font-size: 11px; }
+ 
++.payoff-row { display: grid; grid-template-columns: 1.15fr .85fr; gap: 34px; padding: 25px 0; border-bottom: 1px solid var(--line); }
++.payoff-row > div { padding-left: 16px; border-left: 2px solid var(--green); }
++.payoff-row > div:last-child { border-left-color: var(--red); }
++.payoff-row h2 { margin: 8px 0 0; color: var(--ink); font-family: var(--font-display), sans-serif; font-size: 24px; font-weight: 500; line-height: 1.18; }
++.payoff-row p:last-child { margin: 8px 0 0; color: #aeb0b4; font-size: 13px; line-height: 1.5; }
++
+ .evidence-panel { padding: 26px 22px; border-left: 1px solid var(--line); }
+ .evidence-panel__head { display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--line); }
+ .evidence-panel__head > span { color: var(--red); font-family: var(--font-display), sans-serif; font-size: 11px; }
+@@ -309,6 +316,21 @@ dd { margin: 0; color: #c6c7c9; font-size: 11px; text-align: right; }
+ .pathway-strip strong { font-family: var(--font-display), sans-serif; font-size: 13px; text-transform: uppercase; }
+ .pathway-strip small { margin-top: 4px; color: var(--dim); font-size: 10px; line-height: 1.35; }
+ 
++.blueprint__subhead { margin-top: 14px; max-width: 640px; font-size: 15px; color: var(--muted); }
++
++.readout { margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--line); }
++.readout__item { display: grid; grid-template-columns: minmax(200px, 260px) 1fr; gap: clamp(20px, 4vw, 58px); padding: 34px 0; border-top: 1px solid var(--line); }
++.readout__item:first-child { border-top: 0; }
++.readout__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
++.readout__number { font-family: var(--font-display), sans-serif; font-size: 46px; font-weight: 700; line-height: 1; color: #292c32; }
++.readout__body { max-width: 760px; padding-left: 18px; border-left: 2px solid var(--line); }
++.readout__body h2 { margin: 0 0 10px; font-family: var(--font-display), sans-serif; font-size: clamp(22px, 2.4vw, 31px); font-weight: 600; letter-spacing: .01em; text-transform: none; line-height: 1.2; }
++.readout__body p { margin: 0; font-size: 15px; line-height: 1.6; color: #9d9fa3; }
++.readout__item--feeling .readout__body { border-left-color: var(--red); }
++.readout__item--costing .readout__body { border-left-color: var(--red-dark); }
++.readout__item--mattersFirst .readout__body { border-left-color: var(--green); }
++.readout__item--happensNext .readout__body { border-left-color: var(--copper); }
++
+ .blueprint-shell { background: linear-gradient(150deg, #0a0b0d, #11141a); }
+ .blueprint { padding: clamp(40px, 6vw, 82px) clamp(22px, 6vw, 90px); }
+ .blueprint__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+@@ -324,7 +346,7 @@ dd { margin: 0; color: #c6c7c9; font-size: 11px; text-align: right; }
+ .blueprint__next { margin-top: 34px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 45px; }
+ .blueprint__next > div { padding-left: 18px; border-left: 2px solid var(--red); }
+ .blueprint__next h2 { margin: 7px 0 0; font-size: 25px; text-transform: none; }
+-.blueprint__boundary { margin-top: 38px; padding: 18px; display: grid; grid-template-columns: auto 1fr auto 1fr; align-items: center; gap: 12px; border: 1px solid var(--line); background: #0c0e11; }
++.blueprint__boundary { margin-top: 38px; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; border: 1px solid var(--line); background: #0c0e11; }
+ .blueprint__boundary p { font-size: 11px; }
+ 
+ @media (max-width: 1100px) {
+@@ -369,8 +391,11 @@ dd { margin: 0; color: #c6c7c9; font-size: 11px; text-align: right; }
+   .blueprint__grid { display: block; }
+   .blueprint__grid article, .blueprint__grid article:not(:first-child) { min-height: 250px; padding: 28px 0 34px; border-right: 0; border-bottom: 1px solid var(--line); }
+   .blueprint__grid h2 { margin-top: 50px; }
+-  .blueprint__next { grid-template-columns: 1fr; }
+-  .blueprint__boundary { grid-template-columns: auto 1fr; }
++  .blueprint__next, .payoff-row { grid-template-columns: 1fr; }
++  .blueprint__boundary { grid-template-columns: 1fr; }
++  .readout__item { grid-template-columns: 1fr; gap: 16px; }
++  .readout__meta { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 12px; }
++  .readout__number { font-size: 34px; }
+ }
+ 
+ @media (prefers-reduced-motion: reduce) {
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index 4f9b45d..76d2c4e 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -23,8 +23,8 @@ const displayFont = localFont({
+ });
+ 
+ export const metadata: Metadata = {
+-  title: "FLOW Blueprint",
+-  description: "A diagnostic workspace for finding the human repair work hidden between tools.",
++  title: "FLOW Fog & Friction Diagnostic",
++  description: "Find where people are filling gaps in the way work moves, and where those gaps are starting to stop the business.",
+ };
+ 
+ export const viewport: Viewport = {
+diff --git a/src/components/FlowVisualizer.tsx b/src/components/FlowVisualizer.tsx
+index 06aa5a3..86dbebd 100644
+--- a/src/components/FlowVisualizer.tsx
++++ b/src/components/FlowVisualizer.tsx
+@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
+ import { buildFlowBlueprint, type FlowBlueprint } from "@/lib/blueprint";
+ import { DEPARTMENTS, DEPARTMENT_KEYS, type DepartmentKey } from "@/lib/departments";
+ import { PATHWAY } from "@/lib/pathway";
++import type { EvidenceClass } from "@/lib/readout";
+ import { evaluateScenarioRevision3 } from "@/lib/scenario";
+ import {
+   QUESTIONS,
+@@ -17,10 +18,24 @@ import {
+ type Stage = "intro" | "survey" | "report" | "blueprint";
+ 
+ const ARCHETYPE_COPY: Record<SurveyReport["archetype"], string> = {
+-  bottleneckOperator: "Bottleneck operator",
+-  toolOverload: "Tool overload",
+-  executionStall: "Execution stall",
+-  fragmentedWorkflow: "Fragmented workflow",
++  bottleneckOperator: "Work depends on one person",
++  toolOverload: "Tools create more coordination",
++  executionStall: "Work starts but does not finish",
++  fragmentedWorkflow: "People rebuild missing context",
++};
++
++const EVIDENCE_TONE: Record<EvidenceClass, "neutral" | "red" | "green"> = {
++  "SURVEY-DERIVED": "neutral",
++  ASSUMED: "neutral",
++  ILLUSTRATIVE: "red",
++  PROPOSED: "green",
++};
++
++const EVIDENCE_LABEL: Record<EvidenceClass, string> = {
++  "SURVEY-DERIVED": "FROM YOUR ANSWERS",
++  ASSUMED: "CONFIRM THIS",
++  ILLUSTRATIVE: "SCENARIO, NOT MEASURED",
++  PROPOSED: "CHANGE TO TEST",
+ };
+ 
+ function EvidenceTag({ children, tone = "neutral" }: { children: React.ReactNode; tone?: "neutral" | "red" | "green" }) {
+@@ -29,9 +44,9 @@ function EvidenceTag({ children, tone = "neutral" }: { children: React.ReactNode
+ 
+ function BrandMark() {
+   return (
+-    <div className="brand" aria-label="FLOW Blueprint">
++    <div className="brand" aria-label="FLOW Fog and Friction Diagnostic">
+       <span className="brand__mark" aria-hidden="true"><i /><i /><i /></span>
+-      <span>FLOW <b>BLUEPRINT</b></span>
++      <span>FLOW <b>FOG &amp; FRICTION</b></span>
+     </div>
+   );
+ }
+@@ -58,15 +73,15 @@ function Intro({ onStart }: { onStart: () => void }) {
+     <main className="intro">
+       <header className="topbar">
+         <BrandMark />
+-        <span className="topbar__note">Diagnostic workspace · P0</span>
++        <span className="topbar__note">15-question business diagnostic</span>
+       </header>
+ 
+       <section className="intro__grid">
+         <div className="intro__copy">
+-          <p className="eyebrow"><span /> TRACE THE HANDOFF</p>
+-          <h1>Make the work-between-the-work visible.</h1>
++          <p className="eyebrow"><span /> FIND WHERE THE FOG IS FORMING</p>
++          <h1>Who's carrying the gaps in your business?</h1>
+           <p className="intro__lede">
+-            Find where context, ownership, or proof disappears between tools. Then choose one connection to test.
++            AI creates more work, faster. The business can't always keep up, so people fill the gaps. That's Digital Fog. When they can't keep up either, work stalls. That's Digital Friction.
+           </p>
+           <ol className="intro__steps" aria-label="FLOW diagnostic pathway">
+             {PATHWAY.map((step, index) => (
+@@ -76,16 +91,16 @@ function Intro({ onStart }: { onStart: () => void }) {
+               </li>
+             ))}
+           </ol>
+-          <button className="primary-action" onClick={onStart}>Start with one handoff <span aria-hidden="true">→</span></button>
++          <button className="primary-action" onClick={onStart}>Find my fog <span aria-hidden="true">→</span></button>
+           <p className="privacy-note">15 questions. Answers stay in this browser session.</p>
+         </div>
+ 
+         <div className="intro__machine">
+-          <p className="machine-label">Diagnostic engine / waiting</p>
++          <p className="machine-label">Fog detector / waiting</p>
+           <MachineCore />
+           <div className="machine-caption">
+-            <span>INPUT</span><strong>Reported experience</strong>
+-            <span>OUTPUT</span><strong>A connection to test</strong>
++            <span>WHAT YOU SHARE</span><strong>How work gets done now</strong>
++            <span>WHAT YOU GET</span><strong>Where pressure is building</strong>
+           </div>
+         </div>
+       </section>
+@@ -116,7 +131,7 @@ function Survey({
+       <section className="survey">
+         <div className="survey__index" aria-hidden="true">{String(questionIndex + 1).padStart(2, "0")}</div>
+         <div className="survey__content">
+-          <p className="eyebrow"><span /> REPORTED EXPERIENCE</p>
++          <p className="eyebrow"><span /> HOW WORK REALLY MOVES</p>
+           <h1>{question.text}</h1>
+           <div className="answer-grid" role="radiogroup" aria-label={question.text}>
+             {question.options.map((answer, index) => (
+@@ -185,13 +200,13 @@ function Report({
+         <BrandMark />
+         <div className="workspace__actions">
+           <button className="text-action" onClick={onRestart}>Restart</button>
+-          <button className="primary-action primary-action--small" onClick={onGenerate}>Generate Blueprint <span aria-hidden="true">→</span></button>
++          <button className="primary-action primary-action--small" onClick={onGenerate}>See my full fog report <span aria-hidden="true">→</span></button>
+         </div>
+       </header>
+ 
+       <section className="workspace__grid">
+         <aside className="department-rail" aria-label="Department views">
+-          <p className="panel-kicker">DEPARTMENT</p>
++          <p className="panel-kicker">WHERE IT HURTS</p>
+           {DEPARTMENT_KEYS.map((key) => {
+             const item = DEPARTMENTS[key];
+             return (
+@@ -204,82 +219,89 @@ function Report({
+ 
+         <section className="diagnostic-panel">
+           <div className="diagnostic-panel__head">
+-            <div><p className="panel-kicker">{department.code} / ACTIVE VIEW</p><h1>{department.moniker}</h1></div>
+-            <div className="signal"><i /> Diagnostic signal</div>
++            <div><p className="panel-kicker">{department.code} / WHERE THIS SHOWS UP</p><h1>{department.name}</h1></div>
++            <div className="signal"><i /> Warning found in your answers</div>
++          </div>
++
++          <div className="instrument-row">
++            <div className="instrument-copy">
++              <p className="panel-kicker">WHAT YOUR ANSWERS REVEAL ACROSS THE BUSINESS</p>
++              <h2>{report.profile}</h2>
++              <p>{report.description}</p>
++              <dl>
++                <div><dt>What is happening</dt><dd>{report.pressures.length === 0 ? "No strong pressure pattern" : ARCHETYPE_COPY[report.archetype]}</dd></div>
++                <div><dt>Illustrative repair burden</dt><dd>{hours[0]} to {hours[1]} hours per person each week</dd></div>
++              </dl>
++            </div>
++            <div className="instrument-dial" style={{ "--dial-value": `${report.scoreIndex * 2.7}deg` } as React.CSSProperties}>
++              <div><strong>{report.rawScore}</strong><span>/ 30</span></div>
++              <small>ANSWER SCORE</small>
++            </div>
+           </div>
+ 
+           <div className="handoff-chain">
+             <article>
+-              <EvidenceTag>ASSUMED</EvidenceTag>
+-              <h2>Reported gap</h2>
++              <EvidenceTag>CONFIRM THIS</EvidenceTag>
++              <h2>Where fog is forming</h2>
+               <p>{department.gap}</p>
+             </article>
+             <span className="chain-arrow" aria-hidden="true">→</span>
+             <article>
+-              <EvidenceTag tone="red">ASSUMED</EvidenceTag>
+-              <h2>Human repair</h2>
++              <EvidenceTag tone="red">CHECK THIS</EvidenceTag>
++              <h2>What people are carrying</h2>
+               <p>{department.repair}</p>
+             </article>
+             <span className="chain-arrow" aria-hidden="true">→</span>
+             <article>
+-              <EvidenceTag tone="green">PROPOSED</EvidenceTag>
+-              <h2>Change the link</h2>
+-              <p>{department.connection}</p>
++              <EvidenceTag tone="red">HUMAN COST</EvidenceTag>
++              <h2>What the fog is taking</h2>
++              <p>{department.fogTakes}</p>
+             </article>
+           </div>
+ 
+-          <div className="instrument-row">
+-            <div className="instrument-copy">
+-              <p className="panel-kicker">QUESTIONNAIRE RESULT</p>
+-              <h2>{report.profile}</h2>
+-              <p>{report.description}</p>
+-              <dl>
+-                <div><dt>Pattern</dt><dd>{ARCHETYPE_COPY[report.archetype]}</dd></div>
+-                <div><dt>Suggested review</dt><dd>{hours[0]} to {hours[1]} hours</dd></div>
+-              </dl>
+-            </div>
+-            <div className="instrument-dial" style={{ "--dial-value": `${report.scoreIndex * 2.7}deg` } as React.CSSProperties}>
+-              <div><strong>{report.rawScore}</strong><span>/ 30</span></div>
+-              <small>ANSWER SCORE</small>
+-            </div>
++          <div className="payoff-row">
++            <div><p className="panel-kicker">WHAT RETURNS WHEN THE GAP CLOSES</p><h2>{department.payoff}</h2></div>
++            <div><p className="panel-kicker">WHAT TO FIX FIRST</p><p>{department.connection}</p></div>
+           </div>
+ 
+           <div className="pressure-list">
+-            <p className="panel-kicker">PLACES TO CHECK</p>
+-            <div>{report.pressures.map((pressure) => <span key={pressure.id}>{pressure.title}</span>)}</div>
++            <p className="panel-kicker">OTHER WARNING SIGNS IN YOUR ANSWERS</p>
++            {report.pressures.length > 0
++              ? <div>{report.pressures.map((pressure) => <span key={pressure.id}>{pressure.title}</span>)}</div>
++              : <p>No additional warning signs were triggered by these answers.</p>}
+           </div>
+         </section>
+ 
+         <aside className="evidence-panel">
+-          <div className="evidence-panel__head"><p className="panel-kicker">EVIDENCE INSPECTOR</p><span>REV 3</span></div>
++          <div className="evidence-panel__head"><p className="panel-kicker">HOW WE FOUND THE FOG</p><span>MODEL 3</span></div>
+           <section>
+-            <EvidenceTag>SURVEY-DERIVED</EvidenceTag>
+-            <h2>What the answers say</h2>
+-            <p>This score summarizes the selected answers. It is not a measured business result.</p>
++            <EvidenceTag>FROM YOUR ANSWERS</EvidenceTag>
++            <h2>Your answers</h2>
++            <p>This score comes from your answers. It hasn't measured lost time or money.</p>
+             <dl>
+               <div><dt>Answer score</dt><dd>{report.scoreIndex} / 100</dd></div>
+-              <div><dt>Profile</dt><dd>{report.profile}</dd></div>
+-              <div><dt>Band</dt><dd>{report.band}</dd></div>
++              <div><dt>Fog pattern</dt><dd>{report.profile}</dd></div>
++              <div><dt>Answer range</dt><dd>{report.band}</dd></div>
+             </dl>
+           </section>
+           <section>
+-            <EvidenceTag tone="red">ILLUSTRATIVE</EvidenceTag>
+-            <h2>Revision 3 scenario</h2>
+-            <p>A model comparison, not observed loss. Inputs remain visible so the assumption can be challenged.</p>
++            <EvidenceTag tone="red">FORMULA DEMO</EvidenceTag>
++            <h2>Fog pressure scenario</h2>
++            <p>This shows how the formula changes when one gap gets smaller. It's an example, not lost time or money we've measured.</p>
+             <label className="flow-switch">
+               <input type="checkbox" checked={flowActive} onChange={(event) => onFlow(event.target.checked)} />
+               <span aria-hidden="true"><i /></span>
+-              FLOW connection scenario
++              Show the gap reduced
+             </label>
+-            <div className="scenario-number"><strong>{scenario.modelLossIndex.toFixed(2)}</strong><span>model loss index</span></div>
++            <div className="scenario-number"><strong>{scenario.modelLossIndex.toFixed(2)}</strong><span>fog pressure index</span></div>
+             <dl className="formula-grid">
+-              <div><dt>O proxy</dt><dd>{scenario.variables.outputVolumeProxy.toFixed(2)}</dd></div>
+-              <div><dt>I proxy</dt><dd>{scenario.variables.effectiveFragilityProxy.toFixed(2)}</dd></div>
+-              <div><dt>D factor</dt><dd>{scenario.variables.dependencyFactor.toFixed(2)}</dd></div>
+-              <div><dt>Height</dt><dd>{scenario.monsterHeightFeet.toFixed(2)} ft</dd></div>
++              <div><dt>AI-output proxy</dt><dd>{scenario.variables.outputVolumeProxy.toFixed(2)}</dd></div>
++              <div><dt>Repair-pressure proxy</dt><dd>{scenario.variables.effectiveFragilityProxy.toFixed(2)}</dd></div>
++              <div><dt>Department factor</dt><dd>{scenario.variables.dependencyFactor.toFixed(2)}</dd></div>
++              <div><dt>Fog manifestation</dt><dd>{scenario.monsterHeightFeet.toFixed(2)} ft</dd></div>
+             </dl>
+           </section>
+-          <p className="model-note">Model: friction-fog-revision-3 · Perfect answers return zero.</p>
++          <p className="model-note">Formula: friction-fog-revision-3 · Perfect answers return zero.</p>
+         </aside>
+       </section>
+       <PathwayStrip />
+@@ -293,29 +315,45 @@ function Blueprint({ blueprint, onBack, onRestart }: { blueprint: FlowBlueprint;
+       <header className="topbar">
+         <BrandMark />
+         <div className="workspace__actions">
+-          <button className="text-action" onClick={onBack}>Back to workspace</button>
++          <button className="text-action" onClick={onBack}>Back to findings</button>
+           <button className="primary-action primary-action--small" onClick={onRestart}>Run again</button>
+         </div>
+       </header>
+       <section className="blueprint">
+         <header className="blueprint__head">
+-          <div><p className="eyebrow"><span /> CONNECTION PLAN</p><h1>{blueprint.department.name}: {blueprint.department.moniker}</h1></div>
+-          <p>Generated {new Date(blueprint.generatedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</p>
++          <div>
++            <p className="eyebrow"><span /> YOUR FLOW FOG REPORT</p>
++            <h1>{blueprint.readout.sections[0].headline}</h1>
++            <p className="blueprint__subhead">{blueprint.department.name} is where this is showing up first.</p>
++          </div>
++          <p>Created {new Date(blueprint.generatedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</p>
+         </header>
+-        <div className="blueprint__grid">
+-          <article><EvidenceTag>ASSUMED</EvidenceTag><span className="blueprint__number">01</span><h2>Reported gap</h2><p>{blueprint.reportedGap.text}</p></article>
+-          <article><EvidenceTag tone="red">ASSUMED</EvidenceTag><span className="blueprint__number">02</span><h2>Human repair</h2><p>{blueprint.humanRepair.text}</p></article>
+-          <article><EvidenceTag tone="green">PROPOSED</EvidenceTag><span className="blueprint__number">03</span><h2>Connection to test</h2><p>{blueprint.connectionToTest.text}</p></article>
+-        </div>
+-        <div className="blueprint__next">
+-          <div><p className="panel-kicker">NEXT ACTION</p><h2>{blueprint.nextAction}</h2></div>
+-          <div><p className="panel-kicker">EVIDENCE NEEDED</p><p>{blueprint.evidenceNeeded}</p></div>
+-        </div>
++
++        <ol className="readout" aria-label="Fog and friction readout">
++          {blueprint.readout.sections.map((section, index) => (
++            <li key={section.key} className={`readout__item readout__item--${section.key}`}>
++              <div className="readout__meta">
++                <span className="readout__number" aria-hidden="true">0{index + 1}</span>
++                <p className="panel-kicker">{section.label}</p>
++                <EvidenceTag tone={EVIDENCE_TONE[section.evidence]}>{EVIDENCE_LABEL[section.evidence]}</EvidenceTag>
++              </div>
++              <div className="readout__body">
++                <h2>{section.headline}</h2>
++                <p>{section.body}</p>
++              </div>
++            </li>
++          ))}
++        </ol>
++
+         <div className="blueprint__boundary">
+-          <EvidenceTag>SURVEY-DERIVED</EvidenceTag>
+-          <p>{blueprint.survey.profile} · {blueprint.survey.rawScore}/{blueprint.survey.maxScore} answer score</p>
+-          <EvidenceTag tone="red">ILLUSTRATIVE</EvidenceTag>
+-          <p>{blueprint.scenario.modelLossIndex.toFixed(2)} revision 3 model loss index</p>
++          <div>
++            <EvidenceTag>FROM YOUR ANSWERS</EvidenceTag>
++            <p>Answer profile {blueprint.survey.profile} · {blueprint.survey.rawScore}/{blueprint.survey.maxScore} answer score. This came from your answers. It hasn't measured lost time or money.</p>
++          </div>
++          <div>
++            <EvidenceTag tone="red">SCENARIO, NOT MEASURED</EvidenceTag>
++            <p>{blueprint.scenario.modelLossIndex.toFixed(2)} fog pressure index from model {blueprint.scenario.modelVersion}. It shows what the formula does with the assumptions above.</p>
++          </div>
+         </div>
+       </section>
+     </main>
+diff --git a/src/lib/blueprint.test.ts b/src/lib/blueprint.test.ts
+index 0fd1c6f..114c69b 100644
+--- a/src/lib/blueprint.test.ts
++++ b/src/lib/blueprint.test.ts
+@@ -4,7 +4,7 @@ import { DEPARTMENTS } from "./departments";
+ import { evaluateScenarioRevision3 } from "./scenario";
+ import { QUESTIONS, deriveSurveyReport, type AnswerValue } from "./survey";
+ 
+-describe("FLOW Blueprint output contract", () => {
++describe("FLOW Fog Report output contract", () => {
+   it("keeps assumed, proposed, survey-derived, and illustrative claims separate", () => {
+     const answers = Array<AnswerValue>(15).fill(1);
+     const selections = QUESTIONS.map((question, index) => {
+@@ -23,6 +23,8 @@ describe("FLOW Blueprint output contract", () => {
+     expect(blueprint.connectionToTest.evidenceStatus).toBe("PROPOSED");
+     expect(blueprint.survey.evidenceStatus).toBe("SURVEY-DERIVED");
+     expect(blueprint.scenario.evidenceStatus).toBe("ILLUSTRATIVE");
++    expect(blueprint.title).toBe("FLOW Fog Report");
++    expect(blueprint.payoff).toBe(DEPARTMENTS.OPS.payoff);
+     expect(blueprint.evidenceNeeded).toContain("before and after the change");
+   });
+ });
+diff --git a/src/lib/blueprint.ts b/src/lib/blueprint.ts
+index bfbe70b..be07f45 100644
+--- a/src/lib/blueprint.ts
++++ b/src/lib/blueprint.ts
+@@ -1,17 +1,21 @@
+ import type { Department } from "./departments";
+ import { PATHWAY } from "./pathway";
++import { buildReadout, type Readout } from "./readout";
+ import type { ScenarioResult } from "./scenario";
+ import type { SurveyReport } from "./survey";
+ 
+ export type FlowBlueprint = {
+-  title: "FLOW Blueprint";
++  title: "FLOW Fog Report";
+   generatedAt: string;
+   department: Pick<Department, "code" | "name" | "moniker">;
+   reportedGap: { evidenceStatus: "ASSUMED"; text: string };
+   humanRepair: { evidenceStatus: "ASSUMED"; text: string };
+   connectionToTest: { evidenceStatus: "PROPOSED"; text: string };
++  fogTakes: string;
++  payoff: string;
+   survey: Pick<SurveyReport, "evidenceStatus" | "rawScore" | "maxScore" | "scoreIndex" | "profile" | "pressures" | "archetype">;
+   scenario: ScenarioResult;
++  readout: Readout;
+   pathway: typeof PATHWAY;
+   nextAction: string;
+   evidenceNeeded: string;
+@@ -24,12 +28,14 @@ export function buildFlowBlueprint(
+   now: Date = new Date(),
+ ): FlowBlueprint {
+   return {
+-    title: "FLOW Blueprint",
++    title: "FLOW Fog Report",
+     generatedAt: now.toISOString(),
+     department: { code: department.code, name: department.name, moniker: department.moniker },
+     reportedGap: { evidenceStatus: "ASSUMED", text: department.gap },
+     humanRepair: { evidenceStatus: "ASSUMED", text: department.repair },
+     connectionToTest: { evidenceStatus: "PROPOSED", text: department.connection },
++    fogTakes: department.fogTakes,
++    payoff: department.payoff,
+     survey: {
+       evidenceStatus: survey.evidenceStatus,
+       rawScore: survey.rawScore,
+@@ -40,8 +46,9 @@ export function buildFlowBlueprint(
+       archetype: survey.archetype,
+     },
+     scenario,
++    readout: buildReadout(survey, department, scenario),
+     pathway: PATHWAY,
+-    nextAction: `Test this connection: ${department.connection}`,
+-    evidenceNeeded: `Observe ${department.compare.toLowerCase()} for the same workflow and review period before and after the change.`,
++    nextAction: `Start with the recurring task where this burden shows up most. Trace it from request to finished work and mark every moment someone has to search, chase, remember, or rebuild what is missing.`,
++    evidenceNeeded: `Watch ${department.compare.toLowerCase()} in the same kind of work before and after the change. That shows whether time and confidence actually return.`,
+   };
+ }
+diff --git a/src/lib/departments.ts b/src/lib/departments.ts
+index 5c00d77..8dcd180 100644
+--- a/src/lib/departments.ts
++++ b/src/lib/departments.ts
+@@ -11,6 +11,8 @@ export type Department = {
+   gap: string;
+   repair: string;
+   connection: string;
++  fogTakes: string;
++  payoff: string;
+   compare: string;
+ };
+ 
+@@ -19,70 +21,90 @@ export const DEPARTMENTS: Record<DepartmentKey, Department> = {
+     key: "AM", code: "ACC", name: "Account Management", moniker: "The Context Relay", accent: "#3b82f6", upstreamWeight: 1.2, dependencyWeight: 1.5,
+     gap: "Approval history is scattered; someone reconstructs client choices and the current version.",
+     repair: "Account Management rebuilds the decision trail and identifies the approved version.",
+-    connection: "One approval record linking version, owner, change history, and decision.",
++    connection: "Keep every approval, version, owner, and decision together so nobody has to rebuild the client's history.",
++    fogTakes: "Confidence in the client relationship. Time meant for the client goes into proving what was already decided.",
++    payoff: "The team can stay present with the client because the decision trail travels with the work.",
+     compare: "Reconstruction minutes and approval cycle time.",
+   },
+   FIN: {
+     key: "FIN", code: "FIN", name: "Finance", moniker: "The Reconciliation Loop", accent: "#10b981", upstreamWeight: 1.5, dependencyWeight: 1.1,
+     gap: "Scope, authorization, vendor, charge, and invoice records do not reconcile.",
+     repair: "Finance manually reconciles records across spreadsheets and systems.",
+-    connection: "Shared identifiers and a traceable transaction trail.",
++    connection: "Give each authorization, charge, and invoice one shared trail so the numbers explain themselves.",
++    fogTakes: "Trust in the numbers. Every mismatch creates another round of checking before anyone can act with confidence.",
++    payoff: "Finance can trust the trail behind each number without another reconciliation marathon.",
+     compare: "Exception handling hours and unresolved age.",
+   },
+   LGL: {
+     key: "LGL", code: "LGL", name: "Legal", moniker: "The Provenance Chain", accent: "#991b1b", upstreamWeight: 1.6, dependencyWeight: 1,
+     gap: "The reviewed version lacks source, rights, or approval evidence.",
+     repair: "Legal retrieves the missing provenance while downstream work waits.",
+-    connection: "Evidence attached to the reviewed version; material changes reopen the appropriate review.",
++    connection: "Keep the source, rights, and approval with the exact version under review. If the work changes, reopen only the review that change requires.",
++    fogTakes: "Confidence that the business can move safely. Missing proof turns review into a last-minute search for exposure.",
++    payoff: "Legal can review the right work with the right proof already attached.",
+     compare: "Retrieval effort and returns for missing evidence.",
+   },
+   PROD: {
+     key: "PROD", code: "PRD", name: "Production", moniker: "The Version Stack", accent: "#f59e0b", upstreamWeight: 1.1, dependencyWeight: 1.7,
+     gap: "Approved masters are difficult to distinguish from variants.",
+     repair: "Production opens loose files one by one to find master outputs.",
+-    connection: "An approved asset record with status, rights, naming, and delivery requirements.",
++    connection: "Give every approved asset one unmistakable record showing what is final, where it can be used, and how it must be delivered.",
++    fogTakes: "Time to make and confidence in what ships. People search through versions instead of finishing the work.",
++    payoff: "Production can ship the right master the first time and keep its attention on making.",
+     compare: "Retrieval time and first-pass acceptance.",
+   },
+   STRAT: {
+     key: "STRAT", code: "STR", name: "Strategy", moniker: "The Signal Filter", accent: "#7c3aed", upstreamWeight: 1, dependencyWeight: 1.4,
+     gap: "Inputs multiply without a clear decision question or retained intent.",
+     repair: "Strategy filters plausible output until the decision-ready signal is clear.",
+-    connection: "A decision brief with sources, assumptions, criteria, and accountable decision.",
++    connection: "Put the decision, its purpose, the evidence behind it, and the person responsible in one place before more output is created.",
++    fogTakes: "Room to think. The team spends its judgment separating signal from piles of plausible output.",
++    payoff: "Strategy gets the space to make a decision instead of repeatedly rediscovering its purpose.",
+     compare: "Validation effort and avoidable reopened decisions.",
+   },
+   CRTV: {
+     key: "CRTV", code: "CRT", name: "Creative", moniker: "The Option Field", accent: "#db2777", upstreamWeight: 1.3, dependencyWeight: 1.3,
+     gap: "Feedback and intent separate from the work; selection and revision require reconstruction.",
+     repair: "Creative rebuilds iteration logic and consolidates scattered feedback.",
+-    connection: "Shared brief, approved direction, criteria, and consolidated feedback.",
++    connection: "Keep the brief, approved direction, and final feedback with the work so every revision has a reason.",
++    fogTakes: "Creative energy. People excavate old feedback when they should be making the next strong idea.",
++    payoff: "Creative can create with confidence because the intent and the approved direction stay with the work.",
+     compare: "Avoidable revision effort and time available for creative work.",
+   },
+   PR: {
+     key: "PR", code: "PR", name: "Public Relations", moniker: "The Approval Pulse", accent: "#06b6d4", upstreamWeight: 1.4, dependencyWeight: 1.2,
+     gap: "A response waits for current facts or a known approver.",
+     repair: "Public Relations coordinates confirmation across the people holding current facts.",
+-    connection: "Evidence and an explicit approval path by response type.",
++    connection: "Decide who can approve each kind of response and keep the current facts ready for them.",
++    fogTakes: "The moment to respond. Confidence drains while the team waits to learn what it can safely say.",
++    payoff: "Public Relations can answer while the moment still matters, without guessing.",
+     compare: "Time to authorized response and missed response windows.",
+   },
+   MEDIA: {
+     key: "MEDIA", code: "MED", name: "Media Buying / Planning", moniker: "The Attribution Maze", accent: "#84cc16", upstreamWeight: 1.2, dependencyWeight: 1.4,
+     gap: "Platforms use conflicting objectives, taxonomies, and attribution records.",
+     repair: "Media planners reconcile conflicting platform records and definitions.",
+-    connection: "Shared definitions connecting intent, platform action, spend, and evidence.",
++    connection: "Use the same definitions for the goal, the platform action, the spend, and the result so performance can be compared without translation.",
++    fogTakes: "Trust in what worked. Analysis becomes spreadsheet archaeology instead of a confident next move.",
++    payoff: "The team can see what earned attention and decide where the next dollar belongs.",
+     compare: "Reconciliation effort and unexplained differences.",
+   },
+   HR: {
+     key: "HR", code: "HR", name: "Human Resources", moniker: "The Human Context Check", accent: "#fb7185", upstreamWeight: 1, dependencyWeight: 1.1,
+     gap: "Drafts depend on outdated policy or missing situational context.",
+     repair: "Human Resources restores policy and situational context before approval.",
+-    connection: "Versioned policy authority and an appropriate human review path.",
++    connection: "Keep one current policy source and make the right human review obvious when a person's situation changes the answer.",
++    fogTakes: "People's trust and dignity. A person can receive the wrong answer because the right context arrived late.",
++    payoff: "People receive current, situation-aware guidance without HR rebuilding the facts each time.",
+     compare: "Verification effort and preventable corrections.",
+   },
+   OPS: {
+     key: "OPS", code: "OPS", name: "Operations", moniker: "The Missing Layer", accent: "#b45309", upstreamWeight: 1.8, dependencyWeight: 1.8,
+     gap: "Ownership, handoff acceptance, and completion evidence are missing.",
+     repair: "Operations pieces together unlinked systems and orphaned handoffs.",
+-    connection: "Accepted ownership, escalation paths, and explicit completion criteria.",
++    connection: "Make the owner accept the task, show who steps in when it stalls, and define what finished means before work begins.",
++    fogTakes: "Momentum and peace of mind. Work stays alive only because someone keeps chasing it.",
++    payoff: "Work reaches done without one person carrying the entire business in their head.",
+     compare: "Orphaned work, handoff age, and verified completions.",
+   },
+ };
+diff --git a/src/lib/pathway.ts b/src/lib/pathway.ts
+index 1b7a81a..b2fdbf8 100644
+--- a/src/lib/pathway.ts
++++ b/src/lib/pathway.ts
+@@ -1,6 +1,6 @@
+ export const PATHWAY = [
+-  { title: "Follow the work", summary: "Trace one work item, its handoff, required context, and accepted outcome." },
+-  { title: "Expose the human repair", summary: "Name the finding, clarifying, reconciling, rerouting, or verifying that keeps it moving." },
+-  { title: "Change one connection", summary: "Choose the missing operating connection to test without pretending the outcome is known." },
+-  { title: "Measure what improves", summary: "Compare the same workflow and period using observed repair, waiting, and accepted completion." },
++  { title: "Find the gap", summary: "See where information, ownership, or proof goes missing." },
++  { title: "Find who fills it", summary: "See who has to chase, remember, reconcile, or rebuild what the work needs." },
++  { title: "See what it takes", summary: "See the time, confidence, focus, or momentum the fog is consuming." },
++  { title: "Know what to fix first", summary: "Leave with one task to trace and one result worth watching." },
+ ] as const;
+diff --git a/src/lib/survey.ts b/src/lib/survey.ts
+index 5eae9b0..54bf97c 100644
+--- a/src/lib/survey.ts
++++ b/src/lib/survey.ts
+@@ -205,39 +205,39 @@ export const QUESTIONS: readonly SurveyQuestion[] = [
+ const pressure = (id: string, title: string, implication: string): Pressure => ({ id, title, implication });
+ 
+ const PRESSURE_WHEN_ZERO: Record<number, Pressure> = {
+-  1: pressure("start", "Starting work", "You reported difficulty starting. Check whether the first step is clear."),
+-  2: pressure("next", "Choosing the next step", "You work out priorities as you go. Try keeping the next action in one place."),
+-  3: pressure("memory", "Finding shared knowledge", "Your answer points to knowledge held in people's heads or scattered messages."),
+-  4: pressure("tools", "Before adding AI agents and tools", "You reported no AI agents and tools in use. Start with the task and its handoffs before choosing any."),
+-  5: pressure("learning", "Keeping what you learn", "You reported losing what a project taught you. Save one lesson with the work."),
+-  6: pressure("followup", "Tracking follow-up", "Your answer suggests follow-up can depend on someone remembering."),
+-  7: pressure("ownership", "Ownership is unclear", "You reported unclear ownership. Give one waiting task an owner."),
+-  8: pressure("ai", "AI agents and tools need a process", "You reported experimenting without a system. Define what happens after an output arrives."),
+-  9: pressure("decisions", "Deciding under pressure", "Your answer suggests decisions depend on who speaks up or is available."),
+-  10: pressure("revenue", "Revenue follow-up", "You reported that much of your revenue depends on manual follow-up or memory."),
+-  11: pressure("repeat", "Repeated work", "You reported frequent repeated work. Check what could be reused."),
+-  12: pressure("key-person", "Covering an absence", "You reported work stopping or slowing when a key person is away."),
+-  13: pressure("pipeline", "The pipeline is not visible", "You reported limited visibility into leads. Check where status is recorded."),
+-  14: pressure("loop", "Learning from completed work", "You reported no regular learning process. Review one completed task."),
+-  15: pressure("shape", "Responding as work arrives", "You described work as chaotic or reactive. Start with one repeatable next step."),
++  1: pressure("start", "Work struggles to get moving", "The first step is unclear, so energy is spent beginning instead of progressing."),
++  2: pressure("next", "Priorities are rebuilt in the moment", "People decide what comes next as they go, which makes attention easy to pull off course."),
++  3: pressure("memory", "Information is scattered", "People have to search messages or ask around before they can move with confidence."),
++  4: pressure("tools", "The work needs a path before another tool", "A new tool will add output, but it cannot decide where that output belongs or who finishes it."),
++  5: pressure("learning", "Lessons disappear when the work ends", "The next project pays again for knowledge the business already earned."),
++  6: pressure("followup", "Follow-up depends on memory", "A lead or promise can disappear when the person remembering it gets pulled elsewhere."),
++  7: pressure("ownership", "Work can wait without an owner", "People spend time finding someone to act while the task loses momentum."),
++  8: pressure("ai", "AI output arrives without a clear next step", "People have to judge, route, and recover the output by hand before it becomes useful."),
++  9: pressure("decisions", "Pressure changes who gets heard", "Decisions depend on presence or volume instead of the facts the work requires."),
++  10: pressure("revenue", "Revenue depends on remembering", "Income stays exposed to the availability and memory of the people holding the follow-up."),
++  11: pressure("repeat", "Good work is being paid for twice", "People repeat work because the useful answer did not stay findable or reusable."),
++  12: pressure("key-person", "One absence can stop the work", "The business loses momentum when the person carrying the missing context is unavailable."),
++  13: pressure("pipeline", "Leads can disappear from view", "People cannot act with confidence because the current status is hard to see."),
++  14: pressure("loop", "The business keeps relearning the same lesson", "Completed work does not improve the next attempt, so avoidable problems return."),
++  15: pressure("shape", "Incoming work controls the day", "People react to what arrives instead of protecting time for what matters most."),
+ };
+ 
+ const PRESSURE_WHEN_ONE: Record<number, Pressure> = {
+-  1: pressure("handoff", "Tools and handoffs", "You reported delays switching tools or waiting on others."),
+-  2: pressure("priorities", "Priorities are informal", "Your priorities or process are informal. Make the next owner and action visible."),
+-  3: pressure("scattered", "Finding the current information", "You reported loosely organized knowledge. Check whether the current version is easy to find."),
+-  6: pressure("loose-followup", "Follow-up is a loose process", "You reported a loose follow-up process. Make the next contact date visible."),
+-  7: pressure("informal-owner", "Ownership depends on who is free", "You reported informal ownership or assignments based on availability."),
+-  10: pressure("some-manual", "Some follow-up remains manual", "You reported some revenue depending on manual follow-up or memory."),
+-  11: pressure("sometimes-repeat", "Occasional repeated work", "You reported repeating some work. Keep a useful example with the next task."),
+-  13: pressure("partial-pipe", "The pipeline is only partly visible", "Your answer suggests some lead status is visible. Check the gaps."),
++  1: pressure("handoff", "Momentum fades between tools and people", "Waiting and switching interrupt the work before it reaches done."),
++  2: pressure("priorities", "Priorities live in conversation", "The next move can change depending on who is present to explain it."),
++  3: pressure("scattered", "The current answer takes work to find", "People can usually locate it, but the search steals focus from the task itself."),
++  6: pressure("loose-followup", "Follow-up is easy to lose", "The next contact exists, but it is not protected from distraction or absence."),
++  7: pressure("informal-owner", "Ownership depends on who is free", "The most available person carries the work, whether or not they should."),
++  10: pressure("some-manual", "Some revenue still depends on memory", "A busy week or missed reminder can still cost the business an earned opportunity."),
++  11: pressure("sometimes-repeat", "Some work has to be done again", "Useful effort is lost when the answer cannot travel into the next task."),
++  13: pressure("partial-pipe", "Part of the pipeline is hidden", "A lead can sit still because the person who could move it cannot see its status."),
+ };
+ 
+ const PROFILE_COPY: Record<Profile, string> = {
+-  FRAGMENTED: "Your answers suggest work depends on scattered information and manual coordination. Start with one task that keeps getting held up.",
+-  STALLED: "Your answers suggest some processes are in place, with gaps between steps. Pick one handoff and make the next action clear.",
+-  SCALING: "Your answers suggest a working setup with room to reduce repeated work. Check where context or ownership gets lost.",
+-  COMPOUNDING: "Your answers suggest a connected setup. Check that new AI agents and tools fit the way work already moves.",
++  FRAGMENTED: "People are keeping work alive by hunting for information, remembering follow-up, and reconnecting decisions that should travel with the work.",
++  STALLED: "The business has a process, but people still bridge its weak points. When they are unavailable, momentum slows or stops.",
++  SCALING: "The business is moving, but repeated repair is taking time from better work. Growth will multiply that burden unless the gaps close.",
++  COMPOUNDING: "Work is moving with fewer manual repairs. The priority is protecting that confidence as AI creates more work, faster.",
+ };
+ 
+ export function deriveArchetype(pressures: readonly Pressure[]): Archetype {
+
+===== NEW FILE: src/lib/readout.ts =====
+import type { Department } from "./departments";
+import type { ScenarioResult } from "./scenario";
+import { presetHours, type Archetype, type Profile, type SurveyReport } from "./survey";
+
+/**
+ * The readout turns a survey report into the six things a person needs to
+ * understand without reading a score:
+ *
+ *   what you're feeling -> what's causing it -> where it's showing up ->
+ *   what it's costing -> what matters first -> what happens next
+ *
+ * It is a presentation layer only. It introduces no new scoring, changes no
+ * formula, and never restates a survey score as a measured business result.
+ * Every section carries the evidence class of the material it came from.
+ */
+
+export type EvidenceClass = "SURVEY-DERIVED" | "ASSUMED" | "PROPOSED" | "ILLUSTRATIVE";
+
+export type ReadoutKey =
+  | "feeling"
+  | "causing"
+  | "showingUp"
+  | "costing"
+  | "mattersFirst"
+  | "happensNext";
+
+export type ReadoutSection = {
+  key: ReadoutKey;
+  label: string;
+  headline: string;
+  body: string;
+  evidence: EvidenceClass;
+};
+
+export type Readout = {
+  order: readonly ReadoutKey[];
+  sections: ReadoutSection[];
+};
+
+export const READOUT_ORDER = [
+  "feeling",
+  "causing",
+  "showingUp",
+  "costing",
+  "mattersFirst",
+  "happensNext",
+] as const;
+
+const LABELS: Record<ReadoutKey, string> = {
+  feeling: "WHAT YOU'RE FEELING",
+  causing: "WHAT'S CAUSING IT",
+  showingUp: "WHERE IT'S SHOWING UP",
+  costing: "WHAT IT'S COSTING",
+  mattersFirst: "WHAT MATTERS FIRST",
+  happensNext: "WHAT HAPPENS NEXT",
+};
+
+const FEELING: Record<Profile, { headline: string; body: string }> = {
+  FRAGMENTED: {
+    headline: "Work only moves because someone's holding it together.",
+    body: "Finding the current version. Remembering who agreed to what. Chasing the next step. None of it looks like work, but it's where the day goes.",
+  },
+  STALLED: {
+    headline: "You've got a process. People are still what makes it work.",
+    body: "Most days it holds. When it doesn't, whoever notices first fills the gap. Progress depends on who's around, not the process.",
+  },
+  SCALING: {
+    headline: "Work's moving. The repair work's growing with it.",
+    body: "Delivery looks healthy. Underneath it, people keep checking, finding, and explaining the same things. More work means more repair.",
+  },
+  COMPOUNDING: {
+    headline: "Work's moving without constant rescue. That's worth protecting.",
+    body: "Fewer gaps need someone to fill them. The risk now is adding AI output faster than the business can handle it.",
+  },
+};
+
+const CAUSING: Record<Archetype, string> = {
+  bottleneckOperator: "Too much of the business depends on one person.",
+  toolOverload: "Every new tool adds more work between the work.",
+  executionStall: "Starting is easier than finishing.",
+  fragmentedWorkflow: "The information people need doesn't move with the work.",
+};
+
+/**
+ * The pressure IDs that resolve each archetype, in the precedence order used by
+ * deriveArchetype(). The cause section must explain the pressure that actually
+ * produced the archetype, not simply the first pressure in question order.
+ */
+const ARCHETYPE_DRIVERS: Record<Archetype, readonly string[]> = {
+  bottleneckOperator: ["key-person", "ownership", "informal-owner"],
+  toolOverload: ["tools", "handoff"],
+  executionStall: ["start", "loop", "next"],
+  fragmentedWorkflow: [],
+};
+
+function drivingPressure(survey: SurveyReport) {
+  const drivers = ARCHETYPE_DRIVERS[survey.archetype];
+  return survey.pressures.find((item) => drivers.includes(item.id)) ?? survey.pressures[0];
+}
+
+function sentence(text: string): string {
+  return text.trim().replace(/[.\s]+$/, "");
+}
+
+const NO_PRESSURE_BODY =
+  "Your answers didn't point to one clear pressure. The department view below is a place to look, not a finding.";
+
+export function buildReadout(
+  survey: SurveyReport,
+  department: Department,
+  scenario: ScenarioResult,
+): Readout {
+  const [lowHours, highHours] = presetHours(survey.profile);
+  const leadPressure = drivingPressure(survey);
+  const otherPressures = survey.pressures.filter((item) => item.id !== leadPressure?.id);
+  const feeling = FEELING[survey.profile];
+
+  const sections: ReadoutSection[] = [
+    {
+      key: "feeling",
+      label: LABELS.feeling,
+      headline: feeling.headline,
+      body: feeling.body,
+      evidence: "SURVEY-DERIVED",
+    },
+    {
+      key: "causing",
+      label: LABELS.causing,
+      headline: CAUSING[survey.archetype],
+      body: leadPressure ? leadPressure.implication : NO_PRESSURE_BODY,
+      evidence: "SURVEY-DERIVED",
+    },
+    {
+      key: "showingUp",
+      label: LABELS.showingUp,
+      headline: `Here's what this looks like in ${department.name}.`,
+      body: otherPressures.length > 0
+        ? `${department.gap} ${department.repair} Your answers also point to ${otherPressures.map((item) => item.title.toLowerCase()).join("; ")}.`
+        : `${department.gap} ${department.repair}`,
+      evidence: "ASSUMED",
+    },
+    {
+      key: "costing",
+      label: LABELS.costing,
+      headline: department.fogTakes,
+      body: `The model puts this pattern at about ${lowHours} to ${highHours} hours per person each week. We haven't measured that in your business yet.`,
+      evidence: "ILLUSTRATIVE",
+    },
+    {
+      key: "mattersFirst",
+      label: LABELS.mattersFirst,
+      headline: department.connection,
+      body: department.payoff,
+      evidence: "PROPOSED",
+    },
+    {
+      key: "happensNext",
+      label: LABELS.happensNext,
+      headline: "Trace one recurring task from the request to done.",
+      body: `Mark every moment someone has to search, chase, remember, or rebuild what is missing. Then watch ${sentence(department.compare).toLowerCase()} in that same kind of work before and after the change. ${
+        scenario.flowActive
+          ? "The formula now shows what it expects if the gap shrinks. It isn't a result you've achieved yet."
+          : "Turn on 'Show the gap reduced' to see the direction the formula expects."
+      }`,
+      evidence: "PROPOSED",
+    },
+  ];
+
+  return { order: READOUT_ORDER, sections };
+}
+
+export function readoutSection(readout: Readout, key: ReadoutKey): ReadoutSection {
+  const found = readout.sections.find((section) => section.key === key);
+  if (!found) throw new Error(`Readout is missing the ${key} section.`);
+  return found;
+}

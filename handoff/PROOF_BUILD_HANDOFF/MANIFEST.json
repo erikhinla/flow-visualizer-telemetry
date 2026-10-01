@@ -1,0 +1,274 @@
+{
+  "captured_utc": "2026-09-28T01:21:03.727421+00:00",
+  "source_path": "/Users/test/PROJECTS/flow-visualizer-telemetry",
+  "branch": "codex/visualizer-live",
+  "head": "e72f4b8fb5662c955c087d40fffb011d6fee0d95",
+  "head_tree": "f6366f487fec724c88bedfd7b6097755dcc6b0a9",
+  "tracked_files_at_head": 40,
+  "modified_tracked_files": [
+    "DECISION_LOG.md",
+    "src/app/globals.css",
+    "src/app/layout.tsx",
+    "src/components/FlowVisualizer.tsx",
+    "src/lib/blueprint.test.ts",
+    "src/lib/blueprint.ts",
+    "src/lib/departments.ts",
+    "src/lib/pathway.ts",
+    "src/lib/survey.ts"
+  ],
+  "included_untracked_files": [
+    "WHAT_CLAUDE_CHANGED.txt",
+    "src/lib/readout-attribution.test.ts",
+    "src/lib/readout.test.ts",
+    "src/lib/readout.ts"
+  ],
+  "excluded_untracked_files": [
+    ".DS_Store"
+  ],
+  "files": [
+    {
+      "path": "source/.env.example",
+      "size_bytes": 162,
+      "sha256": "6481398fea2a8f700965051e5948df8eb90aeeefe7301593f53c735ef8f6cf2b"
+    },
+    {
+      "path": "source/.github/workflows/ci.yml",
+      "size_bytes": 348,
+      "sha256": "263ea21d9999d73a5021d9efb2c80a3ea6740297b18626e4c69acf60a64586f7"
+    },
+    {
+      "path": "source/.gitignore",
+      "size_bytes": 2165,
+      "sha256": "ae3ac05cd16b0f6c4251fd30d74c12866d1ba6daa365aacc2e32ddfc09a478f6"
+    },
+    {
+      "path": "source/.prettierrc.json",
+      "size_bytes": 153,
+      "sha256": "9836d62804f1e61b6560cd9a4059c64066f1cf6451d742641e7b26c533bcbc90"
+    },
+    {
+      "path": "source/AGENTS.md",
+      "size_bytes": 737,
+      "sha256": "9b3ca15007f441d472f2359c9d325b532882c8a5eb3d6a080a34f8762c86c955"
+    },
+    {
+      "path": "source/CURRENT_WORKTREE_DIFF.patch",
+      "size_bytes": 46708,
+      "sha256": "74077c036e49807a68eaefe738044082136ffe441d2bcd7b95bdbe276c429619"
+    },
+    {
+      "path": "source/DECISION_LOG.md",
+      "size_bytes": 3606,
+      "sha256": "f60ed8d74fc828ba817e9a2c5101fa4cdc7fabbef81f9b64d4e32f0ffc577567"
+    },
+    {
+      "path": "source/README.md",
+      "size_bytes": 1062,
+      "sha256": "481533a9216c6024321947d9a8908480acf51f018a2b6cd87341990bf6ed9a7a"
+    },
+    {
+      "path": "source/WHAT_CLAUDE_CHANGED.txt",
+      "size_bytes": 53135,
+      "sha256": "2d9cb7ad6e7ca81a9cbaf8c37e232d6ea0e634975139cfa96dfc508a6b8f69f5"
+    },
+    {
+      "path": "source/docs/design/README.md",
+      "size_bytes": 1473,
+      "sha256": "20448aea04bed22d22065c58e988c754a367d28f97b25b237f394fbe1fae89f6"
+    },
+    {
+      "path": "source/docs/design/flow-entry-reference.png",
+      "size_bytes": 1942859,
+      "sha256": "6564532e6111b18e3343d85050148c55a27448e808d187ab13be50dc0607ec7c"
+    },
+    {
+      "path": "source/docs/design/flow-workspace-reference.png",
+      "size_bytes": 1925665,
+      "sha256": "53699f75773748e33fb9f486bb422430e36643be0caadaaa12800f66c4cf3977"
+    },
+    {
+      "path": "source/next-env.d.ts",
+      "size_bytes": 288,
+      "sha256": "1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b"
+    },
+    {
+      "path": "source/next.config.ts",
+      "size_bytes": 196,
+      "sha256": "7ec601dbaa1f22c8606d8d378527da89a9d5318a14169a1443206acd9d49bcf5"
+    },
+    {
+      "path": "source/package-lock.json",
+      "size_bytes": 68946,
+      "sha256": "af314608a617ab8d8408f4d8d287e640f08ab60f05c11ea7eaaef2d3683dcc9a"
+    },
+    {
+      "path": "source/package.json",
+      "size_bytes": 694,
+      "sha256": "48ef597cf299791effa5cacf27e49406508fd3a4115a7975f55417685499d208"
+    },
+    {
+      "path": "source/setup.record.md",
+      "size_bytes": 4378,
+      "sha256": "edf49f1b842620bffa1d7df13a5124eac907cbdc7de813a22aa0c35c07692f47"
+    },
+    {
+      "path": "source/src/app/fonts/OFL.txt",
+      "size_bytes": 6014,
+      "sha256": "4877e0c1b66f0b16cc3ebc4801c4def24c06252f618b9229428b20c7387aa0c0"
+    },
+    {
+      "path": "source/src/app/fonts/barlow-condensed-latin-500-normal.woff2",
+      "size_bytes": 21424,
+      "sha256": "460f141ec8f6c9a1516bfd2bd9fe71656246d7a9d04a0955faf53158d8970c4c"
+    },
+    {
+      "path": "source/src/app/fonts/barlow-condensed-latin-600-normal.woff2",
+      "size_bytes": 22308,
+      "sha256": "215a93c696f442034a46fbb382958f753fda60e30490683aeea6b235fcbb2b66"
+    },
+    {
+      "path": "source/src/app/fonts/barlow-condensed-latin-700-normal.woff2",
+      "size_bytes": 22444,
+      "sha256": "3787a5a419171630e6890cfa47c4da067474d005cd0ff8dc11ec090fdc3ee2b8"
+    },
+    {
+      "path": "source/src/app/fonts/barlow-latin-400-normal.woff2",
+      "size_bytes": 22196,
+      "sha256": "b0a8ad37ac45f5fb22ced461576db72e44e295107aad7a9c8a7a4bad728fd03b"
+    },
+    {
+      "path": "source/src/app/fonts/barlow-latin-500-normal.woff2",
+      "size_bytes": 22008,
+      "sha256": "cd759df8ef9efc98fee14307b4eb5ba27f08b1f8f2f3ad2872432e25c89907a8"
+    },
+    {
+      "path": "source/src/app/fonts/barlow-latin-600-normal.woff2",
+      "size_bytes": 22772,
+      "sha256": "4b52ddd4836b592df0e4832b8286956883cdc651b015126bdd18f184b7f90cc3"
+    },
+    {
+      "path": "source/src/app/globals.css",
+      "size_bytes": 22434,
+      "sha256": "71de7f95795013f075e0e3ae1a20237194db564331843f8c9867270f69f0be29"
+    },
+    {
+      "path": "source/src/app/layout.tsx",
+      "size_bytes": 1416,
+      "sha256": "d7989381a8c2d37d31d662b508203f25efe91bf16b552a10c1c4c1fb8cbe4627"
+    },
+    {
+      "path": "source/src/app/page.tsx",
+      "size_bytes": 131,
+      "sha256": "906df2fc37418ca35783e2696781db292967cff675e0d44d74c52844d4c9ca40"
+    },
+    {
+      "path": "source/src/components/FlowVisualizer.tsx",
+      "size_bytes": 17145,
+      "sha256": "ef1987a7deee2d1a8c2d1ea15dd90c8b5871005e8ee8c9e40115fd8e5273f348"
+    },
+    {
+      "path": "source/src/lib/blueprint.test.ts",
+      "size_bytes": 1689,
+      "sha256": "afaf50d96ba6884336ab0aa6839075fda0101599e55c7000e48e56e8b4119bb3"
+    },
+    {
+      "path": "source/src/lib/blueprint.ts",
+      "size_bytes": 2240,
+      "sha256": "0c3a1b5ffb1d97550d597f31a1ecccdeab99af1eacbd08b3092a5335089f60d1"
+    },
+    {
+      "path": "source/src/lib/departments.ts",
+      "size_bytes": 8064,
+      "sha256": "72a37e24b8481097469913f9c64eb3099b1d6b067ad9fd60df798e366acca9b2"
+    },
+    {
+      "path": "source/src/lib/pathway.ts",
+      "size_bytes": 480,
+      "sha256": "2dd1b42d28b43e9d87006b41bce119e816eae8ef898ffcdd0d18b96a10aaeb49"
+    },
+    {
+      "path": "source/src/lib/readout-attribution.test.ts",
+      "size_bytes": 1170,
+      "sha256": "2a547034f5adf89929fedb05816d91028e732ed4b8e2210c510200a5474dc776"
+    },
+    {
+      "path": "source/src/lib/readout.test.ts",
+      "size_bytes": 5639,
+      "sha256": "2af68d465d86bf60fb311f47c90a8b3cd594f3bb387f6f922a1cc3b4caef69dc"
+    },
+    {
+      "path": "source/src/lib/readout.ts",
+      "size_bytes": 6331,
+      "sha256": "aac27a6cba3f8a023bfe1c4bf5c009159cfe116fe98c40b37e0742b170c26d52"
+    },
+    {
+      "path": "source/src/lib/scenario.test.ts",
+      "size_bytes": 1809,
+      "sha256": "d5fefbdfcfe468055c6fb51d31c7d89c8c418b726fd53e2ce4b066f766e4b7a5"
+    },
+    {
+      "path": "source/src/lib/scenario.ts",
+      "size_bytes": 2407,
+      "sha256": "39cf61eefad47405570643d217cd068ac283688a387bffbf9a8f57dc9bd846f8"
+    },
+    {
+      "path": "source/src/lib/survey.test.ts",
+      "size_bytes": 3108,
+      "sha256": "4ab7ba9732e071f14ba41dcb9c47f8d3da7fe895f6d505e14e534c8df02b4e38"
+    },
+    {
+      "path": "source/src/lib/survey.ts",
+      "size_bytes": 12947,
+      "sha256": "73b278b0c8360266de5ea0fe8fd1892167ae2730114575c9aa1039fa12a21efa"
+    },
+    {
+      "path": "source/src/telemetry/VISUALIZER_MASTER.md",
+      "size_bytes": 71336,
+      "sha256": "a5bfa0dd26d5af6abf85e5c5d1c5e15a29bc57aab0b19b81988cce7fd256e4bb"
+    },
+    {
+      "path": "source/src/telemetry/schema.test.ts",
+      "size_bytes": 2256,
+      "sha256": "67cf1fe928b7785d3879b467e97a69d461150321e114726b2a972242123e9639"
+    },
+    {
+      "path": "source/src/telemetry/schema.ts",
+      "size_bytes": 4095,
+      "sha256": "2778549d7326120089eadbdce3cbff5b1612d9151b21fc396a90cc6e36ecbcce"
+    },
+    {
+      "path": "source/src/telemetry/src/visualizer/config.ts",
+      "size_bytes": 1065,
+      "sha256": "40e681f4413abac60ff261f064929e714e09e560127ab1f27d539fc2540906b4"
+    },
+    {
+      "path": "source/tsconfig.json",
+      "size_bytes": 703,
+      "sha256": "a3b8af357e992b0798c116d58d9b85209509bd5850d210477db5bd90bbd3fe78"
+    },
+    {
+      "path": "source/vitest.config.ts",
+      "size_bytes": 190,
+      "sha256": "30496efa6d5d17208c2934868434bb8f11cc2f28e0819e44de29c27e1f9d1d15"
+    },
+    {
+      "path": "reference/Global_TBTX_BBAI_BBM_GUIDE_retrieved.txt",
+      "size_bytes": 29915,
+      "sha256": "a5ce517042acb4cda6737d266540c7d86c09d8932fa32bc5fb74aa32c600770b"
+    },
+    {
+      "path": "reference/PROOF_CREATIVE_SYSTEM_retrieved.txt",
+      "size_bytes": 22145,
+      "sha256": "f7a8e5c9a4c697bc9aff0630896c3ac4d206c3cd4130c2ddaec2f8baabbad1d2"
+    },
+    {
+      "path": "reference/PROOF_STANDALONE_BUILD_SPEC.md",
+      "size_bytes": 61307,
+      "sha256": "0e32e967790438fb05c0c6134df517b26066d130bff810a6c5cb6b5cb83f5f69"
+    }
+  ],
+  "reference_sources": {
+    "Global_TBTX_BBAI_BBM_GUIDE_retrieved.txt": "https://docs.google.com/document/d/1oPSj3vSRot8KIgMdXTFDMKRiiZWYQ4ySPd0jWEmnjEo/edit",
+    "PROOF_CREATIVE_SYSTEM_retrieved.txt": "https://docs.google.com/document/d/1vA_8oasfpaM9ryR6QS6hmG2wfySiw-yeAv8aQFYR2D4/edit"
+  }
+}

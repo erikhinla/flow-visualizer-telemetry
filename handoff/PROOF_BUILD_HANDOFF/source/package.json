@@ -1,0 +1,27 @@
+{
+  "name": "flow-visualizer-telemetry",
+  "version": "0.2.0",
+  "type": "module",
+  "private": true,
+  "description": "FLOW Blueprint Visualizer application and privacy-bounded diagnostic telemetry",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run type-check && npm run test && npm run build"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.3",
+    "typescript": "5.9.3",
+    "vitest": "5.0.0"
+  }
+}

@@ -1,0 +1,48 @@
+
+> flow-visualizer-telemetry@0.2.0 check
+> npm run type-check && npm run test && npm run build
+
+
+> flow-visualizer-telemetry@0.2.0 type-check
+> tsc --noEmit
+
+
+> flow-visualizer-telemetry@0.2.0 test
+> vitest run
+
+
+ RUN  v5.0.0 /Users/test/Documents/website/2026-09-27/w/outputs/PROOF_BUILD_HANDOFF/source
+
+
+ Test Files  6 passed (6)
+      Tests  40 passed (40)
+   Start at  21:24:10
+   Duration  7.98s (transform 53%, import 18%, worker 15%, tests 14%)
+
+  Transform  transforming modules took 2.13s · 53% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+> flow-visualizer-telemetry@0.2.0 build
+> next build
+
+▲ Next.js 16.3.4 (Turbopack)
+✓ Running next.config.ts took 12.5s
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 38.6s
+  Running TypeScript ...
+  Finished TypeScript in 19.6s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/3) ...
+✓ Generating static pages using 3 workers (3/3) in 936ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+└ ○ /_not-found
+
+
+○  (Static)  prerendered as static content
+
