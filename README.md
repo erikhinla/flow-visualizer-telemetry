@@ -1,8 +1,8 @@
 # PROOF
 
-A scan for marketing agencies. It shows the reconstruction inside one campaign workflow — approvals, versions, feedback, spend — and a connection that returns hours without cutting the review that protects the work.
+A trace for marketing agencies. It shows where a project is, what needs done, who has it, and by when. Digital fog hides those four facts. Digital friction stalls the desk that rebuilds them.
 
-The waiting curve marks when that load is still forming and when it has seized the desk. If a fix costs more than it returns, the balance says so.
+Once the Trace can see the desk, the path back is the four keystones: Folders, Markdown, Scripts, and Protocols. The waiting curve still marks when that load is forming and when it has seized the desk. If a fix costs more than it returns, the balance says so.
 
 ## Run
 
@@ -15,8 +15,8 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 - **Scan** — fifteen questions about how the agency runs campaign work. Scores and routing follow the saved point values. Unanswered questions stay unknown.
-- **Desk** — account, creative, production, media, and the other desks a job crosses. Edit the sample, or keep it labeled simulated. Compare one connection.
-- **Record** — reconstruction, the balance of the fix, the review that stays, and a JSON download.
+- **Trace** — where, what, who, and when on one desk. The keystone actions stay dark until the scenario is known. A sample stays simulated until you say otherwise.
+- **Record** — the four facts, the keystone path, the balance of the fix, and a JSON download.
 
 ## Models
 

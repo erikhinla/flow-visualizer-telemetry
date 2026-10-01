@@ -160,6 +160,14 @@ h3 {
     'opsz' 144;
 }
 
+.home h1.facts-title {
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.02em 0.28em;
+  font-size: clamp(2.5rem, 12vw, 6.4rem);
+}
+
 h1 {
   margin: 0;
   font-size: clamp(2.2rem, 4.4vw, 3.8rem);
@@ -223,6 +231,13 @@ figcaption,
 .record {
   display: grid;
   gap: 2.5rem;
+  min-width: 0;
+}
+
+.home > *,
+.see > *,
+.record > * {
+  min-width: 0;
 }
 
 .hero-instrument,
@@ -231,6 +246,8 @@ figcaption,
 .scenario,
 .action-card,
 .inspector,
+.trace,
+.stones,
 .see > .balance,
 .record > .balance,
 .map-result,
@@ -786,6 +803,204 @@ figcaption,
 @media (prefers-reduced-motion: reduce) {
   .token-move {
     animation: none;
+  }
+}
+
+.trace-head {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1.1rem;
+}
+
+.trace-head h2,
+.stones h2 {
+  margin: 0;
+}
+
+.state-line {
+  margin: 0.2rem 0 0;
+  max-width: 40rem;
+}
+
+.state-line.is-fog {
+  color: var(--muted);
+}
+
+.state-line.is-friction {
+  color: var(--brass);
+}
+
+.state-line.is-seized {
+  color: var(--ember);
+}
+
+.state-line.is-held {
+  color: var(--sage);
+}
+
+.foundation {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.fact {
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+  min-height: 13.5rem;
+  padding: 1rem 1.05rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.fact header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.7rem;
+  align-items: baseline;
+}
+
+.fact header h3 {
+  flex: 1 1 10rem;
+}
+
+.fact h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.fact-index,
+.state-pill,
+.seat span,
+.held span,
+.holds span,
+.stone-mark {
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.fact-index,
+.state-pill.is-untraced {
+  color: var(--muted);
+}
+
+.state-pill.is-fog {
+  color: var(--ivory);
+}
+
+.state-pill.is-friction {
+  color: var(--brass);
+}
+
+.state-pill.is-seized {
+  color: var(--ember);
+}
+
+.state-pill.is-held {
+  color: var(--sage);
+}
+
+.fact.is-fog {
+  background:
+    linear-gradient(180deg, rgba(243, 236, 223, 0.05), transparent 42%), rgba(0, 0, 0, 0.22);
+  border-style: dashed;
+}
+
+.fact.is-friction {
+  border-color: rgba(212, 180, 131, 0.55);
+}
+
+.fact.is-seized {
+  border-color: rgba(231, 162, 122, 0.7);
+  background: rgba(231, 162, 122, 0.06);
+}
+
+.fact.is-held {
+  border-color: rgba(197, 208, 190, 0.55);
+}
+
+.fact .now,
+.fact .held,
+.fact .seat,
+.stone-action,
+.holds {
+  margin: 0;
+}
+
+.fact .held,
+.fact .seat,
+.holds {
+  color: var(--muted);
+}
+
+.fact .held span,
+.fact .seat span,
+.holds span {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--brass);
+}
+
+.stone-path {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.stone {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  min-height: 14rem;
+  padding: 1rem;
+  border: 1px solid var(--brass-deep);
+  border-radius: 1rem;
+  background: var(--carbon);
+}
+
+.stone h3 {
+  margin: 0;
+  font-size: 1.55rem;
+}
+
+.stone-mark {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--brass);
+}
+
+.stone-action {
+  font-size: 1.02rem;
+}
+
+.stone.is-locked {
+  border-style: dashed;
+  border-color: var(--line);
+  background: transparent;
+}
+
+.stone.is-locked .stone-mark,
+.stone.is-locked h3,
+.stone.is-locked .stone-action {
+  color: var(--muted);
+}
+
+@media (min-width: 720px) {
+  .foundation,
+  .stone-path {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1040px) {
+  .stone-path {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 

@@ -25,9 +25,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'PROOF — the hours before they take the launch',
+  title: 'PROOF — where, what, who, when',
   description:
-    'An agency scan for the reconstruction inside campaign work, and a fix that returns hours without cutting the review that protects the result.',
+    'An agency trace for the four facts a job needs, and a path to rebuild them on Folders, Markdown, Scripts, and Protocols.',
 };
 
 export const viewport: Viewport = {

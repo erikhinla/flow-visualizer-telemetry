@@ -6,8 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Balance } from './Balance';
 import { DepartmentMark } from './DepartmentMark';
 import { FlowTrack } from './FlowTrack';
+import { KeystonePath } from './KeystonePath';
 import { Readout } from './Readout';
 import { SeizureCurve } from './SeizureCurve';
+import { TraceBoard } from './TraceBoard';
 import { useSession } from './SessionProvider';
 import { DEPARTMENTS, getDepartment } from '../lib/departments';
 import { trace } from '../lib/diagnostics';
@@ -87,6 +89,21 @@ export function VisualizerExperience() {
           );
         })}
       </div>
+
+      <TraceBoard
+        departmentId={department.id}
+        band={comparison.baseline.band}
+        repairHours={comparison.baseline.repairHours}
+        known={comparison.baseline.known}
+        evidenceKind={session.evidenceKind}
+      />
+      <KeystonePath
+        departmentId={department.id}
+        band={comparison.baseline.band}
+        repairHours={comparison.baseline.repairHours}
+        known={comparison.baseline.known}
+        evidenceKind={session.evidenceKind}
+      />
 
       <FlowTrack
         stages={department.stages}

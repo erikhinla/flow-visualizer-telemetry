@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Balance } from './Balance';
+import { KeystonePath } from './KeystonePath';
+import { TraceBoard } from './TraceBoard';
 import { useSession } from './SessionProvider';
 import { trace } from '../lib/diagnostics';
 import { formatHours, formatPressure, formatWait, reviewDate } from '../lib/format';
@@ -56,6 +58,21 @@ export function RecordExperience() {
         Evidence is marked <strong>{session.evidenceKind}</strong>. A simulated or estimated figure
         is not an observation.
       </p>
+
+      <TraceBoard
+        departmentId={department.id}
+        band={baseline.band}
+        repairHours={baseline.repairHours}
+        known={baseline.known}
+        evidenceKind={session.evidenceKind}
+      />
+      <KeystonePath
+        departmentId={department.id}
+        band={baseline.band}
+        repairHours={baseline.repairHours}
+        known={baseline.known}
+        evidenceKind={session.evidenceKind}
+      />
 
       <section>
         <h2>The reconstruction</h2>
@@ -159,7 +176,7 @@ export function RecordExperience() {
           Print
         </button>
         <Link className="button ghost" href="/visualizer">
-          Back to the workflow
+          Back to the Trace
         </Link>
       </div>
     </article>

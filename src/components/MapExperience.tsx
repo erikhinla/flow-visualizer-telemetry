@@ -151,7 +151,7 @@ export function MapExperience() {
         </div>
         <div className="actions">
           <Link className="button" href="/visualizer?from=map">
-            Open the {department.name} desk
+            Trace {department.name}
           </Link>
           <button
             type="button"

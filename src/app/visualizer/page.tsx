@@ -3,14 +3,14 @@ import { Suspense } from 'react';
 import { VisualizerExperience } from '../../components/VisualizerExperience';
 
 export const metadata: Metadata = {
-  title: 'Desk — PROOF',
+  title: 'Trace — PROOF',
   description:
-    'One agency desk. Reconstruction hours, the wait before a launch or flight seizes, and a connection that keeps the review.',
+    'Where the project is, what needs done, who has it, and by when — then the keystones that put those facts back.',
 };
 
 export default function VisualizerPage() {
   return (
-    <Suspense fallback={<p className="note">Opening the workflow…</p>}>
+    <Suspense fallback={<p className="note">Opening the Trace…</p>}>
       <VisualizerExperience />
     </Suspense>
   );

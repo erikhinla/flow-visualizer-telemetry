@@ -15,6 +15,7 @@ import {
   suggestDepartment,
   teamHours,
 } from '../src/lib/questionnaire';
+import { DESK_TRACE, factState } from '../src/lib/trace';
 import type { PressureId } from '../src/lib/types';
 
 function answered(values: Array<0 | 1 | 2>, optionIndex = 0) {
@@ -251,5 +252,47 @@ describe('recorded manifestation index', () => {
       modifierOn: true,
     });
     assert.ok(Math.abs(on.score / off.score - Math.pow(0.25, 1.8)) < 1e-9);
+  });
+});
+
+describe('trace', () => {
+  it('reads fog, friction, seizure, and an untraced desk from the display band', () => {
+    assert.equal(factState('unknown', null), 'untraced');
+    assert.equal(factState('unavailable', 4), 'untraced');
+    assert.equal(factState('seized', 9), 'seized');
+    assert.equal(factState('forming', 2.5), 'friction');
+    assert.equal(factState('closing', 2.5), 'friction');
+    assert.equal(factState('fog', 1), 'fog');
+    assert.equal(factState('open', 0), 'held');
+    assert.equal(factState('open', 1), 'fog');
+  });
+
+  it('gives every desk four facts and the four keystones', () => {
+    const factIds = ['where', 'what', 'who', 'when'];
+    const stoneIds = ['folders', 'markdown', 'scripts', 'protocols'];
+    const stoneNames = ['Folders', 'Markdown', 'Scripts', 'Protocols'];
+    for (const department of DEPARTMENTS) {
+      const trace = DESK_TRACE[department.id];
+      assert.deepEqual(
+        trace.facts.map((fact) => fact.id),
+        factIds
+      );
+      assert.deepEqual(
+        trace.keystones.map((stone) => stone.id),
+        stoneIds
+      );
+      assert.deepEqual(
+        trace.keystones.map((stone) => stone.name),
+        stoneNames
+      );
+      for (const fact of trace.facts) {
+        assert.ok(fact.now.length > 0);
+        assert.ok(fact.held.length > 0);
+      }
+      for (const stone of trace.keystones) {
+        assert.ok(stone.holds.length > 0);
+        assert.ok(stone.action.length > 0);
+      }
+    }
   });
 });

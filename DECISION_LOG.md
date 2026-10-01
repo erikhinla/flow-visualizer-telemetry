@@ -70,6 +70,17 @@ Each entry includes:
 
 ---
 
+### Decision #005 - Trace and the quad keystones
+
+**Date**: 2026-10-01  
+**Category**: Product  
+**Decision**: After a desk scenario is known, PROOF shows a rebuild path on the quad keystones: Folders, Markdown, Scripts, and Protocols. The Trace reads four facts — where the project is, what needs done, who is doing it, and by when — from the existing display band. Unknown and zero-capacity desks stay untraced. Keystone actions are hidden on screen until the scenario is known. The downloaded record keeps the planned actions and a complete flag.  
+**Rationale**: Agencies asked for the operating context fog and friction erase, and a visible path to put that foundation back. The keystones already had this meaning in the master document. They were supporting concepts, not the opening pitch. They are now the close of the Trace.  
+**Impact**: Navigation reads Scan, Trace, and Record. Sample desks are known, so their stones are visible and labeled simulated. Clearing an input locks the stones. Scoring, repair-hour accounting, and the revision-3 index are unchanged.  
+**Status**: Active
+
+---
+
 ## Future Decisions
 
 _To be filled as the project evolves_

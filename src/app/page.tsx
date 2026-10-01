@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { Balance } from '../components/Balance';
 import { FlowTrack } from '../components/FlowTrack';
+import { KeystonePath } from '../components/KeystonePath';
 import { SeizureCurve } from '../components/SeizureCurve';
+import { TraceBoard } from '../components/TraceBoard';
 import { getDepartment } from '../lib/departments';
 import { formatHours, formatPressure, formatWait } from '../lib/format';
 import { compareScenario } from '../lib/operational';
@@ -16,21 +18,41 @@ export default function HomePage() {
     <div className="home">
       <section className="hero">
         <p className="kicker">PROOF · for marketing agencies</p>
-        <h1>See the hours before they take the launch.</h1>
+        <h1 className="facts-title">
+          <span>Where</span>
+          <span>What</span>
+          <span>Who</span>
+          <span>When</span>
+        </h1>
         <p className="lede">
-          A campaign can still ship while account, creative, and media spend the week reconstructing
-          approvals, versions, and spend. PROOF puts that load on one desk, then shows a connection
-          that gives time back without cutting the review that protects the work.
+          Those four facts are the foundation of a job. Digital fog hides them. Digital friction
+          stalls the desk that has to rebuild them. After the Trace, PROOF opens a path back onto
+          four keystones: Folders, Markdown, Scripts, and Protocols.
         </p>
         <div className="actions">
-          <Link className="button" href="/map">
-            Scan the agency
+          <Link className="button" href="/visualizer">
+            Start the Trace
           </Link>
-          <Link className="button ghost" href="/visualizer">
-            Open a desk
+          <Link className="button ghost" href="/map">
+            Scan the agency
           </Link>
         </div>
       </section>
+
+      <TraceBoard
+        departmentId="PR"
+        band={result.band}
+        repairHours={result.repairHours}
+        known={result.known}
+        evidenceKind="simulated"
+      />
+      <KeystonePath
+        departmentId="PR"
+        band={result.band}
+        repairHours={result.repairHours}
+        known={result.known}
+        evidenceKind="simulated"
+      />
 
       <section className="hero-instrument" aria-label="Sample public relations scenario">
         <div className="instrument-head">
@@ -89,30 +111,27 @@ export default function HomePage() {
       </section>
 
       <section className="sequence">
-        <h2>What an agency can take from the scan.</h2>
+        <h2>What the Trace gives an agency.</h2>
         <ol>
           <li>
             <span>01</span>
-            <strong>Where the hours leave the craft</strong>
-            Reconstruction, chasing, and reconciliation. Not the making, and not the review the work
-            needs.
+            <strong>Where the project is</strong>
+            The live file, the draft, the master, the handoff. One place, or a search.
           </li>
           <li>
             <span>02</span>
-            <strong>Whether the next flight can still make it</strong>
-            Pressure and the wait curve. Forming is a warning. Seized means the desk is already
-            behind the work.
+            <strong>What needs done</strong>
+            The decision, the next action, the definition of done. Written, or reconstructed.
           </li>
           <li>
             <span>03</span>
-            <strong>One connection, not a new stack</strong>
-            The brief, the approval, the master, the approver, or the shared definition of spend.
+            <strong>Who has it, and by when</strong>A named seat and a date. Fog is the chase.
+            Friction is the desk already bending.
           </li>
           <li>
             <span>04</span>
-            <strong>The balance</strong>
-            Hours that come back, hours the fix costs to keep, the review that stays, and the result
-            that must not get worse.
+            <strong>The keystones</strong>
+            Folders, Markdown, Scripts, Protocols. They open only after the Trace can see the desk.
           </li>
         </ol>
       </section>

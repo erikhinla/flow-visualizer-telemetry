@@ -11,6 +11,7 @@ import {
   teamHours,
   type MapAnswers,
 } from './questionnaire';
+import { deskTrace, factState } from './trace';
 import type { DepartmentId, EvidenceKind, ScenarioInputs } from './types';
 import { MANIFESTATION_MODEL_VERSION, MAP_MODEL_VERSION, OPERATIONAL_MODEL_VERSION } from './types';
 
@@ -101,6 +102,15 @@ export function buildRecord(input: PortableRecordInput) {
           note: 'Uncalibrated scenario index. Height is an artistic scale, not a physical or financial measurement.',
         }
       : null,
+    foundation: {
+      complete: comparison.baseline.known && comparison.baseline.band !== 'unknown',
+      state: factState(comparison.baseline.band, comparison.baseline.repairHours),
+      facts: deskTrace(input.departmentId).facts,
+      keystones: deskTrace(input.departmentId).keystones,
+      ownerRole: department.action.ownerRole,
+      reviewInDays: department.action.reviewInDays,
+      note: 'On screen, keystone actions stay hidden until the scenario is known. This record keeps the planned actions and marks whether the Trace was complete.',
+    },
     balance: AGENCY_BALANCE[input.departmentId],
     action: {
       change: department.action.change,

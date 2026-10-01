@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 
 const LINKS = [
   { href: '/map', label: 'Scan' },
-  { href: '/visualizer', label: 'Desk' },
+  { href: '/visualizer', label: 'Trace' },
   { href: '/record', label: 'Record' },
 ];
 
@@ -35,8 +35,11 @@ export function Shell({ children }: { children: ReactNode }) {
       </header>
       <main id="content">{children}</main>
       <footer className="colophon">
+        <p>
+          Digital fog hides where the project is, what needs done, who has it, and by when. Digital
+          friction is the drag that stalls the desk.
+        </p>
         <p>Reconstruction is not the craft. The client decision and the required review stay.</p>
-        <p>The numbers are a scenario until the evidence is marked observed.</p>
       </footer>
     </>
   );
