@@ -1,0 +1,633 @@
+﻿Global TBTX_BBAI_BBM GUIDE
+Owner: Erik Bush (@erikhbush) | Business: TransformBy10X (TBTX) / BizBuilders AI (BBAI) / BizBot Mrktng (BBM) Status: Living document — last updated 2026-09-26. This is the single source of truth. All other TBTX_MASTER copies are archived. Authority rule: Erik approves canon changes, creative direction, masters, and release. AI may draft, audit, inventory, test, and implement, but may not invent philosophy, change positioning, publish, fabricate evidence, or overwrite approved source. Anything new is PROPOSAL until he decides.
+
+
+________________
+
+
+Part 0 — Two-Minute Summary
+TransformBy10X (TBTX) is a three-brand ecosystem built on one causal idea: when AI outpaces infrastructure, you get Digital Fog. AI increases the quantity, speed, and flow of work faster than the systems around it can absorb — and when there's no control layer to catch the gap, a person becomes the control layer. That person quietly repairs the gap (searching, chasing, checking, remembering) until repair itself becomes the tax. TBTX's job is to make that gap visible, diagnose it, and build the infrastructure that closes it — without blaming the people doing the repair work and without blaming the tools.
+
+
+The route: Recognition → Diagnostic (PROOF / Digital Fog Scan) → Digital De-Fog Daily or BizBlueprint → aligned infrastructure → governed execution → recovered momentum → good purpose.
+
+
+________________
+
+
+Part 1 — Business Structure & Brand Ecosystem
+* TransformBy10X (TBTX) — the hub / worldview brand. Owns Digital Fog and the Digital Fog Scan concept. Lives at transformby10x.ai.
+* Fog-Lift — the personal lane. Product renamed (canon v2026.09.02) to Digital De-Fog Daily — $7.77 honor system / free download. Replaces the earlier "Digital Fog-Lift Kit" name.
+* BizBuilders AI (BBAI) — the operating foundation. B2B.
+* BizBot Mrktng (BBM) — growth activation. BBM does not sell products; it is the payoff to PROOF and the BizBlueprint, and the prep work for BBM is BBAI. Its role is feeding the engine and directing back toward PROOF, not selling directly.
+
+
+The PROOF Loop (closed lead loop): social media brings new visitors to PROOF → PROOF brings them to BBAI → BBAI brings them to BBM → BBM brings new visitors back to PROOF.
+
+
+Site split (locked 2026-09-21):
+
+
+* B2B stays on transformby10x.ai
+* B2C moved to erikhbush.com
+
+
+________________
+
+
+Part 2 — Strategy Layer
+Digital Fog cause model — three connected changes: Quantity, Speed, Flow (probabilistic, branching work entering deterministic operating models).
+
+
+Universal causal line: "When AI Outpaces Infrastructure, You Get Digital Fog." Technical diagnosis: probabilistic reasoning engines injected into deterministic legacy systems with no mediating control layer (the "Architectural Blindspot"). When there's no control layer, the system uses a person.
+
+
+Universal action line: "Map the gap. Align the Infra. Build Fog-Free." (Locked: third beat is "Build Fog-Free," not "Free the Fog." After-state language is fog-free.)
+
+
+Digital Fog qualification test (all three required):
+
+
+1. AI materially changed quantity/speed/flow
+2. Infrastructure didn't adapt
+3. A person or department absorbed the gap work
+
+
+Operating sequence (the strategy): See the Fog → Diagnose the Fog → Create Context → Build the Foundation → Govern Execution → Activate Growth
+
+
+Five doctrine lines:
+
+
+1. Intelligence isn't the tool, it's the infrastructure
+2. Ambiguity is the enemy of automation
+3. Sequence is strategy
+4. The gap isn't AI adoption, it's operational architecture
+5. Assets may evolve, architecture does not
+
+
+Definitions (2026-09-22):
+
+
+* "Digital Fog is formed when AI output outpaces operational infrastructure."
+* "Digital Fog is the condition, Digital Friction is the consequence."
+* These go one layer below the joke (About sections), never on banners.
+
+
+________________
+
+
+Part 3 — Positioning Layer
+Main campaign lockup: "AI CREATED A JOB. (NOBODY WANTED.)" — the job is unwanted, the person is not.
+
+
+Second public lockup (separate block, never between hook and mutter): the mantle "Managing Digital Fog" + "Start Here" (note: "Start Here" CTA lock is retired — see Part 4 CTA history)
+
+
+Lockup type: Archivo Black for "AI Created a Job." and "Managing Digital Fog"; DM Sans for "(Nobody wanted.)" and "Start Here"
+
+
+The desire the campaign sells: freedom to live and work to good purpose. Emotional meaning leads; operational proof makes it credible.
+
+
+Route: Recognition → Digital Fog Scan / PROOF → Digital De-Fog Daily or BizBlueprint → aligned infrastructure → governed execution → recovered momentum → good purpose. BBM follows operating readiness and never leads.
+
+
+Front-door gate (locked): "Where do you stand?" — Sit out and Sit back shown as closed consequences; only Stand up opens the site.
+
+
+Positioning refinement (2026-09-23): core framing moved from "AI reassigned the work" to "the tool worked, and its success created a brand-new, unstaffed layer of coordination work." Crediting the tool keeps credibility with AI-using executives and makes "AI created a job (nobody wanted)" literally true. Short surfaces (headline, bio, banner) may still carry: "AI didn't take the work. It reassigned it to you."
+
+
+The gap line resolves the work-vs-worker question: operational architecture covers the mechanical systems AND the roles, responsibilities, and SOPs — what gets done, how it gets done, and who owns it.
+
+
+Diagnostic split: the public diagnostic is 8 questions for the B2C lane (Digital Fog Scan) and 15 Answers for the B2B lane (PROOF) — deliberately different counts as a lane signal. "Fifteen questions" is retired as of 2026-09-26.
+
+
+________________
+
+
+Part 4 — Marketing Layer
+MUST (marketing law, every public asset)
+Mirror, Understand, Solve, Transform. If an asset talks about TBTX before the reader recognizes themselves, it's too early.
+No villains
+No person or company is the villain. Satire targets infrastructure lag and preserves the dignity of both the person and the company. No blame-based commands.
+Cast rule
+Closed recurring character ecosystem, real mix of races, ages, genders, and lives. No defaulting to an all-Asian cast or a middle-aged white man unless deliberate and story-led.
+The find stage vs the fix stage
+Everything public right now is the find stage. We name the job, we don't sell the repair. Finding is the hook. Tracing is the work. The fix language stays parked until a buyer has been through PROOF.
+
+
+Stage
+	Job
+	Lines that belong here
+	Find
+	Name the unstaffed job. Get them to PROOF.
+	Department banners, the lead-in ladders, "See PROOF"
+	Trace
+	The 15 questions. Show where the job lives.
+	PROOF itself
+	Fix
+	Build the operating layer.
+	"Create context. Establish protocols. Sequence the work." / "Build the backbone before adding more AI."
+	
+
+Holding the fix lines is not deleting them. They stay as BBAI lines and remain available — they just don't run on a find-stage page.
+Retired language
+Retired
+	Why
+	Use instead
+	"AI didn't take the work. It reassigned it to you."
+	"Reassigned" says a manager moved existing work onto a person. Nothing was moved. The work is new, and nobody was hired for it.
+	"The tools work. They created a job nobody staffed."
+	Any form of "reassigned"
+	Same reason. No exception for headlines, bios, or tight space.
+	as above
+	"Find the stall."
+	"Stall" is a fourth noun at the highest-intent moment. Fog and Friction are the only two words we teach.
+	"Fifteen Answers. See where it shows up."
+	"Machine speed"
+	Two words where one does it.
+	"that speed"
+	"See where it landed."
+	Past tense reads like a verdict on something finished.
+	"See where it shows up."
+	"Find the Blockage."
+	Still dead.
+	n/a
+	"Fifteen questions"
+	The diagnostic produces answers, not questions asked of the reader.
+	"Fifteen Answers" / "15 Answers"
+	"That's friction worth finding."
+	Promises a justification for why the friction matters, rather than delivering the actual payoff: naming and evidence.
+	"That's friction, not a feeling."
+	
+
+One-use rule. "Coordination work" may appear once, lowercase, on a page. It never gets capitalized, never gets a definition, never becomes a third brand word.
+The payoff line
+See where it shows up.
+
+
+Present tense, it answers the line directly above it on both sites, and it stands alone in a bio or an ad. Runner-up, if the echo ever needs breaking: "See where it sits."
+Lead-in ladder — B2B (transformby10x.ai homepage and /bbai)
+Show the job, then name it. Opening on a definition is a glossary, and a cold visitor doesn't know the name yet.
+
+
+The tools work. That's not the problem. Generating at that speed created a job. Nobody scheduled it. Nobody staffed it. Your people absorbed it. They chase, check, and remember. That's Digital Fog. The drag it creates is Digital Friction. You can't fix what you can't see. It doesn't show up on a dashboard. Fifteen Answers. See where it shows up. [ PROOF ]
+
+
+Note the order: condition, then consequence. "That job is Digital Fog" is wrong because it narrows Fog from a condition to a job.
+Lead-in ladder — B2C (erikhbush.com)
+Same shape, different nouns.
+
+
+The tool works. That's not the problem. It writes faster than you can check. The extra pass landed on you. That's Digital Fog. The drag on your day is Digital Friction. Eight answers. See where it shows up.
+
+
+B2C rules: no PROOF wordmark, no "your people," no "fifteen," no $7.77 in the lead-in. Keep whatever CTA label is already live on the page.
+Short lines for headlines and bios
+Short:
+
+
+The tools work. They created a job nobody staffed.
+
+
+Under 160 characters, for X and LinkedIn:
+
+
+The tools work. They created a job nobody staffed. Digital Fog is the condition. Digital Friction is what the business feels next.
+Satirical ad framework
+Setup a real benefit → parenthetical turn revealing the mundane gap work → structural reveal (AI outpaced infrastructure) → human desire → route. Approved example: "AUTOMATION SAVED EVERYONE TIME. (Billing is still trying to find it.)"
+Department banner system
+The live social and banner system at the find stage. Three beats, one unit:
+
+
+1. Setup, biggest type. AI MAKES MORE WORK POSSIBLE
+2. Deadpan continuation. ...for [department], [the specific unglamorous task].
+3. Label and ask, together (LOCKED 2026-09-26). That's friction, not a feeling. SEE PROOF:
+
+
+No "but." A "but" negates. Beat two is a continuation of beat one, not a reversal. The irony does the work.
+
+
+Type hierarchy is part of the copy. The setup is the biggest thing on the frame. The label and the ask are one visual unit and never get separated across a layout.
+
+
+Department rotation:
+
+
+Page
+	Department
+	Continuation
+	1
+	PM
+	...for PM, checking which version is "the FINAL FINAL."
+	2
+	HR
+	...for HR, onboarding people into a process nobody can explain.
+	3
+	PM
+	...for PM, checking which version is "the FINAL FINAL."
+	4
+	Account / unnamed
+	...for whoever's been quietly holding it together.
+	5
+	IT
+	...for IT, being a human MCP keeping it connected.
+	6
+	Finance
+	...for finance, reconciling what never matches.
+	7
+	Strategy
+	...for strategy, context switching on 10 briefs.
+	8
+	Creative
+	...for creative, making round 7 look like round 1.
+	9
+	Biz Ops
+	...for biz ops, building the spreadsheet that tracks the other spreadsheets.
+	
+
+Page 4 is the emotional anchor of the set — the only line that names a person instead of a function, and the one that gets shared.
+Copy anti-patterns (banned)
+Engine-first explanations, diagnosis as the hook, selling a meeting instead of relief, invented proof, generic AI hype words (supercharge, unlock, 10x, game-changing, revolutionary), therapeutic padding, autonomy claims, robotic voice, em/en dashes, public chatbots or a founder avatar as conversion path.
+Voice hard fail
+Contractions by default in public copy; expanded forms are a pattern fail on review. Read it out loud and rewrite if it sounds written.
+Two creative modes (declare per task)
+* Brand System Mode — clarity, accuracy, consistency
+* Campaign Mode — memorability, emotion, craft
+
+
+Mixing without naming the primary mode is defective. Default to Brand System Mode and ask.
+CTA history
+* Original lock: "Start Here" — retired as of 2026-09-13.
+* Interim: "Map Business Momentum" → transformby10x.ai/proof — retired.
+* Current PROOF ask lines: "See PROOF" or "Scan for PROOF."
+* Locked 2026-09-26: the department banner label+ask unit is "That's friction, not a feeling. SEE PROOF:" — replaces "That's friction worth finding. SEE PROOF:" everywhere.
+PROOF link routing (corrected 2026-09-23)
+The hash form https://www.transformby10x.ai/#proof is retired — it keeps the PROOF card hidden behind the gate and lands visitors on the manifesto. Do not use it anywhere, including QR codes.
+
+
+Destination
+	Use
+	A person's day, B2C
+	https://erikhbush.com
+	The business, B2B general
+	https://transformby10x.ai/bbai
+	Any asset that already says PROOF
+	https://transformby10x.ai/proof
+	
+
+Open exposure: any banner already in circulation with a printed QR encoding /#proof sends every scan to the manifesto instead of PROOF. Those QRs must be re-encoded before further distribution.
+QR codes (locked 2026-09-26)
+QR codes are reserved for out-of-home / print media only. Never in a digital or social layout — a non-clickable QR on a digital surface adds a friction step (phone out, scan) when a native clickable link is already available. Fewer clicks to destination is the standard.
+Copy structure (his method)
+Ironic setup → mirror the reader's department → state the point of view → ask them to do something. Villain/protagonist storytelling that pays off the reader.
+Locked/retired public lines
+Retired or banned: "Find the Blockage," "Take the Scan," "Take the Digital Fog Diagnostic," "Diagnose the Friction," "BizBot Marketing" spelled out, generic "Learn More," "Book a Discovery Call" as the primary relief CTA.
+★ Approved Copy — PROOF Banner (updated 2026-09-26)
+[headline] AI MAKES MORE WORK POSSIBLE [subhead] …for whoever's been quietly holding it together. [tagline] 15 Answers. One friction point. [CTA] That's friction, not a feeling. SEE PROOF: transformby10x.ai/proof
+
+
+________________
+
+
+Part 5 — Revenue Layer
+Revenue order and locks:
+
+
+* Recognition (Scan/Diagnostic) is free, not a product.
+* Digital De-Fog Daily is $7.77 honor / free.
+* BBAI foundation work is core revenue — dollar amounts deliberately NOT locked.
+* BBM productized offers are also unpriced.
+* Never invent a price or a proof number.
+
+
+Every client is a custom scoped engagement: no standard packages, no fixed deliverables — scope is set per client after PROOF. BBM items are capabilities, not SKUs. Nothing carries a price, tier, duration, or inclusions list.
+
+
+The Principle Build (Quad Keystones): Folders, Markdown, Scripts, Protocols — the four phases of the "Principle Build," sold as one client-facing scope.
+
+
+* The foundation/Principle Build is a one-time charge, not a retainer.
+* The client owns the Quad Keystones foundation outright — client ownership is the point of the model.
+
+
+The retainer: long-term work — repeatable project workflows, automated effectively, fine-tuned as variables change. Items that help generate revenue for the client are the primary things that should make up a retainer.
+
+
+CARE (Conversion Architecture Revenue Engine): internal methodology for turning useful conversations into trust, leads, and revenue. Public materials lead with the customer promise "Earn trust before the first sales call" — CARE appears as the method only after the buyer understands the opportunity.
+
+
+BBM locked line: "Tools magnify what they run on."
+
+
+"Ambiguity doesn't automate" pairs with: automation is the opposite end of the line from friction, and automation is what scales.
+
+
+________________
+
+
+Part 6 — PROOF (Business Diagnostic)
+Name: PROOF — subtitle "Fog & Friction Forensics." Tagline: "See where people are carrying what the system can't." Also carries: "Ambiguity Doesn't Automate."
+
+
+Naming — DECIDED FINAL, 2026-09-26. TRACE was considered and rejected. Reasons: TRACE is five letters, not four, and doesn't carry PROOF's acronym structure; renaming would have broken the live /proof route, LinkedIn About copy, and printed QR codes already in circulation on out-of-home assets. PROOF is the product name, final. "Trace" stays alive as the verb for the method ("tracing is the work") — the appeal of TRACE without the rename cost. Do not revisit this. Do not revert to "FLOW Blueprint" either — a blueprint shows how something should be built, PROOF examines how work moves now.
+
+
+Acronym: Process, Response, Output, Operating Capacity, Friction.
+
+
+Causal chain: Output enters a Process. When Process and Operating Capacity can't carry it, people Respond by filling gaps — searching, chasing, checking, remembering, reconnecting, translating, rebuilding. This creates the Human Repair Load, the tax, not the remedy. Repeated repair becomes Fog; when people can't carry it, Friction appears.
+
+
+PROOF reveals the human repair load and names the first investigation — it does not perform the remedy.
+
+
+Method chain (public-safe): Answers → Patterns → Pressure → Likely human repair → Friction risk → First investigation. Never expose proprietary weights or present the formula as scientific validation.
+
+
+Locked readout order: What you're feeling / What's causing it / Where it's showing up / What it's taking away / What matters first / What happens next
+
+
+Five evidence labels: Survey derived, Assumed, Illustrative, Proposed, Observed. Unknown stays unknown; a model result is never a measured business fact.
+
+
+Banned unsupported claims: 10X output, a 40-hour tax, a 75% reduction, execution dropping to zero, enterprise freeze, invented hours/costs/ROI/benchmarks.
+
+
+Three creative territories (one dominant per artifact): Forensic Trace, Pressure Field, Human Carry.
+
+
+Momentum Monster: a marketing personification. Momentum Loss Index 0–100 maps to 0–100 feet. Never scientific evidence or a diagnostic variable.
+
+
+Visual world: deep charcoal, black, warm metal, oxidized copper, restrained blue, warning amber, signal red. Strong negative space, contemporary editorial typography, traces revealing movement. Visible copy short enough to feel, not study.
+
+
+PROOF artifact exclusions: FLOW Blueprint, FLOW Agent AS, Quad Keystones, named agent runtimes, portfolio-project material, generic SaaS graphics, cute fog clouds, literal blueprints, dense labeled machinery diagrams, tiny decorative text, feature lists, worker-blaming language.
+
+
+PROOF voice avoids: operational alignment, governance layer, change the link, digital transformation, optimize workflows, leverage synergies, drive efficiency, systemic failure, operational physics, health score, readiness score.
+
+
+PROOF must not feel like: a survey, consulting framework, PDF report, software dashboard, an AI company explaining AI, or a machine judging workers. The final reaction should be recognition, then relief.
+
+
+Product flow: Digital De-Fog Daily → Free Map → Fog & Friction Finder (the diagnostic) → Diagnostic Readout → Client Engagement → BizBlueprint → Quad Keystones / Infrastructure Alignment → Implementation → Governed Execution
+
+
+BizBlueprint is the post-engagement fix plan built from diagnostic findings — not the diagnostic itself.
+
+
+Ownership boundary: ChatGPT/Codex owns the Finder/Visualizer diagnostic engine in ~/PROJECTS/flow-visualizer-telemetry. Claude must not modify that repo and treats its output contract as an upstream dependency for the website.
+
+
+________________
+
+
+Part 7 — Character Canon
+Mr. Nobody — legal identity Noah Eli Bottie, non-binary (they/them), a Project Manager with 20+ years experience. Canon doc v2026.09.02 spells the name Noah Bottiē~Élle, a respected Project Manager at "LA/MIA/NYC Advertising," and uses he/him there.
+
+
+Arc: Noah gets passed over for an expected promotion when the agency adopts an agentic workflow governance OS called FAAS (Frictionless Leverage Orchestrated Workflows Agent Architected Schemas), which absorbs the fog Noah used to manage — leaving Noah with no fog left to manage.
+
+
+Bitter about the passover, Noah renames to Drew Elle, earns a PhD/Doctorate from MIT in AI Systems Architecture, and starts a podcast. Dr. Drew Elle's animosity fuels a villain alter ego, Dr. Drool, whose mission is to keep the business world distracted with shiny tools and discredit infrastructure advocates as conspiracy theorists — to protect Dr. Drew Elle's empire.
+
+
+Dr. Drool's core psychology: a zero-sum belief that someone else's success takes away from their own, so they need others to fail to feel superior. They'd rather keep millions in infrastructure ignorance than free them from fog into creative sovereignty.
+
+
+Tone note: the transformation is meant to be non-literal, more Magneto-style (a sympathetic, motivated antagonist) than a literal werewolf/Hulk physical transformation. The 5G/moon-landing references illustrate the level of shade/rhetoric Dr. Drew Elle throws — not literal talking points to reuse.
+
+
+"Tool Drool" — related marketing bit/vehicle used to educate and to demonstrate the leverage of building 3 brands/businesses solo.
+
+
+Launch timing: Mr. Nobody does not launch until October 2026 and must stay off public surfaces until then.
+
+
+________________
+
+
+Part 8 — Creative System
+Ten-department social system
+Code
+	Moniker
+	Accent
+	ACC
+	The Context Relay
+	Cobalt
+	FIN
+	The Reconciliation Loop
+	Ledger green
+	LGL
+	The Provenance Chain
+	Oxblood
+	PRD
+	The Version Stack
+	Orange
+	STR
+	The Signal Filter
+	Violet
+	CRT
+	The Option Field
+	Magenta
+	PR
+	The Approval Pulse
+	Cyan
+	MED
+	The Attribution Maze
+	Chartreuse
+	HR
+	The Human Context Check
+	Coral
+	OPS
+	The Missing Layer
+	Brass
+	
+
+Legal and PR must not share a visual behavior.
+Spatial chassis
+12-column grid, 6-unit safe frame. Diagnosis in columns 1–4; person and evidence in 5–12. Department badge upper left, campaign lockup lower left. Fracture line never crosses a face. Person occupies a third to half the frame. Per-ratio crops specified for 4:5, 1:1, 9:16, 16:9.
+Three-second end card beat sheet
+"WHEN AI OUTPACES INFRASTRUCTURE" types on → INFRASTRUCTURE cracks → DIGITAL FOG resolves → OG swaps to RICTION → then "MAP YOURS." Primary route /bbai/map, earned next step /bbai/blueprint, no competing buttons.
+Three visual modes
+* TBTX campaign — cinematic / editorial / photorealistic
+* BBAI — industrial precision at museum grade: brushed steel, sparse copper at connection points, glass, blueprint linework, near-black grounds (#0D0F12–#1A1D23), warm gold key with cool fill
+* BBM — kinetic and productized
+
+
+Emerald in TBTX campaign work is reserved for release, useful movement, and regained momentum — never body or problem copy.
+
+
+Default creative dials: design variance 8, motion intensity 7, visual density 4. Every motion job must serve hierarchy, storytelling, feedback, or state change.
+
+
+Anti-template bans: centered headline on AI-purple mesh, three equal feature cards, icon-heading-paragraph rows, bento grids, stock laptop/dashboard as meaning, fake metrics or testimonials, gradient headline as the main move, neon glows, split-screen text + B-roll as the default video layout, title-plus-five-bullets slides.
+
+
+Production rounds 0–5: Brief → three-to-four materially different concept territories with rendered proof → direction development → foundational master → adaptation → release. A correct message is not an approved creative direction. publish_allowed defaults to false.
+
+
+Brand mark: "TBTX™ / BE FOG-FREE" wordmark. First TBTX logo created 2026-09-21. TransformBy10X LinkedIn company page went live 2026-09-21 with that mark as logo.
+
+
+________________
+
+
+Part 9 — Naming Registry & Locked Terms
+Internal machinery that must not lead public surfaces: MUST, FLOW Agent AS (never "FLOW Agent OS"), CARE (soft mention only), GOAL (Governed Operational Architecture Logic, not public), FAAS (internal shorthand for the same engine), W.I.N., Quad Keystones (now client-facing as the Principle Build — see Part 5), Arva (restrained visual only, never a chatbot or voice).
+
+
+FLOW Agent AS: the name is and always was "FLOW Agent AS" (Frictionless Leverage Orchestrated Workflows Agent Architected Schemas). It is not an OS. Never shortened to "FLOW" alone, never cased as "Flow," never split.
+
+
+FLOW Agent AS is agent-agnostic: it's a governing framework, not a roster. It names roles and never names the tools occupying them. Hermes, Agent Zero, OpenClaw, Manus, Grok, and Jules come out of the framework and out of any asset describing it.
+
+
+"FLOW Blueprint" was renamed to PROOF — do not use the FLOW Blueprint name.
+
+
+ArVA (Architected Voice Agent — never AVA/MAVA/AiVA): go-to-market sequenced internal-first, run on his own operation before being sold.
+
+
+BizBot Mrktng / BBM — never spelled out publicly as "BizBot Marketing."
+
+
+________________
+
+
+Part 10 — Agent & Tool Stack / Production Workflow
+Tool roles per canon:
+
+
+* Notion — canon control and decision log
+* Grok/Imagine — visual ideation
+* LLMs — synthesis and briefs (not inventing brands)
+* Canva/CapCut/Resolve — production
+* Postiz — publishing handoff
+* Activepieces — moves approved work
+* FLOW Agent AS — governs production against the book
+
+
+Agent roles per canon:
+
+
+* FLOW produces the bounded artifact
+* Hermes — canon-sensitive copy support
+* OpenClaw — files/media/rendering/link checks
+* Agent Zero — adversarial validation
+* Manus — bounded research only
+* Grok — optional challenge or footage
+
+
+Never label a generic model call as one of these named roles.
+
+
+"Snowfall Method" — 10-stage multi-tool creative production workflow: Grok (ideation) → Manus (project/workflow management) → Claude (production planning) → Gemini (visual review) → Codex (tests/validators) → Jules (repo code changes) → Hermes VPS (job/queue automation) → VS Code/Cursor/Antigravity (human dev/review)
+
+
+Agent stack update (2026-09-24):
+
+
+* Antigravity connected to Hermes (VPS) and to Google Cloud Vertex account
+* Canva and Postiz execution consolidated to one worker (Gemini/Antigravity) — supersedes routing Canva jobs to Manus
+* Operating principle: keep execution contained in one worker rather than splitting a job across several
+
+
+Paid ads frozen until a verified proof library exists. Organic only until then.
+
+
+________________
+
+
+Part 11 — Infrastructure Status
+Sites:
+
+
+* transformby10x.ai (B2B) — deployed and live; Vercel project tbtx-next-ecosystem under the erikhbush-8628s-projects team
+* erikhbush.com (B2C) — connected to Vercel 2026-09-21
+
+
+Postiz: self-hosted via Docker on his VPS, live at postiz.transformby10x.ai. Three channels connected: LinkedIn personal, LinkedIn company page, X @erikhbush. His X company account @Trnsfrmby10x is deliberately not connected to Postiz.
+
+
+Two X account roles:
+
+
+* @erikhbush — founder account; work scenes plus, separately, life posts; posts first
+* @Trnsfrmby10x — destination account; work only, repeating a founder scene later; never life posts
+
+
+Hermes on the Netcup VPS: runs at 159.195.251.226, version 0.21.0, native Python 3.11 aiohttp service. Supervised by systemd user unit hermes-gateway.service. Fronted by Caddy at https://159.195.251.226:8443.
+
+
+________________
+
+
+Part 12 — Open Items / Unresolved Decisions
+* Exact phrasing lock for "AI didn't take on more work. It reassigned it to you" (short-surface variant only — the long form is retired, see Part 4)
+* Whether to keep OpenClaw as a named canon agent role or strip it from the framework
+* FLOW Telemetry / FLOW Monitor layer — not yet merged into core PROOF scoring
+
+
+(PROOF vs. TRACE and the CTA-variant question are both closed as of 2026-09-26 — see Appendix A.)
+
+
+________________
+
+
+Appendix A — Correction Log
+Date
+	Correction
+	2026-09-13
+	"Start Here" CTA retired; current CTA is the PROOF one
+	2026-09-13
+	Mr. Nobody confirmed phase 2, not current
+	2026-09-13
+	PROOF acronym confirmed: Process, Response, Output, Operating Capacity, Friction
+	2026-09-16
+	Question counts corrected: Scan (B2C) = 8 questions, Map/PROOF (B2B) = 15
+	2026-09-17
+	FLOW Agent AS name/spelling corrected — was never "FLOW Agent OS"
+	2026-09-17
+	Vercel unblocked; TBTX site deployed and live
+	2026-09-18
+	BBM repositioned: no products — BBM is the payoff to PROOF/BizBlueprint
+	2026-09-21
+	B2B/B2C split: B2B stays transformby10x.ai, B2C moves to erikhbush.com
+	2026-09-21
+	First TBTX logo mark created; LinkedIn company page live
+	2026-09-23
+	PROOF link corrected — hash-form URL retired, lane-specific routing locked
+	2026-09-23
+	Positioning refined to "the tool worked, and its success created a brand-new, unstaffed layer of coordination work"
+	2026-09-23
+	Find-stage system locked: retired-language table, lead-in ladders (B2B/B2C), department banner rotation
+	2026-09-23 (evening)
+	TRACE considered as a PROOF replacement and rejected — QR codes/route/About already live
+	2026-09-24
+	Canva/Postiz execution consolidated to one worker (Gemini/Antigravity)
+	2026-09-25
+	New approved PROOF banner copy set added
+	2026-09-26
+	PROOF vs. TRACE decided final — PROOF wins, TRACE rejected and retired for good
+	2026-09-26
+	B2B diagnostic count corrected to "15 Answers" / "Fifteen Answers" — "Fifteen questions" retired
+	2026-09-26
+	Department banner label+ask line changed to "That's friction, not a feeling. SEE PROOF:" — replaces "That's friction worth finding. SEE PROOF:"
+	2026-09-26
+	QR codes locked as out-of-home/print only — never in digital or social layouts
+	2026-09-26
+	All prior TBTX_MASTER copies (.docx/.md/.html, and the 2026-09-23 dated file) archived; this document is the sole canon
+	
+
+________________
+
+
+
+
+End of document.
