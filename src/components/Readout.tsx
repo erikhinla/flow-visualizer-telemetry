@@ -34,7 +34,7 @@ export function Readout({
         {BAND_COPY[baseline.band]}
       </p>
       {changed ? (
-        <p className="legend">Ivory is this scenario. Brass is the changed connection.</p>
+        <p className="legend">The filled mark is this week. The ring is the same week after the connection.</p>
       ) : null}
       <dl className="ledger">
         <Line
