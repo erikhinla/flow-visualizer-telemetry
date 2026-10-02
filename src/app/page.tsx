@@ -17,26 +17,33 @@ export default function HomePage() {
   return (
     <div className="home">
       <section className="hero">
-        <p className="kicker">PROOF · for marketing agencies</p>
-        <h1 className="facts-title">
-          <span>Where</span>
-          <span>What</span>
-          <span>Who</span>
-          <span>When</span>
-        </h1>
-        <p className="lede">
-          Those four facts are the foundation of a job. Digital fog hides them. Digital friction
-          stalls the desk that has to rebuild them. After the Trace, PROOF opens a path back onto
-          four keystones: Folders, Markdown, Scripts, and Protocols.
-        </p>
-        <div className="actions">
-          <Link className="button" href="/visualizer">
-            Start the Trace
-          </Link>
-          <Link className="button ghost" href="/map">
-            Scan the agency
-          </Link>
+        <div>
+          <p className="kicker">PROOF · for marketing agencies</p>
+          <h1 className="facts-title">
+            <span>Where</span>
+            <span>What</span>
+            <span>Who</span>
+            <span>When</span>
+          </h1>
+          <p className="lede">
+            Those four facts are the foundation of a job. Digital fog hides them. Digital friction
+            stalls the desk that has to rebuild them. After the Trace, PROOF opens a path back onto
+            four keystones: Folders, Markdown, Scripts, and Protocols.
+          </p>
+          <div className="actions">
+            <Link className="button" href="/visualizer">
+              Start the Trace
+            </Link>
+            <Link className="button ghost" href="/map">
+              Scan the agency
+            </Link>
+          </div>
         </div>
+        <aside className="dial">
+          <p className="kicker">Public relations · simulated</p>
+          <p className="dial-word">Friction</p>
+          <p className="lede">The window is bending. The desk can still send the work.</p>
+        </aside>
       </section>
 
       <TraceBoard

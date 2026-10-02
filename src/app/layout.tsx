@@ -1,18 +1,20 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import { Fraunces, IBM_Plex_Mono, Outfit } from 'next/font/google';
+import { Barlow, Barlow_Condensed, IBM_Plex_Mono } from 'next/font/google';
 import { SessionProvider } from '../components/SessionProvider';
 import { Shell } from '../components/Shell';
 import './globals.css';
 
-const serif = Fraunces({
+const display = Barlow_Condensed({
   subsets: ['latin'],
+  weight: ['500', '600', '700'],
   display: 'swap',
-  variable: '--font-serif',
+  variable: '--font-display',
 });
 
-const sans = Outfit({
+const sans = Barlow({
   subsets: ['latin'],
+  weight: ['400', '500', '600'],
   display: 'swap',
   variable: '--font-sans',
 });
@@ -31,14 +33,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#141311',
+  themeColor: '#121416',
   width: 'device-width',
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body>
         <SessionProvider>
           <Shell>{children}</Shell>

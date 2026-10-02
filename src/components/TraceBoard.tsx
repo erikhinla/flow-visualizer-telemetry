@@ -57,28 +57,30 @@ export function TraceBoard({
                 : null;
           return (
             <article key={fact.id} className={`fact is-${state}`}>
-              <header>
-                <span className="fact-index">{FACT_ORDER[fact.id]}</span>
-                <h3>{FACT_QUESTION[fact.id]}</h3>
-                <span className={`state-pill is-${state}`}>{STATE_LABEL[state]}</span>
-              </header>
-              {state === 'untraced' ? (
-                <p className="now">Not visible yet.</p>
-              ) : state === 'held' ? (
-                <p className="now">{fact.held}</p>
-              ) : (
-                <p className="now">{fact.now}</p>
-              )}
-              {state !== 'held' && state !== 'untraced' ? (
-                <p className="held">
-                  <span>Holds as</span> {fact.held}
-                </p>
-              ) : null}
-              {seat ? (
-                <p className="seat">
-                  <span>{fact.id === 'who' ? 'Seat' : 'Review'}</span> {seat}
-                </p>
-              ) : null}
+              <span className="fact-index">{FACT_ORDER[fact.id]}</span>
+              <div className="fact-body">
+                <h3>
+                  {FACT_QUESTION[fact.id]}
+                  <span className={`state-pill is-${state}`}>{STATE_LABEL[state]}</span>
+                </h3>
+                {state === 'untraced' ? (
+                  <p className="now">Not visible yet.</p>
+                ) : state === 'held' ? (
+                  <p className="now">{fact.held}</p>
+                ) : (
+                  <p className="now">{fact.now}</p>
+                )}
+                {state !== 'held' && state !== 'untraced' ? (
+                  <p className="held">
+                    <span>Holds as</span> {fact.held}
+                  </p>
+                ) : null}
+                {seat ? (
+                  <p className="seat">
+                    <span>{fact.id === 'who' ? 'Seat' : 'Review'}</span> {seat}
+                  </p>
+                ) : null}
+              </div>
             </article>
           );
         })}
