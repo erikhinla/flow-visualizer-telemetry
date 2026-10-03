@@ -31,3 +31,18 @@ The formulas and their limits are in `src/telemetry/VISUALIZER_MASTER.md`. `npm 
 ## Telemetry
 
 `POST /api/telemetry` accepts event batches and holds a short in-memory buffer for the life of the process. It is not a warehouse and it stores no secrets.
+
+## Deploy
+
+Production is [flow-visualizer-telemetry.vercel.app](https://flow-visualizer-telemetry.vercel.app), project `flow-visualizer-telemetry` on the Vercel team `erikhbush-8628s-projects`. `.vercel/project.json` holds the team and project ids. It holds no token.
+
+Hermes Agent manages this project from a checkout of the repo. Point its terminal at the Vercel Sandbox backend, then give it the project token outside git:
+
+```bash
+hermes config set terminal.backend vercel_sandbox
+hermes config set terminal.vercel_runtime node24
+hermes config set terminal.container_cpu 2
+hermes config set terminal.container_memory 4096
+```
+
+Set `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, and `VERCEL_TEAM_ID` in the Hermes environment. The ids are the `projectId` and `orgId` in `.vercel/project.json`. Do not commit the token. With those three values, Hermes can deploy, read logs, and change the project. `hermes setup terminal` reads the same project file when this directory is the working directory.
