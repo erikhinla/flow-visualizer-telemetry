@@ -8,18 +8,22 @@ import { TraceBoard } from './TraceBoard';
 import { useSession } from './SessionProvider';
 import { trace } from '../lib/diagnostics';
 import { formatHours, formatPressure, formatWait, reviewDate } from '../lib/format';
-import { BAND_COPY } from '../lib/operational';
+import { BAND_COPY, BAND_WORD, balanceReason } from '../lib/operational';
 import { buildRecord } from '../lib/record';
 import { getDepartment } from '../lib/departments';
 
 export function RecordExperience() {
-  const { session } = useSession();
+  const { ready, session, clearSession } = useSession();
   const [today, setToday] = useState<Date | null>(null);
 
   useEffect(() => {
     setToday(new Date());
-    trace('record', 'state', { event: 'record-open', department: session.departmentId });
-  }, [session.departmentId]);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    trace({ name: 'record-open', department: session.departmentId });
+  }, [ready, session.departmentId]);
 
   const department = getDepartment(session.departmentId);
   const reviewedOn = today ? today.toISOString().slice(0, 10) : 'today';
@@ -28,6 +32,7 @@ export function RecordExperience() {
     teamSize: session.teamSize,
     departmentId: session.departmentId,
     evidenceKind: session.evidenceKind,
+    attested: session.attested,
     inputs: session.inputs,
     modifierOn: session.modifierOn,
     reviewedOn,
@@ -41,68 +46,67 @@ export function RecordExperience() {
     link.href = url;
     link.download = `visualizer-${department.id.toLowerCase()}-${reviewedOn}.json`;
     link.click();
-    URL.revokeObjectURL(url);
-    trace('record', 'interaction', { event: 'export', department: department.id });
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    trace({ name: 'record-export', department: department.id });
   };
+
+  if (!ready) {
+    return <p className="note">Opening the record…</p>;
+  }
 
   const baseline = record.scenario.baseline;
 
   return (
     <article className="record">
-      <p className="kicker">Portable record · {record.model.operational}</p>
-      <h1>
-        {department.workItem} in {department.name}
-      </h1>
-      <p className="lede">{department.gap}</p>
-      <p className="note">
-        Evidence is marked <strong>{session.evidenceKind}</strong>. A simulated or estimated figure
-        is not an observation.
-      </p>
+      <p className="kicker">{department.name} · the record you can take with you</p>
+      <h1>{department.mirror}</h1>
+      <p className="benefit">{department.relief}</p>
+      <p className="note">{record.provenance.sentence}</p>
 
       <TraceBoard
         departmentId={department.id}
         band={baseline.band}
         repairHours={baseline.repairHours}
         known={baseline.known}
-        evidenceKind={session.evidenceKind}
+        evidenceKind={record.provenance.kind}
       />
       <KeystonePath
         departmentId={department.id}
         band={baseline.band}
         repairHours={baseline.repairHours}
         known={baseline.known}
-        evidenceKind={session.evidenceKind}
+        evidenceKind={record.provenance.kind}
       />
 
       <section>
-        <h2>The reconstruction</h2>
+        <h2>The hours spent finding it</h2>
         <p>
-          {department.repairRole} absorbs it: {department.repair} Craft and required review are not
-          included in these hours.
+          {department.repairRole} is losing these hours to the search. The craft, the client’s
+          review, and the judgment are not part of that count.
         </p>
         <p className={`band-word band-${baseline.band}`}>
-          <span>{baseline.band}</span>
+          <span>{BAND_WORD[baseline.band]}</span>
           {BAND_COPY[baseline.band]}
         </p>
         <dl className="record-stats">
           <div>
-            <dt>Reconstruction hours</dt>
+            <dt>Hours finding it</dt>
             <dd>{formatHours(baseline.repairHours)}</dd>
           </div>
           <div>
-            <dt>Required hours</dt>
+            <dt>Hours the desk needs</dt>
             <dd>{formatHours(baseline.requiredHours)}</dd>
           </div>
           <div>
-            <dt>Available hours</dt>
+            <dt>Desk hours</dt>
             <dd>{formatHours(session.inputs.availableHours)}</dd>
           </div>
           <div>
-            <dt>Pressure</dt>
+            <dt>How full</dt>
             <dd>{formatPressure(baseline.pressure)}</dd>
           </div>
           <div>
-            <dt>Modeled wait</dt>
+            <dt>Waiting</dt>
             <dd>
               {baseline.queueState === 'no-steady-state'
                 ? 'No steady wait'
@@ -110,7 +114,7 @@ export function RecordExperience() {
             </dd>
           </div>
           <div>
-            <dt>Net hours after the change</dt>
+            <dt>Hours back after the fix</dt>
             <dd>{formatHours(record.scenario.netReleasedHours)}</dd>
           </div>
         </dl>
@@ -149,6 +153,12 @@ export function RecordExperience() {
         ongoing={session.inputs.ongoingHours}
         net={record.scenario.netReleasedHours}
         pressureWithOngoing={record.scenario.pressureWithOngoing}
+        reason={balanceReason({
+          baselineKnown: record.scenario.baseline.known,
+          changedKnown: record.scenario.changed.known,
+          ongoingHours: session.inputs.ongoingHours,
+          net: record.scenario.netReleasedHours,
+        })}
       />
 
       <section>
@@ -178,6 +188,9 @@ export function RecordExperience() {
         <Link className="button ghost" href="/visualizer">
           Back to the Trace
         </Link>
+        <button type="button" className="button ghost" onClick={clearSession}>
+          Clear this browser
+        </button>
       </div>
     </article>
   );

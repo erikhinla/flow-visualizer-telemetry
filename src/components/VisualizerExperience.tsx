@@ -11,40 +11,84 @@ import { Readout } from './Readout';
 import { SeizureCurve } from './SeizureCurve';
 import { TraceBoard } from './TraceBoard';
 import { useSession } from './SessionProvider';
-import { DEPARTMENTS, getDepartment } from '../lib/departments';
+import { DEPARTMENTS, getDepartment, isDepartmentId } from '../lib/departments';
 import { trace } from '../lib/diagnostics';
+import { presentedEvidence } from '../lib/evidence';
+import { commitNumeric } from '../lib/format';
 import { manifestation } from '../lib/manifestation';
-import { compareScenario } from '../lib/operational';
+import { balanceReason, compareScenario, scenarioDirty } from '../lib/operational';
 import { isComplete, scoreMap, suggestDepartment } from '../lib/questionnaire';
-import type { EvidenceKind } from '../lib/types';
+import { isUntouchedSession } from '../lib/session';
+import type { DepartmentId, EvidenceKind } from '../lib/types';
 import { MANIFESTATION_MODEL_VERSION, OPERATIONAL_MODEL_VERSION } from '../lib/types';
 
-const EVIDENCE: Array<{ id: EvidenceKind; label: string }> = [
-  { id: 'simulated', label: 'Simulated sample' },
-  { id: 'estimated', label: 'Estimated' },
-  { id: 'self-reported', label: 'Self-reported' },
-  { id: 'observed', label: 'Observed' },
-];
+const RELEASED: EvidenceKind[] = ['estimated', 'self-reported', 'observed'];
 
 export function VisualizerExperience() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { ready, session, setSession, selectDepartment, editInputs } = useSession();
-  const applied = useRef(false);
   const [showChange, setShowChange] = useState(true);
+  const [settled, setSettled] = useState(false);
+  const [bannerDesk, setBannerDesk] = useState<DepartmentId | null>(null);
+  const selectedRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    if (!ready || applied.current) return;
-    if (searchParams.get('from') !== 'map') return;
-    applied.current = true;
-    const score = scoreMap({ values: session.values, optionIds: session.optionIds });
-    if (score) selectDepartment(suggestDepartment(score.pressures));
-    router.replace('/visualizer');
-  }, [ready, router, searchParams, selectDepartment, session.optionIds, session.values]);
+    if (!ready || settled) return;
+    const fromMap = searchParams.get('from') === 'map';
+    const desk = searchParams.get('desk');
+
+    if (fromMap) {
+      const score = scoreMap({ values: session.values, optionIds: session.optionIds });
+      if (score) selectDepartment(suggestDepartment(score.pressures));
+      router.replace('/visualizer');
+      setSettled(true);
+      return;
+    }
+
+    if (desk === null) {
+      setSettled(true);
+      return;
+    }
+
+    if (!isDepartmentId(desk)) {
+      router.replace('/visualizer');
+      setSettled(true);
+      return;
+    }
+
+    if (desk === session.departmentId) {
+      router.replace('/visualizer');
+      setSettled(true);
+      return;
+    }
+
+    if (isUntouchedSession(session)) {
+      selectDepartment(desk);
+      router.replace('/visualizer');
+      setSettled(true);
+      return;
+    }
+
+    setBannerDesk(desk);
+    setSettled(true);
+  }, [ready, settled, router, searchParams, selectDepartment, session]);
+
+  useEffect(() => {
+    if (!settled) return;
+    selectedRef.current?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+  }, [settled, session.departmentId]);
 
   const department = getDepartment(session.departmentId);
   const comparison = compareScenario(session.inputs);
   const variability = session.inputs.variability ?? 1;
+  const dirty = scenarioDirty(session.inputs, department.sample);
+  const presentation = presentedEvidence({
+    evidenceKind: session.evidenceKind,
+    attested: session.attested,
+    dirty,
+    known: comparison.baseline.known,
+  });
   const mapReady = isComplete({ values: session.values, optionIds: session.optionIds });
   const index = mapReady
     ? manifestation({
@@ -53,20 +97,76 @@ export function VisualizerExperience() {
         modifierOn: session.modifierOn,
       })
     : null;
+  const reason = balanceReason({
+    compareOff: !showChange,
+    baselineKnown: comparison.baseline.known,
+    changedKnown: comparison.changed.known,
+    ongoingHours: session.inputs.ongoingHours,
+    net: comparison.netReleasedHours,
+  });
+
+  const replaceDesk = (id: DepartmentId) => {
+    if (dirty && !window.confirm('Replace this desk? The numbers you edited will be replaced by that sample.')) {
+      return;
+    }
+    selectDepartment(id);
+    trace({ name: 'desk-open', department: id });
+  };
+
+  if (!ready || !settled) {
+    return <p className="note">Opening the Trace…</p>;
+  }
+
+  const bannerName = bannerDesk ? getDepartment(bannerDesk).name : '';
 
   return (
     <article className="see">
       <header className="see-intro">
-        <p className="kicker">
-          {department.id} · {department.moniker}
-        </p>
-        <h1>{department.gap}</h1>
-        <p className="lede">
-          {department.repairRole} absorbs it: {department.repair} The connection to test is{' '}
-          {department.connection} Necessary review is not reconstruction.
-        </p>
+        <p className="kicker">{department.name} · sample until you replace the numbers</p>
+        <h1>{department.mirror}</h1>
+        <p className="benefit">{department.relief}</p>
         {department.campaignLine ? <p className="campaign">{department.campaignLine}</p> : null}
       </header>
+
+      {bannerDesk ? (
+        <div className="desk-banner" role="status">
+          <p>
+            This link opens the {bannerName} sample. This Trace is still {department.name}.
+          </p>
+          <div className="actions">
+            <button
+              type="button"
+              className="button"
+              onClick={() => {
+                if (
+                  dirty &&
+                  !window.confirm(
+                    'Replace this desk? The numbers you edited will be replaced by that sample.'
+                  )
+                ) {
+                  return;
+                }
+                selectDepartment(bannerDesk);
+                trace({ name: 'desk-open', department: bannerDesk });
+                setBannerDesk(null);
+                router.replace('/visualizer');
+              }}
+            >
+              Open the {bannerName} sample
+            </button>
+            <button
+              type="button"
+              className="button ghost"
+              onClick={() => {
+                setBannerDesk(null);
+                router.replace('/visualizer');
+              }}
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="dept-rail" role="group" aria-label="Departments">
         {DEPARTMENTS.map((item) => {
@@ -74,13 +174,13 @@ export function VisualizerExperience() {
           return (
             <button
               key={item.id}
+              ref={selected ? selectedRef : undefined}
               type="button"
               aria-pressed={selected}
               className={selected ? 'dept selected' : 'dept'}
               onClick={() => {
                 if (item.id === department.id) return;
-                selectDepartment(item.id);
-                trace('visualizer', 'interaction', { department: item.id });
+                replaceDesk(item.id);
               }}
             >
               <DepartmentMark id={item.id} accent={item.accent} />
@@ -95,14 +195,14 @@ export function VisualizerExperience() {
         band={comparison.baseline.band}
         repairHours={comparison.baseline.repairHours}
         known={comparison.baseline.known}
-        evidenceKind={session.evidenceKind}
+        evidenceKind={presentation.kind}
       />
       <KeystonePath
         departmentId={department.id}
         band={comparison.baseline.band}
         repairHours={comparison.baseline.repairHours}
         known={comparison.baseline.known}
-        evidenceKind={session.evidenceKind}
+        evidenceKind={presentation.kind}
       />
 
       <FlowTrack
@@ -133,28 +233,27 @@ export function VisualizerExperience() {
           <h2>
             {department.workItem} · one {department.period}
           </h2>
-          <label className="evidence">
-            Evidence
-            <select
-              value={session.evidenceKind}
-              onChange={(event) =>
-                setSession((current) => ({
-                  ...current,
-                  evidenceKind: event.target.value as EvidenceKind,
-                }))
-              }
-            >
-              {EVIDENCE.map((kind) => (
-                <option key={kind.id} value={kind.id}>
-                  {kind.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <EvidenceControl
+            locked={presentation.locked}
+            sentence={presentation.sentence}
+            kind={session.evidenceKind}
+            attested={session.attested}
+            onKind={(evidenceKind) =>
+              setSession((current) => ({ ...current, evidenceKind, attested: false }))
+            }
+            onAttest={(attested) =>
+              setSession((current) =>
+                attested
+                  ? { ...current, attested: true }
+                  : { ...current, attested: false, evidenceKind: 'estimated' }
+              )
+            }
+          />
         </div>
         <p className="note">
-          Blank means unknown. Unknown is not zero. Editing a sample marks the evidence as estimated
-          until you say otherwise.
+          Blank means unknown. Unknown is not zero. A sample stays simulated until the numbers
+          change. Observed and self-reported stay estimated until you attest them, and the next edit
+          clears that claim.
         </p>
         <div className="fields">
           <NumberField
@@ -166,20 +265,20 @@ export function VisualizerExperience() {
           />
           <PercentField
             id="share"
-            label="Missing the connection"
+            label="Share still being searched for"
             value={session.inputs.missingShare}
             onChange={(missingShare) => editInputs({ missingShare })}
           />
           <NumberField
             id="minutes"
-            label="Minutes to reconstruct one"
+            label="Minutes to find one"
             suffix="min"
             value={session.inputs.repairMinutes}
             onChange={(repairMinutes) => editInputs({ repairMinutes })}
           />
           <NumberField
             id="necessary"
-            label="Craft and required review"
+            label="Hours that are the real work"
             suffix="h"
             value={session.inputs.necessaryHours}
             onChange={(necessaryHours) => editInputs({ necessaryHours })}
@@ -207,38 +306,41 @@ export function VisualizerExperience() {
               checked={showChange}
               onChange={(event) => setShowChange(event.target.checked)}
             />
-            Compare one changed connection
+            Compare the week after the fix
           </label>
           {showChange ? (
             <div className="fields">
               <PercentField
                 id="next-share"
-                label="Missing share after the change"
+                label="Share still missing after the fix"
                 value={session.inputs.nextMissingShare}
                 onChange={(nextMissingShare) => editInputs({ nextMissingShare })}
               />
               <NumberField
                 id="next-minutes"
-                label="Minutes to reconstruct after"
+                label="Minutes to find one after"
                 suffix="min"
                 value={session.inputs.nextRepairMinutes}
                 onChange={(nextRepairMinutes) => editInputs({ nextRepairMinutes })}
               />
               <NumberField
                 id="ongoing"
-                label="Hours to keep the connection"
+                label="Hours to keep the fix"
                 suffix="h"
                 value={session.inputs.ongoingHours}
                 onChange={(ongoingHours) => editInputs({ ongoingHours })}
               />
             </div>
           ) : null}
+          {showChange && comparison.changed.issues.length > 0 ? (
+            <ul className="issues">
+              {comparison.changed.issues.map((issue) => (
+                <li key={issue}>{issue}</li>
+              ))}
+            </ul>
+          ) : null}
         </div>
-        <button
-          type="button"
-          className="button ghost"
-          onClick={() => selectDepartment(department.id)}
-        >
+        <button type="button" className="button ghost" onClick={() => selectDepartment(department.id)}>
           Reset this desk’s sample
         </button>
       </section>
@@ -250,11 +352,12 @@ export function VisualizerExperience() {
         ongoing={showChange ? session.inputs.ongoingHours : null}
         net={showChange ? comparison.netReleasedHours : null}
         pressureWithOngoing={showChange ? comparison.pressureWithOngoing : null}
+        reason={reason}
       />
 
       <section className="action-card">
         <p className="kicker">Who carries it</p>
-        <h2>Same workflow. Same period. Review stays.</h2>
+        <h2>Your people still do the work. The judgment stays.</h2>
         <dl>
           <div>
             <dt>Owner role</dt>
@@ -307,7 +410,7 @@ export function VisualizerExperience() {
         </label>
         <p>
           Display bands, not a certification: fog while repair is absorbed under 0.70 pressure,
-          forming from 0.70, closing from 0.90, seized at 1. The curve is continuous. Necessary
+          forming from 0.70, closing from 0.90, stalled at 1. The curve is continuous. Necessary
           review is not repair.
         </p>
         <h3>Recorded scenario index · {MANIFESTATION_MODEL_VERSION}</h3>
@@ -342,6 +445,53 @@ export function VisualizerExperience() {
   );
 }
 
+function EvidenceControl({
+  locked,
+  sentence,
+  kind,
+  attested,
+  onKind,
+  onAttest,
+}: {
+  locked: boolean;
+  sentence: string;
+  kind: EvidenceKind;
+  attested: boolean;
+  onKind: (kind: EvidenceKind) => void;
+  onAttest: (attested: boolean) => void;
+}) {
+  const selected: EvidenceKind = RELEASED.includes(kind) ? kind : 'estimated';
+  const releasable = selected === 'observed' || selected === 'self-reported';
+  return (
+    <div className="evidence">
+      <p className="note">{sentence}</p>
+      <label>
+        Evidence
+        <select
+          value={locked ? 'simulated' : selected}
+          disabled={locked}
+          onChange={(event) => onKind(event.target.value as EvidenceKind)}
+        >
+          {locked ? <option value="simulated">Simulated sample</option> : null}
+          <option value="estimated">Estimated</option>
+          <option value="self-reported">Self-reported</option>
+          <option value="observed">Observed</option>
+        </select>
+      </label>
+      {releasable && !locked ? (
+        <label className="toggle">
+          <input
+            type="checkbox"
+            checked={attested}
+            onChange={(event) => onAttest(event.target.checked)}
+          />
+          I counted these figures on a real desk. PROOF will not check them.
+        </label>
+      ) : null}
+    </div>
+  );
+}
+
 function NumberField({
   id,
   label,
@@ -355,6 +505,8 @@ function NumberField({
   value: number | null;
   onChange: (value: number | null) => void;
 }) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const shown = draft !== null ? draft : value === null ? '' : String(value);
   return (
     <label className="field" htmlFor={id}>
       <span>{label}</span>
@@ -362,8 +514,17 @@ function NumberField({
         <input
           id={id}
           inputMode="decimal"
-          value={value ?? ''}
-          onChange={(event) => onChange(readNumber(event.target.value))}
+          value={shown}
+          onChange={(event) => {
+            const next = commitNumeric(event.target.value);
+            if (next === undefined) {
+              setDraft(event.target.value);
+              return;
+            }
+            setDraft(null);
+            onChange(next);
+          }}
+          onBlur={() => setDraft(null)}
         />
         <span>{suffix}</span>
       </span>
@@ -382,7 +543,9 @@ function PercentField({
   value: number | null;
   onChange: (value: number | null) => void;
 }) {
-  const shown = value === null ? '' : String(Math.round(value * 1000) / 10);
+  const [draft, setDraft] = useState<string | null>(null);
+  const canonical = value === null ? '' : String(Math.round(value * 1000) / 10);
+  const shown = draft !== null ? draft : canonical;
   return (
     <label className="field" htmlFor={id}>
       <span>{label}</span>
@@ -392,18 +555,18 @@ function PercentField({
           inputMode="decimal"
           value={shown}
           onChange={(event) => {
-            const next = readNumber(event.target.value);
+            const next = commitNumeric(event.target.value);
+            if (next === undefined) {
+              setDraft(event.target.value);
+              return;
+            }
+            setDraft(null);
             onChange(next === null ? null : next / 100);
           }}
+          onBlur={() => setDraft(null)}
         />
         <span>%</span>
       </span>
     </label>
   );
-}
-
-function readNumber(raw: string): number | null {
-  if (raw.trim() === '') return null;
-  const value = Number(raw);
-  return Number.isFinite(value) ? value : null;
 }

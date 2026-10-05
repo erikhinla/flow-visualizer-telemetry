@@ -13,6 +13,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'ACC',
     name: 'Account Management',
+    mirror: 'The client asked where the approval stands. Someone is rebuilding the answer from memory.',
+    relief: 'The account lead gets that hour back. The client still makes the decision.',
     moniker: 'The Context Relay',
     accent: '#3d5aef',
     signal: 'Route-line brackets',
@@ -34,8 +36,8 @@ export const DEPARTMENTS: readonly Department[] = [
       },
       {
         id: 'repair',
-        label: 'Reconstruction',
-        detail: 'Account Management rebuilds the choice by hand.',
+        label: 'Finding it',
+        detail: 'Account rebuilds the last yes by hand.',
         repair: true,
       },
       { id: 'accepted', label: 'Accepted', detail: 'The decision can move.' },
@@ -61,6 +63,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'FIN',
     name: 'Finance',
+    mirror: 'The invoice is late because nobody can tie the charge to the job that approved it.',
+    relief: 'Finance closes the week without a scavenger hunt. A person still reads the numbers.',
     moniker: 'The Reconciliation Loop',
     accent: '#3f6b4e',
     signal: 'Offset closing lines',
@@ -109,6 +113,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'LGL',
     name: 'Legal',
+    mirror: 'A version is ready, and nobody can show who cleared the rights.',
+    relief: 'Legal reviews the work once. The clearance stays with the file.',
     moniker: 'The Provenance Chain',
     accent: '#8c3a48',
     signal: 'A chain with an unresolved link',
@@ -161,6 +167,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'PRD',
     name: 'Production',
+    mirror: 'The master is somewhere. Delivery is waiting on the person who remembers which file it is.',
+    relief: 'Production sends the right file the first time. The craft stays with the people who do it.',
     moniker: 'The Version Stack',
     accent: '#e07a2f',
     signal: 'Stacked frames',
@@ -207,6 +215,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'STR',
     name: 'Strategy',
+    mirror: 'The room is full of decks and notes. Nobody has said what you are deciding.',
+    relief: 'You decide once. Next week starts from that decision, not from zero.',
     moniker: 'The Signal Filter',
     accent: '#7a5aaa',
     signal: 'A narrowing signal field',
@@ -219,17 +229,17 @@ export const DEPARTMENTS: readonly Department[] = [
     workItem: 'Decision brief',
     period: 'week',
     stages: [
-      { id: 'inputs', label: 'Inputs', detail: 'Notes, drafts, and tools add material.' },
+      { id: 'inputs', label: 'Notes', detail: 'Decks, notes, and drafts pile up in the room.' },
       {
         id: 'gap',
-        label: 'No question',
-        detail: 'The decision question and the criteria were not retained.',
+        label: 'No decision',
+        detail: 'Nobody has said what you are deciding.',
         gap: true,
       },
       {
         id: 'repair',
         label: 'Validation',
-        detail: 'Strategy reconstructs intent before anyone can decide.',
+        detail: 'The room spends the meeting figuring out the decision.',
         repair: true,
       },
       { id: 'decision', label: 'Decision', detail: 'An accountable decision is recorded.' },
@@ -255,6 +265,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'CRT',
     name: 'Creative',
+    mirror: 'The work is done. The feedback is in five threads, and the next round starts from scratch.',
+    relief: 'Creative spends the hours on the work. The brief and the notes stay with the piece.',
     moniker: 'The Option Field',
     accent: '#c43b78',
     signal: 'An asterisk field',
@@ -276,7 +288,7 @@ export const DEPARTMENTS: readonly Department[] = [
       },
       {
         id: 'repair',
-        label: 'Reconstruction',
+        label: 'Finding it',
         detail: 'Creative rebuilds what was asked for.',
         repair: true,
       },
@@ -304,6 +316,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'PR',
     name: 'Public Relations',
+    mirror: 'The statement can still go out. The window is closing while someone hunts for the facts and the person allowed to say yes.',
+    relief: 'The response leaves while it still matters. A named person still approves it.',
     moniker: 'The Approval Pulse',
     accent: '#3aa8b8',
     signal: 'A pulse through an approval gate',
@@ -352,6 +366,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'MED',
     name: 'Media Buying / Planning',
+    mirror: 'The spend is in the platform. The reason for it is in someone’s head.',
+    relief: 'Media can explain the buy. A person still reads the spend before it scales.',
     moniker: 'The Attribution Maze',
     accent: '#b6c943',
     signal: 'A target and its route',
@@ -400,6 +416,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'HR',
     name: 'Human Resources',
+    mirror: 'A people decision is drafted. The policy it depends on is not on the page.',
+    relief: 'The decision goes out on the current rule. A person still reviews the person.',
     moniker: 'The Human Context Check',
     accent: '#e07a6a',
     signal: 'A person inside policy brackets',
@@ -452,6 +470,8 @@ export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'OPS',
     name: 'Operations',
+    mirror: 'The job is ready. Nobody has accepted it, so it sits between desks.',
+    relief: 'The handoff lands. The next owner knows what done means.',
     moniker: 'The Missing Layer',
     accent: '#c6a15b',
     signal: 'Two systems and a human bridge',

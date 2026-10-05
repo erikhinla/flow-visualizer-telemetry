@@ -38,17 +38,22 @@ export const STATE_LABEL: Record<FactState, string> = {
   held: 'Held',
   fog: 'Fog',
   friction: 'Friction',
-  seized: 'Seized',
+  seized: 'Stalled',
   untraced: 'Untraced',
 };
 
 export const STATE_LINE: Record<FactState, string> = {
-  held: 'The four facts are holding. This desk has spare margin and no modeled reconstruction.',
-  fog: 'Digital fog. The desk is absorbing the missing facts. The work can still ship.',
-  friction: 'Digital friction. The facts are thin enough that waiting is already bending the desk.',
-  seized: 'The foundation has seized. Required hours are past the desk.',
-  untraced: 'The Trace is open. Fill the desk until where, what, who, and when can be seen.',
+  held: 'You can see the job. Where it is, what is next, who has it, and by when are in one place.',
+  fog: 'The work is still going out. People are spending the day finding it first.',
+  friction: 'The desk is bending. Waiting is starting to cost more than the work itself.',
+  seized: 'This desk has stalled. There is more to do than the hours will hold.',
+  untraced: 'Add this desk’s real numbers. Until then, this is only a picture of the problem.',
 };
+
+/** Hide the seat only when the desk is unknown. Unavailable keeps the seat. */
+export function showSeat(band: BandId, known: boolean): boolean {
+  return known && band !== 'unknown';
+}
 
 export function factState(band: BandId, repairHours: number | null): FactState {
   if (band === 'unknown' || band === 'unavailable') return 'untraced';
@@ -181,13 +186,13 @@ export const DESK_TRACE: Record<DepartmentId, DeskTrace> = {
   },
   STR: {
     facts: facts(
-      ['Inputs are everywhere. The question is not.', 'One brief folder holds the decision.'],
+      ['Notes and decks are everywhere. The question is not.', 'One brief folder holds the decision.'],
       [
-        'The decision is rebuilt each time it is needed.',
+        'The decision gets rebuilt every time the room needs it.',
         'The question, sources, assumptions, criteria, and next action are written.',
       ],
       [
-        'Strategy spends the meeting validating instead of deciding.',
+        'The meeting is spent figuring out what you are deciding.',
         'The decision owner is named.',
       ],
       ['Decisions reopen because nothing closed them.', 'The decision has a due date.']

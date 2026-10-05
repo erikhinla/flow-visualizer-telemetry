@@ -1,6 +1,17 @@
 import { AGENCY_BALANCE } from '../lib/agency';
-import { formatHours, formatPressure, formatSignedHours } from '../lib/format';
+import { formatHours, formatPressure, formatSignedHoursUnit } from '../lib/format';
+import type { BalanceReason } from '../lib/operational';
 import type { DepartmentId } from '../lib/types';
+
+const REASON_COPY: Record<Exclude<BalanceReason, 'known'>, string> = {
+  'compare-off': 'The comparison is off, so this desk is not showing what comes back.',
+  'baseline-unknown':
+    'What comes back is unknown because this desk is missing a number or is out of range.',
+  'changed-invalid':
+    'What comes back is unknown because the week after the fix is missing a number or is out of range.',
+  'ongoing-blank':
+    'What comes back is unknown until the hours to keep the fix are filled in with zero or more.',
+};
 
 export function Balance({
   departmentId,
@@ -9,24 +20,26 @@ export function Balance({
   ongoing,
   net,
   pressureWithOngoing,
+  reason,
 }: {
   departmentId: DepartmentId;
   change: string;
-  /** Reconstruction hours removed by the connection, before upkeep. */
+  /** Hours the search gives back, before the cost of keeping the fix. */
   comesBack: number | null;
   ongoing: number | null;
   net: number | null;
   pressureWithOngoing: number | null;
+  reason: BalanceReason;
 }) {
   const balance = AGENCY_BALANCE[departmentId];
   const verdict =
-    net === null
-      ? 'Net is unknown until the hours to keep the connection are filled in.'
-      : net < 0
-        ? 'On these numbers the connection costs more than it returns. Do not add it yet.'
+    reason !== 'known'
+      ? REASON_COPY[reason]
+      : net !== null && net < 0
+        ? 'On these numbers the fix costs more than it gives back. Leave it alone for now.'
         : net === 0
-          ? 'The connection pays for itself and nothing more. The review below still stays.'
-          : 'Hours come back after the connection is kept. The review below stays.';
+          ? 'The fix pays for itself and nothing more. The review below still stays.'
+          : 'Hours come back once the fix is kept. The review below stays.';
 
   return (
     <section className="balance">
@@ -36,20 +49,20 @@ export function Balance({
         <article>
           <span>Comes back</span>
           <strong>{comesBack === null ? 'Unknown' : `${formatHours(comesBack)} h`}</strong>
-          <p>Reconstruction removed, before the cost of keeping the connection.</p>
+          <p>Hours your people stop spending on the search, before the cost of keeping the fix.</p>
         </article>
         <article>
           <span>Costs to keep</span>
           <strong>{ongoing === null ? 'Unknown' : `${formatHours(ongoing)} h`}</strong>
-          <p>Hours the new connection itself asks of the desk each period.</p>
+          <p>Hours the fix itself asks of this desk each week.</p>
         </article>
         <article className={net !== null && net < 0 ? 'is-negative' : undefined}>
           <span>Net on the desk</span>
-          <strong>{formatSignedHours(net)} h</strong>
+          <strong>{formatSignedHoursUnit(net)}</strong>
           <p>
             {pressureWithOngoing === null
-              ? 'Pressure including upkeep is unknown.'
-              : `Pressure including upkeep is ${formatPressure(pressureWithOngoing)}.`}
+              ? 'How full the desk stays, including those hours, is unknown.'
+              : `How full the desk stays, including those hours, is ${formatPressure(pressureWithOngoing)}.`}
           </p>
         </article>
       </div>

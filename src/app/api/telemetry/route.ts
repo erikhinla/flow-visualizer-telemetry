@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server';
+import { validateBatch } from '../../../lib/telemetry';
 
 const held: unknown[] = [];
 const LIMIT = 200;
 
 export async function POST(request: Request) {
-  const body = (await request.json().catch(() => null)) as { events?: unknown } | null;
-  if (!body || !Array.isArray(body.events)) {
-    return NextResponse.json({ error: 'Expected an events array.' }, { status: 400 });
+  const text = await request.text();
+  const batch = validateBatch(text);
+  if (!batch.ok) {
+    return NextResponse.json({ error: batch.error }, { status: 400 });
   }
 
-  const batch = body.events.slice(0, 40);
-  held.push(...batch);
+  held.push(...batch.events);
   if (held.length > LIMIT) held.splice(0, held.length - LIMIT);
 
-  return NextResponse.json({ accepted: batch.length, held: held.length });
+  return NextResponse.json({ accepted: batch.events.length });
 }

@@ -18,11 +18,37 @@ export function formatSignedHours(value: number | null): string {
   return text;
 }
 
+/** Unsigned hours, or Unknown with no suffix. */
+export function formatHoursUnit(value: number | null, digits = 1): string {
+  if (value === null || !Number.isFinite(value)) return 'Unknown';
+  return `${formatHours(value, digits)} h`;
+}
+
+/** Signed hours, or Unknown with no suffix. */
+export function formatSignedHoursUnit(value: number | null): string {
+  if (value === null || !Number.isFinite(value)) return 'Unknown';
+  return `${formatSignedHours(value)} h`;
+}
+
 export function formatWait(hours: number | null): string {
-  if (hours === null || !Number.isFinite(hours)) return 'No steady wait';
+  if (hours === null || !Number.isFinite(hours)) return 'Unknown';
   const minutes = hours * 60;
   if (minutes < 90) return `${Math.round(minutes)} min`;
   return `${formatHours(hours)} h`;
+}
+
+/**
+ * Commit a typed number.
+ * `null` clears the field. `undefined` keeps a draft (a trailing dot, a lone dot, or anything that is not a number).
+ * `.5` commits. `1.` does not.
+ */
+export function commitNumeric(raw: string): number | null | undefined {
+  const text = raw.trim();
+  if (text === '') return null;
+  if (text === '.' || text.endsWith('.')) return undefined;
+  if (!/^\d*\.?\d+$/.test(text)) return undefined;
+  const value = Number(text);
+  return Number.isFinite(value) ? value : undefined;
 }
 
 export function formatPercent(share: number | null): string {

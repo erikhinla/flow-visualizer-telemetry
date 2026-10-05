@@ -10,11 +10,13 @@ export function SeizureCurve({
   compareRho,
   variability,
   accent,
+  caption = 'How long a job waits, compared with the time it takes to handle it. The cliff is the picture, not a measured delay.',
 }: {
   rho: number | null;
   compareRho: number | null;
   variability: number;
   accent: string;
+  caption?: string;
 }) {
   const points = curvePoints(variability);
   const path = points
@@ -26,10 +28,10 @@ export function SeizureCurve({
 
   const label =
     rho === null
-      ? 'Waiting curve. The operating point is unknown.'
+      ? 'Waiting picture. How full the desk is remains unknown.'
       : rho >= 1
-        ? 'Operating point is at or past seizure. This model has no finite steady wait.'
-        : `Operating point at utilization ${rho.toFixed(2)}.`;
+        ? 'The desk has stalled. This picture has no finite wait.'
+        : `The desk is this full: ${rho.toFixed(2)}.`;
 
   return (
     <figure className="curve">
@@ -46,17 +48,14 @@ export function SeizureCurve({
           0
         </text>
         <text x={x(1) - 46} y={HEIGHT - 8} className="tick">
-          seizure
+          stalled
         </text>
         {rho !== null ? <Point rho={rho} fill={accent} variability={variability} /> : null}
         {compareRho !== null ? (
           <Point rho={compareRho} fill="#f4efe6" variability={variability} ring />
         ) : null}
       </svg>
-      <figcaption>
-        Waiting before handling, as a multiple of handling time. One role, Kingman approximation,
-        variability {variability}. The cliff is the model, not a measured delay.
-      </figcaption>
+      <figcaption>{caption}</figcaption>
     </figure>
   );
 }

@@ -5,6 +5,7 @@ import {
   STATE_LINE,
   deskTrace,
   factState,
+  showSeat,
   type FactId,
 } from '../lib/trace';
 import type { BandId, DepartmentId, EvidenceKind } from '../lib/types';
@@ -32,16 +33,17 @@ export function TraceBoard({
   const department = getDepartment(departmentId);
   const trace = deskTrace(departmentId);
   const state = !known || band === 'unknown' ? 'untraced' : factState(band, repairHours);
+  const seatVisible = showSeat(band, known);
   const line =
     band === 'unavailable' && known
-      ? 'Demand is on the desk and available hours are zero. Pressure is not a finite percentage, so the four facts stay untraced.'
+      ? 'Work is here and the hours are zero. The four questions stay unanswered until there is time to do the work.'
       : STATE_LINE[state];
 
   return (
     <section className="trace" aria-labelledby="trace-title" data-state={state}>
       <div className="trace-head">
         <p className="kicker">Trace · {department.name}</p>
-        <h2 id="trace-title">Where. What. Who. When.</h2>
+        <h2 id="trace-title">Can your people see the job?</h2>
         <p className={`state-line is-${state}`}>{line}</p>
         {evidenceKind === 'simulated' ? (
           <p className="note">Simulated sample. Not a measured agency.</p>
@@ -63,19 +65,19 @@ export function TraceBoard({
                   {FACT_QUESTION[fact.id]}
                   <span className={`state-pill is-${state}`}>{STATE_LABEL[state]}</span>
                 </h3>
-                {state === 'untraced' ? (
+                {state === 'untraced' && !seatVisible ? (
                   <p className="now">Not visible yet.</p>
                 ) : state === 'held' ? (
                   <p className="now">{fact.held}</p>
                 ) : (
                   <p className="now">{fact.now}</p>
                 )}
-                {state !== 'held' && state !== 'untraced' ? (
+                {state !== 'held' && !(state === 'untraced' && !seatVisible) ? (
                   <p className="held">
                     <span>Holds as</span> {fact.held}
                   </p>
                 ) : null}
-                {seat ? (
+                {seat && seatVisible ? (
                   <p className="seat">
                     <span>{fact.id === 'who' ? 'Seat' : 'Review'}</span> {seat}
                   </p>

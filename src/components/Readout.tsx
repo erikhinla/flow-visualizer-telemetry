@@ -1,16 +1,6 @@
-import { formatHours, formatPressure, formatSignedHours, formatWait } from '../lib/format';
-import { BAND_COPY } from '../lib/operational';
+import { formatHoursUnit, formatPressure, formatSignedHoursUnit, formatWait } from '../lib/format';
+import { BAND_COPY, BAND_WORD } from '../lib/operational';
 import type { ScenarioResult } from '../lib/types';
-
-const BAND_WORD = {
-  open: 'Open',
-  fog: 'Fog',
-  forming: 'Forming',
-  closing: 'Closing',
-  seized: 'Seized',
-  unavailable: 'No capacity',
-  unknown: 'Unknown',
-} as const;
 
 export function Readout({
   baseline,
@@ -34,38 +24,38 @@ export function Readout({
         {BAND_COPY[baseline.band]}
       </p>
       {changed ? (
-        <p className="legend">The filled mark is this week. The ring is the same week after the connection.</p>
+        <p className="legend">The filled mark is this week. The ring is the same week after the fix.</p>
       ) : null}
       <dl className="ledger">
         <Line
-          label="Reconstruction"
+          label="Hours finding it"
           baseline={baseline.repairHours}
           changed={changed ? changed.repairHours : undefined}
         />
         <Line
-          label="Required"
+          label="Hours the desk needs"
           baseline={baseline.requiredHours}
           changed={changed ? changed.requiredHours : undefined}
         />
         <div>
-          <dt>Available</dt>
-          <dd>{formatHours(availableHours)} h</dd>
+          <dt>Desk hours</dt>
+          <dd>{formatHoursUnit(availableHours)}</dd>
         </div>
         <Line
-          label="Margin"
+          label="Hours left"
           baseline={baseline.marginHours}
           changed={changed ? changed.marginHours : undefined}
           signed
         />
         <div>
-          <dt>Pressure</dt>
+          <dt>How full</dt>
           <dd>
             {formatPressure(baseline.pressure)}
             {changed ? <em>{formatPressure(changed.pressure)}</em> : null}
           </dd>
         </div>
         <div>
-          <dt>Modeled wait</dt>
+          <dt>Waiting</dt>
           <dd>
             {baseline.queueState === 'no-steady-state'
               ? 'No steady wait'
@@ -82,14 +72,14 @@ export function Readout({
       </dl>
       {repairDelta !== null ? (
         <p className="delta">
-          The connection changes reconstruction by{' '}
-          {formatSignedHours(repairDelta === null ? null : -repairDelta)} h before upkeep.
+          The fix changes the search by {formatSignedHoursUnit(-repairDelta)} before the hours it
+          takes to keep.
           {netReleased === null
-            ? ' Ongoing hours are unknown, so net release is unknown.'
-            : ` After upkeep, modeled net release is ${formatSignedHours(netReleased)} h.`}
+            ? ' The hours to keep the fix are unknown, so what comes back is unknown.'
+            : ` After those hours, the desk gets ${formatSignedHoursUnit(netReleased)} back.`}
           {pressureWithOngoing === null
             ? ''
-            : ` Pressure including upkeep is ${formatPressure(pressureWithOngoing)}.`}
+            : ` How full the desk stays, including those hours, is ${formatPressure(pressureWithOngoing)}.`}
         </p>
       ) : null}
       {baseline.issues.length > 0 ? (
@@ -114,12 +104,13 @@ function Line({
   changed?: number | null;
   signed?: boolean;
 }) {
-  const text = signed ? formatSignedHours : (value: number | null) => formatHours(value);
+  const text = signed ? formatSignedHoursUnit : formatHoursUnit;
   return (
     <div>
       <dt>{label}</dt>
       <dd>
-        {text(baseline)} h{changed === undefined ? null : <em>{text(changed)} h</em>}
+        {text(baseline)}
+        {changed === undefined ? null : <em>{text(changed)}</em>}
       </dd>
     </div>
   );

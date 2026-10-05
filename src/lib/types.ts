@@ -88,6 +88,10 @@ export interface Stage {
 export interface Department {
   id: DepartmentId;
   name: string;
+  /** The problem in the words an owner already uses. */
+  mirror: string;
+  /** What changes for the people and the client if the desk gets the hours back. */
+  relief: string;
   moniker: string;
   accent: string;
   signal: string;

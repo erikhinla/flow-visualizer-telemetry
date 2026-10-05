@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
 import { formatHours } from '../lib/format';
+import { scenarioDirty } from '../lib/operational';
 import {
+  ARCHETYPE_FALLBACK,
   ARCHETYPE_LABEL,
   PRESSURE_LABEL,
   PROFILE_COPY,
@@ -16,6 +18,7 @@ import {
   suggestDepartment,
   teamHours,
 } from '../lib/questionnaire';
+import { DESK_TRACE_PRICE } from '../lib/offer';
 import type { Choice } from '../lib/types';
 import { getDepartment } from '../lib/departments';
 import { useSession } from './SessionProvider';
@@ -24,22 +27,26 @@ export function MapExperience() {
   const { ready, session, setSession, resetMap } = useSession();
   const [cursor, setCursor] = useState(0);
   const [mode, setMode] = useState<'ask' | 'result'>('ask');
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   const choose = useCallback(
     (choice: Choice) => {
-      setSession((current) => {
-        const values = [...current.values];
-        const optionIds = [...current.optionIds];
-        values[cursor] = choice.value;
-        optionIds[cursor] = choice.id;
-        const done = values.every((value) => value !== null);
-        if (done) trace('map', 'state', { event: 'map-complete' });
-        return { ...current, values, optionIds, mapCompleted: done || current.mapCompleted };
-      });
+      const values = [...session.values];
+      const optionIds = [...session.optionIds];
+      values[cursor] = choice.value;
+      optionIds[cursor] = choice.id;
+      const done = values.every((value) => value !== null);
+      setSession((current) => ({
+        ...current,
+        values,
+        optionIds,
+        mapCompleted: done || current.mapCompleted,
+      }));
+      if (done) trace({ name: 'map-complete' });
       if (cursor < QUESTIONS.length - 1) setCursor(cursor + 1);
       else setMode('result');
     },
-    [cursor, setSession]
+    [cursor, session.optionIds, session.values, setSession]
   );
 
   useEffect(() => {
@@ -56,6 +63,7 @@ export function MapExperience() {
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
         setCursor((current) => Math.max(0, current - 1));
@@ -70,6 +78,15 @@ export function MapExperience() {
     return () => window.removeEventListener('keydown', onKey);
   }, [choose, cursor, mode]);
 
+  useEffect(() => {
+    if (!ready || mode !== 'ask') return;
+    headingRef.current?.focus();
+  }, [cursor, mode, ready]);
+
+  if (!ready) {
+    return <p className="note">Opening the scan…</p>;
+  }
+
   const answers = { values: session.values, optionIds: session.optionIds };
   const score = scoreMap(answers);
   const question = QUESTIONS[cursor];
@@ -81,27 +98,11 @@ export function MapExperience() {
     return (
       <article className="map-result">
         <p className="kicker">Agency scan · answers, not a measurement</p>
-        <h1>{score.profile}</h1>
-        <p className="lede">{PROFILE_COPY[score.profile]}</p>
-        <dl className="score-block">
-          <div>
-            <dt>Raw score</dt>
-            <dd>
-              {score.raw}
-              <span> / 30</span>
-            </dd>
-          </div>
-          <div>
-            <dt>Answer index</dt>
-            <dd>
-              {score.index}
-              <span> / 100</span>
-            </dd>
-          </div>
-        </dl>
-        <p className="note">
-          The index is the rounded share of the raw score. It is not a health percentage, a maturity
-          rating, or momentum recovered.
+        <h1>{PROFILE_COPY[score.profile]}</h1>
+        <p className="lede">
+          Answers suggest {range.low}–{range.high} hours a person, every week, spent finding the work
+          instead of doing it. If you get those hours back, the judgment still stays with your
+          people. PROOF has not counted your desk.
         </p>
         <h2>Places to check</h2>
         <p className="note">
@@ -109,7 +110,9 @@ export function MapExperience() {
           answers add no pressure.
         </p>
         {score.pressures.length === 0 ? (
-          <p>No pressure was selected. The default archetype is still fragmented workflow.</p>
+          <p>
+            <span className="kicker">Default hint</span> {ARCHETYPE_FALLBACK}
+          </p>
         ) : (
           <ol className="pressure-list">
             {score.pressures.map((id) => (
@@ -120,22 +123,28 @@ export function MapExperience() {
             ))}
           </ol>
         )}
-        <p className="archetype">
-          <span>Routing hint</span>
-          {ARCHETYPE_LABEL[score.archetype]}
-          <code>{score.archetype}</code>
-        </p>
+        <details className="inspector">
+          <summary>How this was scored</summary>
+          <p>
+            Profile token {score.profile}. Raw score {score.raw} of 30. Answer index {score.index} of
+            100. The index is the rounded share of the raw score. It is not a health percentage.
+          </p>
+          <p className="archetype">
+            <span>Routing hint</span>
+            {ARCHETYPE_LABEL[score.archetype]} <code>{score.archetype}</code>
+          </p>
+        </details>
         <div className="team">
           <label htmlFor="team-size">
-            People in the preset hour range
+            People in the preset hour range{' '}
             <strong>{clampTeam(session.teamSize)}</strong>
           </label>
           <input
             id="team-size"
             type="range"
             min={1}
-            max={20}
-            value={Math.min(20, clampTeam(session.teamSize))}
+            max={50}
+            value={clampTeam(session.teamSize)}
             onChange={(event) =>
               setSession((current) => ({
                 ...current,
@@ -150,7 +159,24 @@ export function MapExperience() {
           </p>
         </div>
         <div className="actions">
-          <Link className="button" href="/visualizer?from=map">
+          <Link className="button" href="/offer">
+            Book the Desk Trace — {DESK_TRACE_PRICE}
+          </Link>
+          <Link
+            className="button ghost"
+            href="/visualizer?from=map"
+            onClick={(event) => {
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+                return;
+              }
+              const sample = getDepartment(session.departmentId).sample;
+              if (!scenarioDirty(session.inputs, sample)) return;
+              const ok = window.confirm(
+                'This Trace has edits. Opening the scan desk replaces them. A new tab skips this question.'
+              );
+              if (!ok) event.preventDefault();
+            }}
+          >
             Trace {department.name}
           </Link>
           <button
@@ -196,7 +222,9 @@ export function MapExperience() {
           />
         ))}
       </div>
-      <h1>{question.text}</h1>
+      <h1 ref={headingRef} tabIndex={-1}>
+        {question.text}
+      </h1>
       <div className="choices" role="group" aria-label={question.text}>
         {question.choices.map((choice, index) => {
           const selected = session.optionIds[cursor] === choice.id;

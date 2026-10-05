@@ -26,15 +26,17 @@ export function KeystonePath({
   const open = known && band !== 'unknown';
   const line = open
     ? state === 'untraced'
-      ? 'The desk is filled, and capacity is zero. The stones are open. Pressure is not a finite percentage.'
-      : 'Trace complete. The four facts are visible. Rebuild them on the keystones.'
-    : 'The Trace is open. Fill the desk until where, what, who, and when can be seen. The stones stay dark until then.';
+      ? 'The desk is full and the hours are zero. You can still name the file, the brief, the check, and the owner.'
+      : state === 'held'
+        ? 'You can see the job. These four keep it where the next person can find it.'
+        : 'The job is still hard to see. These four put it where the next person can find it.'
+    : 'Name the hours on this desk first. Until then, these stay dark.';
 
   return (
     <section className="stones" aria-labelledby="stones-title" data-open={open ? 'true' : 'false'}>
       <div className="trace-head">
-        <p className="kicker">Quad keystones</p>
-        <h2 id="stones-title">Rebuild the foundation.</h2>
+        <p className="kicker">What you put back</p>
+        <h2 id="stones-title">Put the job where the next person can find it.</h2>
         <p className="state-line">{line}</p>
         {open && evidenceKind === 'simulated' ? (
           <p className="note">Actions below are for the simulated sample.</p>
@@ -56,7 +58,7 @@ export function KeystonePath({
             {open ? (
               <p className="stone-action">{stone.action}</p>
             ) : (
-              <p className="stone-action locked">Locked until the Trace is complete.</p>
+              <p className="stone-action locked">Locked until the hours are named.</p>
             )}
           </li>
         ))}

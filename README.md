@@ -2,7 +2,7 @@
 
 A trace for marketing agencies. It shows where a project is, what needs done, who has it, and by when. Digital fog hides those four facts. Digital friction stalls the desk that rebuilds them.
 
-Once the Trace can see the desk, the path back is the four keystones: Folders, Markdown, Scripts, and Protocols. The waiting curve still marks when that load is forming and when it has seized the desk. If a fix costs more than it returns, the balance says so.
+Once the Trace can see the desk, the path back is the four keystones: Folders, Markdown, Scripts, and Protocols. The waiting curve still marks when that load is forming and when the desk has stalled. If a fix costs more than it returns, the balance says so.
 
 ## Run
 

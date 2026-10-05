@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { AGENCY_BALANCE } from '../src/lib/agency';
 import { DEPARTMENTS, getDepartment } from '../src/lib/departments';
-import { formatHours, formatPressure } from '../src/lib/format';
+import { commitNumeric, formatHours, formatPressure, formatWait } from '../src/lib/format';
 import { manifestation } from '../src/lib/manifestation';
-import { compareScenario, evaluateScenario, repairHours } from '../src/lib/operational';
+import { balanceReason, compareScenario, evaluateScenario, repairHours, scenarioDirty } from '../src/lib/operational';
+import { presentedEvidence } from '../src/lib/evidence';
+import { createDefaultSession, editSession, parseSession, withDepartment } from '../src/lib/session';
 import {
   QUESTIONS,
   archetypeFor,
@@ -15,7 +17,7 @@ import {
   suggestDepartment,
   teamHours,
 } from '../src/lib/questionnaire';
-import { DESK_TRACE, factState } from '../src/lib/trace';
+import { DESK_TRACE, factState, showSeat } from '../src/lib/trace';
 import type { PressureId } from '../src/lib/types';
 
 function answered(values: Array<0 | 1 | 2>, optionIndex = 0) {
@@ -294,5 +296,107 @@ describe('trace', () => {
         assert.ok(stone.action.length > 0);
       }
     }
+  });
+
+  it('keeps the seat on an unavailable desk and hides it when the band is unknown', () => {
+    assert.equal(showSeat('unavailable', true), true);
+    assert.equal(showSeat('unknown', true), false);
+    assert.equal(showSeat('forming', false), false);
+  });
+});
+
+describe('desk honesty', () => {
+  it('says Unknown when the wait is null, and commits a trailing decimal draft', () => {
+    assert.equal(formatWait(null), 'Unknown');
+    assert.equal(commitNumeric(''), null);
+    assert.equal(commitNumeric('1.'), undefined);
+    assert.equal(commitNumeric('.'), undefined);
+    assert.equal(commitNumeric('.5'), 0.5);
+    assert.equal(commitNumeric('1.5'), 1.5);
+  });
+
+  it('names a balance reason for each null net', () => {
+    assert.equal(
+      balanceReason({
+        compareOff: true,
+        baselineKnown: true,
+        changedKnown: true,
+        ongoingHours: 1,
+        net: 1,
+      }),
+      'compare-off'
+    );
+    assert.equal(
+      balanceReason({
+        baselineKnown: false,
+        changedKnown: true,
+        ongoingHours: 1,
+        net: null,
+      }),
+      'baseline-unknown'
+    );
+    assert.equal(
+      balanceReason({
+        baselineKnown: true,
+        changedKnown: false,
+        ongoingHours: 1,
+        net: null,
+      }),
+      'changed-invalid'
+    );
+    assert.equal(
+      balanceReason({
+        baselineKnown: true,
+        changedKnown: true,
+        ongoingHours: -1,
+        net: null,
+      }),
+      'ongoing-blank'
+    );
+    assert.equal(
+      balanceReason({
+        baselineKnown: true,
+        changedKnown: true,
+        ongoingHours: null,
+        net: null,
+      }),
+      'ongoing-blank'
+    );
+    const sample = getDepartment('PR').sample;
+    const comparison = compareScenario(sample);
+    assert.equal(
+      balanceReason({
+        baselineKnown: comparison.baseline.known,
+        changedKnown: comparison.changed.known,
+        ongoingHours: sample.ongoingHours,
+        net: comparison.netReleasedHours,
+      }),
+      'known'
+    );
+  });
+
+  it('keeps a later unedited Account Management choice and drops the legacy blob', () => {
+    const chosen = withDepartment(createDefaultSession(), 'ACC');
+    const raw = JSON.stringify(chosen);
+    assert.equal(parseSession(raw)?.departmentId, 'ACC');
+    const legacy = JSON.parse(raw) as Record<string, unknown>;
+    delete legacy.attested;
+    assert.equal(parseSession(JSON.stringify(legacy)), null);
+  });
+
+  it('returns Estimated after an attested figure is edited', () => {
+    const sample = getDepartment('PR').sample;
+    let session = createDefaultSession();
+    session = { ...session, evidenceKind: 'observed', attested: true, inputs: { ...sample, itemCount: 3 } };
+    session = editSession(session, { itemCount: 4 });
+    assert.equal(session.attested, false);
+    assert.equal(session.evidenceKind, 'estimated');
+    const view = presentedEvidence({
+      evidenceKind: session.evidenceKind,
+      attested: session.attested,
+      dirty: scenarioDirty(session.inputs, sample),
+      known: true,
+    });
+    assert.equal(view.kind, 'estimated');
   });
 });

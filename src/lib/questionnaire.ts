@@ -142,6 +142,10 @@ export const PRESSURE_LABEL: Record<PressureId, string> = {
   shape: 'The studio is described as chaos or reaction',
 };
 
+/** Shown when a finished scan selected no pressure. A label, not a finding. */
+export const ARCHETYPE_FALLBACK =
+  'No pressure was selected. This is a default hint, not a finding that the work is fragmented.';
+
 export const ARCHETYPE_LABEL: Record<ArchetypeId, string> = {
   bottleneckOperator: 'A person is still the routing system',
   toolOverload: 'Tools or handoffs are the first place to check',

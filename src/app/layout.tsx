@@ -27,9 +27,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'PROOF — where, what, who, when',
+  title: 'PROOF — Erik H Bush',
   description:
-    'An agency trace for the four facts a job needs, and a path to rebuild them on Folders, Markdown, Scripts, and Protocols.',
+    'Ninety minutes on one function. Your counts. A yes or a no on the fix. No client result is published for this trace yet.',
 };
 
 export const viewport: Viewport = {

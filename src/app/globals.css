@@ -172,30 +172,30 @@ h3 {
 }
 
 .home h1 {
-  max-width: 11ch;
+  max-width: 12em;
   margin: 0;
-  font-size: clamp(3.4rem, 8vw, 6.6rem);
-  line-height: 0.9;
+  font-size: clamp(2.7rem, 7.4vw, 5.4rem);
+  line-height: 0.92;
   font-variation-settings:
     'SOFT' 30,
     'opsz' 144;
+}
+
+.benefit {
+  max-width: 34rem;
+  margin: 1.1rem 0 0.75rem;
+  font-family: var(--font-display), 'Arial Narrow', sans-serif;
+  font-size: clamp(1.45rem, 2.5vw, 2.05rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ivory);
 }
 
 .hero {
   display: grid;
   gap: 2rem;
   align-items: end;
-}
-
-.home h1.facts-title {
-  max-width: 8ch;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  font-size: clamp(4.2rem, 9vw, 7.4rem);
-  line-height: 0.82;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
 }
 
 .dial {
@@ -631,9 +631,9 @@ figcaption,
 }
 
 .dept.selected {
-  border-color: var(--signal);
-  background: rgba(180, 35, 28, 0.12);
-  box-shadow: inset 3px 0 0 var(--signal);
+  border-color: var(--ivory);
+  background: rgba(230, 234, 238, 0.06);
+  box-shadow: inset 3px 0 0 var(--ivory);
 }
 
 .dept span {
@@ -1003,7 +1003,22 @@ figcaption,
 
 .fact.is-friction .fact-index,
 .fact.is-seized .fact-index {
-  color: var(--signal);
+  color: var(--ember);
+}
+
+.desk-banner {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  background: var(--carbon-2);
+  border-left: 3px solid var(--ivory);
+}
+
+.diagnostics {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  max-width: 42rem;
+  color: var(--muted);
 }
 
 .fact .now,

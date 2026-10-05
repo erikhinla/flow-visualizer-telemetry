@@ -3,7 +3,8 @@ import { RecordExperience } from '../../components/RecordExperience';
 
 export const metadata: Metadata = {
   title: 'Record — PROOF',
-  description: 'The four facts, the keystone path, the reconstruction, and the review that stays.',
+  description:
+    'The problem on this desk, the hours the search is costing, and the judgment that stays.',
 };
 
 export default function RecordPage() {

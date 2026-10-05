@@ -1,4 +1,50 @@
 import type { BandId, ComparisonResult, ScenarioInputs, ScenarioResult } from './types';
+
+export type BalanceReason =
+  | 'compare-off'
+  | 'baseline-unknown'
+  | 'changed-invalid'
+  | 'ongoing-blank'
+  | 'known';
+
+const SCENARIO_KEYS: (keyof ScenarioInputs)[] = [
+  'itemCount',
+  'missingShare',
+  'repairMinutes',
+  'necessaryHours',
+  'otherHours',
+  'availableHours',
+  'variability',
+  'nextMissingShare',
+  'nextRepairMinutes',
+  'ongoingHours',
+];
+
+/** True when any of the ten scenario fields differs from the desk sample, null included. */
+export function scenarioDirty(inputs: ScenarioInputs, sample: ScenarioInputs): boolean {
+  return SCENARIO_KEYS.some((key) => inputs[key] !== sample[key]);
+}
+
+/**
+ * Why a balance can or cannot show a net.
+ * Ongoing hours are blank when they are null, non-finite, or negative.
+ * This does not call validateOngoing.
+ */
+export function balanceReason(input: {
+  compareOff?: boolean;
+  baselineKnown: boolean;
+  changedKnown: boolean;
+  ongoingHours: number | null;
+  net: number | null;
+}): BalanceReason {
+  if (input.compareOff) return 'compare-off';
+  if (!input.baselineKnown) return 'baseline-unknown';
+  if (!input.changedKnown) return 'changed-invalid';
+  const ongoing = input.ongoingHours;
+  if (ongoing === null || !Number.isFinite(ongoing) || ongoing < 0) return 'ongoing-blank';
+  if (input.net === null) return 'ongoing-blank';
+  return 'known';
+}
 import { DISPLAY_BAND_VERSION, OPERATIONAL_MODEL_VERSION } from './types';
 
 export { DISPLAY_BAND_VERSION, OPERATIONAL_MODEL_VERSION };
@@ -11,16 +57,24 @@ export { DISPLAY_BAND_VERSION, OPERATIONAL_MODEL_VERSION };
 export const FORMING_RHO = 0.7;
 export const CLOSING_RHO = 0.9;
 
+export const BAND_WORD: Record<BandId, string> = {
+  open: 'Open',
+  fog: 'Fog',
+  forming: 'Forming',
+  closing: 'Closing',
+  seized: 'Stalled',
+  unavailable: 'No capacity',
+  unknown: 'Unknown',
+};
+
 export const BAND_COPY: Record<BandId, string> = {
-  open: 'This desk has spare margin and no modeled reconstruction.',
-  fog: 'The desk is absorbing the reconstruction. The work can still ship.',
-  forming: 'The margin is thinning. Waiting grows faster than the chase that caused it.',
-  closing:
-    'A small rise in volume or missing context meets a steep wait. Flights and approvals are exposed.',
-  seized: 'Required hours exceed the desk. Unfinished jobs accumulate.',
-  unavailable:
-    'Demand is positive and available capacity is zero. Pressure is not a finite percentage.',
-  unknown: 'A required input is missing or out of range. The result stays unknown.',
+  open: 'This desk has room. The job is not waiting on a search.',
+  fog: 'The work still goes out. People are losing hours finding the file, the decision, or the owner.',
+  forming: 'The margin is getting thin. A little more work and the waiting jumps.',
+  closing: 'A small increase in work meets a long wait. Deadlines and approvals are exposed.',
+  seized: 'The desk has stalled. There is more to do than the hours will hold.',
+  unavailable: 'Work is here and the hours are zero. There is no percentage for that.',
+  unknown: 'A number is missing. PROOF will not invent the result.',
 };
 
 export function repairHours(

@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { diagnosticsOn, setDiagnostics } from '../lib/telemetry';
 
 const LINKS = [
   { href: '/map', label: 'Scan' },
@@ -20,7 +21,6 @@ export function Shell({ children }: { children: ReactNode }) {
       <header className="shell">
         <Link className="wordmark" href="/">
           <span>PROOF</span>
-          Agency scan
         </Link>
         <nav aria-label="Primary">
           {LINKS.map((link) => {
@@ -35,12 +35,35 @@ export function Shell({ children }: { children: ReactNode }) {
       </header>
       <main id="content">{children}</main>
       <footer className="colophon">
+        <p>Erik H Bush. One function, last week’s counts, a yes or a no on the fix.</p>
+        <p>A client result from this trace is not published yet.</p>
         <p>
-          Digital fog hides where the project is, what needs done, who has it, and by when. Digital
-          friction is the drag that stalls the desk.
+          <Link href="/offer">Desk Trace</Link>
         </p>
-        <p>Reconstruction is not the craft. The client decision and the required review stay.</p>
+        <DiagnosticsToggle />
       </footer>
     </>
+  );
+}
+
+function DiagnosticsToggle() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    setOn(diagnosticsOn());
+  }, []);
+  return (
+    <label className="toggle diagnostics">
+      <input
+        type="checkbox"
+        checked={on}
+        onChange={(event) => {
+          const next = event.target.checked;
+          setDiagnostics(next);
+          setOn(next);
+        }}
+      />
+      Send anonymous diagnostics. Off until you turn this on. PROOF sends the page and the desk, not
+      your numbers.
+    </label>
   );
 }

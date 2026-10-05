@@ -10,24 +10,17 @@ import {
   type ReactNode,
   type SetStateAction,
 } from 'react';
-import { getDepartment, isDepartmentId } from '../lib/departments';
+import {
+  STORAGE_KEY,
+  createDefaultSession,
+  editSession,
+  isUntouchedSession,
+  parseSession,
+  withDepartment,
+  type SessionState,
+} from '../lib/session';
 import { emptyAnswers } from '../lib/questionnaire';
-import type { DepartmentId, EvidenceKind, ScenarioInputs } from '../lib/types';
-
-const STORAGE_KEY = 'flow.visualizer.session.v1';
-
-const EVIDENCE: readonly EvidenceKind[] = ['observed', 'self-reported', 'estimated', 'simulated'];
-
-export interface SessionState {
-  values: Array<0 | 1 | 2 | null>;
-  optionIds: Array<string | null>;
-  teamSize: number;
-  departmentId: DepartmentId;
-  evidenceKind: EvidenceKind;
-  inputs: ScenarioInputs;
-  modifierOn: boolean;
-  mapCompleted: boolean;
-}
+import type { DepartmentId, ScenarioInputs } from '../lib/types';
 
 interface SessionApi {
   ready: boolean;
@@ -36,12 +29,13 @@ interface SessionApi {
   selectDepartment: (id: DepartmentId) => void;
   editInputs: (patch: Partial<ScenarioInputs>) => void;
   resetMap: () => void;
+  clearSession: () => void;
 }
 
 const SessionContext = createContext<SessionApi | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<SessionState>(createDefaultSession);
+  const [session, setSession] = useState(createDefaultSession);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -59,24 +53,23 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!ready) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    try {
+      if (isUntouchedSession(session)) {
+        window.localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    } catch {
+      // Storage can be full or blocked. The desk still works for this visit.
+    }
   }, [ready, session]);
 
   const selectDepartment = useCallback((id: DepartmentId) => {
-    setSession((current) => ({
-      ...current,
-      departmentId: id,
-      evidenceKind: 'simulated',
-      inputs: getDepartment(id).sample,
-    }));
+    setSession((current) => withDepartment(current, id));
   }, []);
 
   const editInputs = useCallback((patch: Partial<ScenarioInputs>) => {
-    setSession((current) => ({
-      ...current,
-      inputs: { ...current.inputs, ...patch },
-      evidenceKind: current.evidenceKind === 'simulated' ? 'estimated' : current.evidenceKind,
-    }));
+    setSession((current) => editSession(current, patch));
   }, []);
 
   const resetMap = useCallback(() => {
@@ -89,9 +82,18 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  const clearSession = useCallback(() => {
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // The in-memory desk still resets.
+    }
+    setSession(createDefaultSession());
+  }, []);
+
   return (
     <SessionContext.Provider
-      value={{ ready, session, setSession, selectDepartment, editInputs, resetMap }}
+      value={{ ready, session, setSession, selectDepartment, editInputs, resetMap, clearSession }}
     >
       {children}
     </SessionContext.Provider>
@@ -102,66 +104,4 @@ export function useSession(): SessionApi {
   const value = useContext(SessionContext);
   if (!value) throw new Error('useSession requires SessionProvider');
   return value;
-}
-
-function createDefaultSession(): SessionState {
-  const blank = emptyAnswers();
-  return {
-    values: blank.values,
-    optionIds: blank.optionIds,
-    teamSize: 1,
-    departmentId: 'ACC',
-    evidenceKind: 'simulated',
-    inputs: getDepartment('ACC').sample,
-    modifierOn: false,
-    mapCompleted: false,
-  };
-}
-
-function parseSession(raw: string): SessionState | null {
-  const data = JSON.parse(raw) as Partial<SessionState>;
-  if (!data || typeof data !== 'object') return null;
-  if (!Array.isArray(data.values) || data.values.length !== 15) return null;
-  if (!Array.isArray(data.optionIds) || data.optionIds.length !== 15) return null;
-  if (!data.departmentId || !isDepartmentId(data.departmentId)) return null;
-  if (!data.inputs || !isScenario(data.inputs)) return null;
-  if (!data.evidenceKind || !EVIDENCE.includes(data.evidenceKind)) return null;
-  const departmentId = data.departmentId;
-  const evidenceKind = data.evidenceKind;
-
-  const values = data.values.map((value) =>
-    value === 0 || value === 1 || value === 2 ? value : null
-  );
-  const optionIds = data.optionIds.map((id) => (typeof id === 'string' ? id : null));
-
-  return {
-    values,
-    optionIds,
-    teamSize: typeof data.teamSize === 'number' ? data.teamSize : 1,
-    departmentId,
-    evidenceKind,
-    inputs: data.inputs,
-    modifierOn: Boolean(data.modifierOn),
-    mapCompleted: Boolean(data.mapCompleted),
-  };
-}
-
-function isScenario(value: object): value is ScenarioInputs {
-  const record = value as ScenarioInputs;
-  return (
-    isNum(record.itemCount) &&
-    isNum(record.missingShare) &&
-    isNum(record.repairMinutes) &&
-    isNum(record.necessaryHours) &&
-    isNum(record.otherHours) &&
-    isNum(record.availableHours) &&
-    isNum(record.variability) &&
-    isNum(record.nextMissingShare) &&
-    isNum(record.nextRepairMinutes) &&
-    isNum(record.ongoingHours)
-  );
-}
-
-function isNum(value: number | null): boolean {
-  return value === null || (typeof value === 'number' && Number.isFinite(value));
 }
