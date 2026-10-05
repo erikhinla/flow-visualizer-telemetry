@@ -5,7 +5,6 @@ import { SeizureCurve } from '../components/SeizureCurve';
 import { getDepartment } from '../lib/departments';
 import { formatHours, formatPressure, formatWait } from '../lib/format';
 import { compareScenario } from '../lib/operational';
-import { DESK_TRACE_PRICE, KEYSTONE_PRICE } from '../lib/offer';
 
 export default function HomePage() {
   const department = getDepartment('PR');
@@ -29,7 +28,7 @@ export default function HomePage() {
           </p>
           <p className="lede">
             I have not published a client result from this trace, and I will not invent one. The
-            free scan is fifteen questions. The {DESK_TRACE_PRICE} is ninety minutes on one
+            free scan is Fifteen Answers. The trace is ninety minutes on one
             function, using your counts.{' '}
             <a href="https://erikhbush.com/story">The operating history is here.</a>
           </p>
@@ -37,7 +36,7 @@ export default function HomePage() {
             <Link className="button" href="/map">
               Scan the agency
             </Link>
-            <Link className="button ghost" href="/visualizer?desk=PR">
+            <Link className="button ghost" href="/visualizer?desk=ACC">
               See the account sample
             </Link>
           </div>
@@ -169,25 +168,25 @@ export default function HomePage() {
           <li>
             <span>01</span>
             <strong>Scan · free</strong>
-            Fifteen questions. A profile and an hour band. Answers suggest. They do not measure the
+            Fifteen Answers. A profile and an hour band. Answers suggest. They do not measure the
             studio.
           </li>
           <li>
             <span>02</span>
-            <strong>Trace · {DESK_TRACE_PRICE}</strong>
+            <strong>Trace</strong>
             Ninety minutes with Erik H Bush. Your counts replace the sample. The record says buy
             the fix, or leave it alone.
           </li>
           <li>
             <span>03</span>
-            <strong>Install · {KEYSTONE_PRICE}</strong>
+            <strong>Install</strong>
             Two weeks. The file, the written decision, the check, and the owner. Only after the
             trace says the hours come back.
           </li>
         </ol>
         <div className="actions">
           <Link className="button" href="/offer">
-            Book the Desk Trace — {DESK_TRACE_PRICE}
+            Book the Desk Trace
           </Link>
           <Link className="button ghost" href="/map">
             Scan the agency

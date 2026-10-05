@@ -18,7 +18,6 @@ import {
   suggestDepartment,
   teamHours,
 } from '../lib/questionnaire';
-import { DESK_TRACE_PRICE } from '../lib/offer';
 import type { Choice } from '../lib/types';
 import { getDepartment } from '../lib/departments';
 import { useSession } from './SessionProvider';
@@ -160,7 +159,7 @@ export function MapExperience() {
         </div>
         <div className="actions">
           <Link className="button" href="/offer">
-            Book the Desk Trace — {DESK_TRACE_PRICE}
+            Book the Desk Trace
           </Link>
           <Link
             className="button ghost"

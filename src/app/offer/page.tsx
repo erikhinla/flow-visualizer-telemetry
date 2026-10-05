@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BOOKING_MAILTO, DESK_TRACE_PRICE, KEYSTONE_PRICE, RETRACE_PRICE } from '../../lib/offer';
+import { BOOKING_MAILTO } from '../../lib/offer';
 
 export const metadata: Metadata = {
   title: 'Trace — Erik H Bush',
@@ -39,7 +39,7 @@ export default function OfferPage() {
       </p>
       <div className="actions">
         <a className="button" href={BOOKING_MAILTO}>
-          Book the trace — {DESK_TRACE_PRICE}
+          Book the trace
         </a>
         <Link className="button ghost" href="/map">
           Scan the agency
@@ -47,7 +47,7 @@ export default function OfferPage() {
       </div>
 
       <section className="sequence">
-        <h2>What the {DESK_TRACE_PRICE} buys</h2>
+        <h2>What the trace includes</h2>
         <p className="lede">
           Ninety minutes with me. Not a tour of the company. Not me watching the team. You bring
           one function’s last week, and you leave with a record.
@@ -93,29 +93,26 @@ export default function OfferPage() {
           <li>
             <span>Free</span>
             <strong>Scan</strong>
-            Fifteen questions. A profile and an hour band. A suggestion, not a measurement.
+            Fifteen Answers. A profile and an hour band. A suggestion, not a measurement.
           </li>
           <li>
-            <span>{DESK_TRACE_PRICE}</span>
             <strong>Trace</strong>
             The ninety minutes above. Account, creative, production, public relations, or media are
             the five I will book first.
           </li>
           <li>
-            <span>{KEYSTONE_PRICE}</span>
             <strong>Install</strong>
             Two weeks putting the file, the written decision, the check, and the owner where the
             next person can use them. Only after the trace says the hours come back.
           </li>
           <li>
-            <span>{RETRACE_PRICE}</span>
             <strong>Re-trace</strong>
             The same function, one quarter later. New counts. The window opened, or it did not.
           </li>
         </ol>
         <div className="actions">
           <a className="button" href={BOOKING_MAILTO}>
-            Book the trace — {DESK_TRACE_PRICE}
+            Book the trace
           </a>
           <Link className="button ghost" href="/visualizer?desk=ACC">
             See the account sample

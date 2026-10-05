@@ -95,3 +95,16 @@ Each entry includes:
 ## Future Decisions
 
 _To be filled as the project evolves_
+
+
+### 2026-10-05 - PR #4 audit corrections
+
+The questionnaire model remains `map-saved-2026-09-06`. Point values, option and pressure IDs, profile boundaries, and archetype precedence are unchanged. The first four prioritized pressures still determine routing. `allPressures` retains the full prioritized list for the portable record; it does not widen archetype selection.
+
+The foundation complete flag now follows the existing trace state. An unavailable or unknown desk exports `complete: false` with `state: untraced`.
+
+Regression fixtures cover all 60 option identities, the documented isolated-answer archetypes, fifth-pressure retention without a routing change, unknown and zero-capacity records, and positive/negative/unknown account balances. The recovered local snapshot already guards storage writes, preserves decimal drafts, and labels unknown waits Unknown; those fixes remain covered by tests and browser checks.
+
+Public prices are removed, with no replacement price. Public questionnaire references read Fifteen Answers. The homepage account-sample link selects ACC rather than PR.
+
+Source provenance: main at e68df29 lacks the public offer, evidence controls, and yes/no presentation found on production. A separate recovery commit captures the application source from `/Users/test/Documents/flow-visualizer-telemetry-main`. Production page content matches this snapshot in inspected areas, but exact deployment revision remains unverified because the Vercel connector denied access to the project scope. This is a review blocker, not a claim of a canonical source update.

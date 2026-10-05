@@ -14,7 +14,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-- **Scan** — fifteen questions about how the agency runs campaign work. Scores and routing follow the saved point values. Unanswered questions stay unknown.
+- **Scan** — Fifteen Answers about how the agency runs campaign work. Scores and routing follow the saved point values. Unanswered questions stay unknown.
 - **Trace** — where, what, who, and when on one desk. The keystone actions stay dark until the scenario is known. A sample stays simulated until you say otherwise.
 - **Record** — the four facts, the keystone path, the balance of the fix, and a JSON download.
 

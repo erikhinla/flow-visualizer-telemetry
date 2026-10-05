@@ -201,7 +201,10 @@ export interface MapScore {
   /** Rounded answer index from 0 to 100. Not a measured health percentage. */
   index: number;
   profile: ProfileId;
+  /** First four pressures used by the saved routing model and screen. */
   pressures: PressureId[];
+  /** All pressures in saved priority order, retained for the portable record. */
+  allPressures: PressureId[];
   archetype: ArchetypeId;
   destination: string;
 }
@@ -223,7 +226,8 @@ export function scoreMap(answers: MapAnswers): MapScore | null {
     if (value === 1 && pressure) ones.push(pressure);
   });
 
-  const pressures = [...zeros, ...ones].slice(0, 4);
+  const allPressures = [...zeros, ...ones];
+  const pressures = allPressures.slice(0, 4);
   const index = Math.round((100 * raw) / 30);
 
   return {
@@ -231,6 +235,7 @@ export function scoreMap(answers: MapAnswers): MapScore | null {
     index,
     profile: profileFor(raw),
     pressures,
+    allPressures,
     archetype: archetypeFor(pressures),
     destination: savedDestination(profileFor(raw)),
   };

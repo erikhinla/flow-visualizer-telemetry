@@ -62,7 +62,7 @@ export function buildRecord(input: PortableRecordInput) {
           answerIndex: map.index,
           profile: map.profile,
           profileStatement: PROFILE_COPY[map.profile],
-          pressures: map.pressures.map((id) => ({ id, label: PRESSURE_LABEL[id] })),
+          pressures: map.allPressures.map((id) => ({ id, label: PRESSURE_LABEL[id] })),
           archetype: { id: map.archetype, label: ARCHETYPE_LABEL[map.archetype] },
           historicalCampaignReference: {
             path: map.destination,
@@ -115,7 +115,7 @@ export function buildRecord(input: PortableRecordInput) {
         }
       : null,
     foundation: {
-      complete: comparison.baseline.known && comparison.baseline.band !== 'unknown',
+      complete: factState(comparison.baseline.band, comparison.baseline.repairHours) !== 'untraced',
       state: factState(comparison.baseline.band, comparison.baseline.repairHours),
       facts: deskTrace(input.departmentId).facts,
       keystones: deskTrace(input.departmentId).keystones,
