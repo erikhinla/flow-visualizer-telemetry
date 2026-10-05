@@ -86,7 +86,7 @@ describe('momentum map', () => {
     values[3] = 1; // tools is a zero pressure, wait Q4 value 1 has no pressure
     const score = scoreMap(answered(values));
     assert.deepEqual(score?.pressures, ['start', 'next', 'memory', 'learning']);
-    assert.equal(score?.archetype, 'executionStall');
+    assert.equal(score?.archetype, 'bottleneckOperator');
   });
 
   it('lets ownership outrank tools when both are in the four', () => {
@@ -115,8 +115,8 @@ describe('momentum map', () => {
     only(3, 0, 'toolOverload');
     only(6, 0, 'bottleneckOperator');
     only(11, 0, 'bottleneckOperator');
-    assert.equal(scoreMap(all(2))?.archetype, 'fragmentedWorkflow');
-    assert.equal(archetypeFor([]), 'fragmentedWorkflow');
+    assert.equal(scoreMap(all(2))?.archetype, null);
+    assert.equal(archetypeFor([]), null);
   });
 
   it('keeps option identity when two choices share a point value', () => {
@@ -146,7 +146,7 @@ describe('momentum map', () => {
   it('suggests a department from the first pressure only', () => {
     assert.equal(suggestDepartment(['ownership', 'tools']), 'OPS');
     assert.equal(suggestDepartment(['revenue']), 'FIN');
-    assert.equal(suggestDepartment([]), 'ACC');
+    assert.equal(suggestDepartment([]), null);
     const pressures: PressureId[] = ['key-person'];
     assert.equal(suggestDepartment(pressures), 'HR');
   });

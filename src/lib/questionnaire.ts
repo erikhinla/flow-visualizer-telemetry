@@ -192,7 +192,11 @@ export function isComplete(answers: MapAnswers): boolean {
   return (
     answers.values.length === QUESTIONS.length &&
     answers.optionIds.length === QUESTIONS.length &&
-    answers.values.every((value) => value !== null)
+    QUESTIONS.every((question, index) =>
+      question.choices.some((choice) =>
+        choice.id === answers.optionIds[index] && choice.value === answers.values[index]
+      )
+    )
   );
 }
 
@@ -201,11 +205,11 @@ export interface MapScore {
   /** Rounded answer index from 0 to 100. Not a measured health percentage. */
   index: number;
   profile: ProfileId;
-  /** First four pressures used by the saved routing model and screen. */
+  /** First four pressures for display only. */
   pressures: PressureId[];
   /** All pressures in saved priority order, retained for the portable record. */
   allPressures: PressureId[];
-  archetype: ArchetypeId;
+  archetype: ArchetypeId | null;
   destination: string;
 }
 
@@ -236,7 +240,7 @@ export function scoreMap(answers: MapAnswers): MapScore | null {
     profile: profileFor(raw),
     pressures,
     allPressures,
-    archetype: archetypeFor(pressures),
+    archetype: archetypeFor(allPressures),
     destination: savedDestination(profileFor(raw)),
   };
 }
@@ -248,7 +252,8 @@ export function profileFor(raw: number): ProfileId {
   return 'COMPOUNDING';
 }
 
-export function archetypeFor(pressures: readonly PressureId[]): ArchetypeId {
+export function archetypeFor(pressures: readonly PressureId[]): ArchetypeId | null {
+  if (pressures.length === 0) return null;
   const has = (ids: PressureId[]) => ids.some((id) => pressures.includes(id));
   if (has(['key-person', 'ownership', 'informal-owner'])) return 'bottleneckOperator';
   if (has(['tools', 'handoff'])) return 'toolOverload';
@@ -295,8 +300,8 @@ const PRESSURE_DEPARTMENT: Record<PressureId, DepartmentId> = {
 };
 
 /** A starting department for the first pressure. A hint, not a finding. */
-export function suggestDepartment(pressures: readonly PressureId[]): DepartmentId {
+export function suggestDepartment(pressures: readonly PressureId[]): DepartmentId | null {
   const first = pressures[0];
-  if (!first) return 'ACC';
+  if (!first) return null;
   return PRESSURE_DEPARTMENT[first];
 }

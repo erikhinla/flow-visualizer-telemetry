@@ -1,4 +1,4 @@
-export const MAP_MODEL_VERSION = 'map-saved-2026-09-06';
+export const MAP_MODEL_VERSION = 'map-proof-2026-10-05';
 export const OPERATIONAL_MODEL_VERSION = 'operational-1.0';
 export const MANIFESTATION_MODEL_VERSION = 'manifestation-revision-3';
 export const DISPLAY_BAND_VERSION = 'display-bands-1';

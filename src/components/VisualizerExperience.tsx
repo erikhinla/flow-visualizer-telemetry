@@ -40,7 +40,8 @@ export function VisualizerExperience() {
 
     if (fromMap) {
       const score = scoreMap({ values: session.values, optionIds: session.optionIds });
-      if (score) selectDepartment(suggestDepartment(score.pressures));
+      const departmentId = score ? suggestDepartment(score.allPressures) : null;
+      if (departmentId) selectDepartment(departmentId);
       router.replace('/visualizer');
       setSettled(true);
       return;

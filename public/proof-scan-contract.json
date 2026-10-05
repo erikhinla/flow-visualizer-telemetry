@@ -1,0 +1,492 @@
+{
+  "version": "map-proof-2026-10-05",
+  "questions": [
+    {
+      "id": "q1",
+      "number": 1,
+      "text": "Where does campaign work lose momentum most often?",
+      "choices": [
+        {
+          "id": "q1-c1",
+          "text": "Getting the work started",
+          "value": 0,
+          "pressure": "start"
+        },
+        {
+          "id": "q1-c2",
+          "text": "Switching tools or desks",
+          "value": 1,
+          "pressure": "handoff"
+        },
+        {
+          "id": "q1-c3",
+          "text": "Waiting on the client or another desk",
+          "value": 1,
+          "pressure": "handoff"
+        },
+        {
+          "id": "q1-c4",
+          "text": "Finishing and getting it live",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "number": 2,
+      "text": "How does the team know the next deliverable?",
+      "choices": [
+        {
+          "id": "q2-c1",
+          "text": "We figure it out as we go",
+          "value": 0,
+          "pressure": "next"
+        },
+        {
+          "id": "q2-c2",
+          "text": "We have informal priorities",
+          "value": 1,
+          "pressure": "priorities"
+        },
+        {
+          "id": "q2-c3",
+          "text": "We have a system, but it is not always followed",
+          "value": 1,
+          "pressure": "priorities"
+        },
+        {
+          "id": "q2-c4",
+          "text": "Every job has a clear next step",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "number": 3,
+      "text": "Where do the brief, the approval, and the feedback live?",
+      "choices": [
+        {
+          "id": "q3-c1",
+          "text": "In people's heads",
+          "value": 0,
+          "pressure": "memory"
+        },
+        {
+          "id": "q3-c2",
+          "text": "In scattered docs, decks, and chats",
+          "value": 0,
+          "pressure": "memory"
+        },
+        {
+          "id": "q3-c3",
+          "text": "In a loose folder or project",
+          "value": 1,
+          "pressure": "scattered"
+        },
+        {
+          "id": "q3-c4",
+          "text": "In one record the next desk can open",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "number": 4,
+      "text": "How many AI tools are in the making, the media, or the reporting?",
+      "choices": [
+        {
+          "id": "q4-c1",
+          "text": "None yet",
+          "value": 0,
+          "pressure": "tools"
+        },
+        {
+          "id": "q4-c2",
+          "text": "One or two, lightly",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q4-c3",
+          "text": "Several, and they are not connected",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q4-c4",
+          "text": "Several, connected, with consistent output",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "number": 5,
+      "text": "When a campaign ends, what happens to what the team learned?",
+      "choices": [
+        {
+          "id": "q5-c1",
+          "text": "It leaves with the campaign",
+          "value": 0,
+          "pressure": "learning"
+        },
+        {
+          "id": "q5-c2",
+          "text": "Some notes are saved somewhere",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q5-c3",
+          "text": "We debrief, but nothing is formal",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q5-c4",
+          "text": "We capture it, and the next campaign is better",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "number": 6,
+      "text": "How does the agency handle a missed lead, RFP, or client ask?",
+      "choices": [
+        {
+          "id": "q6-c1",
+          "text": "It usually falls through",
+          "value": 0,
+          "pressure": "followup"
+        },
+        {
+          "id": "q6-c2",
+          "text": "Someone follows up when they remember",
+          "value": 0,
+          "pressure": "followup"
+        },
+        {
+          "id": "q6-c3",
+          "text": "We have a loose process",
+          "value": 1,
+          "pressure": "loose-followup"
+        },
+        {
+          "id": "q6-c4",
+          "text": "Follow-up runs without relying on memory",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "number": 7,
+      "text": "How clear is ownership when a deliverable must move?",
+      "choices": [
+        {
+          "id": "q7-c1",
+          "text": "Unclear — it often falls through",
+          "value": 0,
+          "pressure": "ownership"
+        },
+        {
+          "id": "q7-c2",
+          "text": "It depends on who is free",
+          "value": 1,
+          "pressure": "informal-owner"
+        },
+        {
+          "id": "q7-c3",
+          "text": "Ownership is informal",
+          "value": 1,
+          "pressure": "informal-owner"
+        },
+        {
+          "id": "q7-c4",
+          "text": "Every deliverable has an owner and a routing rule",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "number": 8,
+      "text": "How do AI tools sit inside the work?",
+      "choices": [
+        {
+          "id": "q8-c1",
+          "text": "Experiments, with no operating rules",
+          "value": 0,
+          "pressure": "ai"
+        },
+        {
+          "id": "q8-c2",
+          "text": "In use, but the output is inconsistent",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q8-c3",
+          "text": "Workflows run, but they are fragmented",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q8-c4",
+          "text": "In use, with rules and a person accountable",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "number": 9,
+      "text": "How are decisions made when a client or a flight is pressing?",
+      "choices": [
+        {
+          "id": "q9-c1",
+          "text": "Whoever speaks loudest",
+          "value": 0,
+          "pressure": "decisions"
+        },
+        {
+          "id": "q9-c2",
+          "text": "Whoever is available",
+          "value": 0,
+          "pressure": "decisions"
+        },
+        {
+          "id": "q9-c3",
+          "text": "By loose guidelines",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q9-c4",
+          "text": "By a written decision rule",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "number": 10,
+      "text": "How much revenue still depends on someone remembering to follow up?",
+      "choices": [
+        {
+          "id": "q10-c1",
+          "text": "Almost all of it",
+          "value": 0,
+          "pressure": "revenue"
+        },
+        {
+          "id": "q10-c2",
+          "text": "Most of it",
+          "value": 0,
+          "pressure": "revenue"
+        },
+        {
+          "id": "q10-c3",
+          "text": "Some of it",
+          "value": 1,
+          "pressure": "some-manual"
+        },
+        {
+          "id": "q10-c4",
+          "text": "Very little — the system carries most of it",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "number": 11,
+      "text": "How often does a desk remake or re-find work that already existed?",
+      "choices": [
+        {
+          "id": "q11-c1",
+          "text": "Frequently",
+          "value": 0,
+          "pressure": "repeat"
+        },
+        {
+          "id": "q11-c2",
+          "text": "Often",
+          "value": 0,
+          "pressure": "repeat"
+        },
+        {
+          "id": "q11-c3",
+          "text": "Sometimes",
+          "value": 1,
+          "pressure": "sometimes-repeat"
+        },
+        {
+          "id": "q11-c4",
+          "text": "Rarely — masters and decisions are reusable",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "number": 12,
+      "text": "What happens when the person who holds the client or the craft is out?",
+      "choices": [
+        {
+          "id": "q12-c1",
+          "text": "The work stops",
+          "value": 0,
+          "pressure": "key-person"
+        },
+        {
+          "id": "q12-c2",
+          "text": "It slows sharply",
+          "value": 0,
+          "pressure": "key-person"
+        },
+        {
+          "id": "q12-c3",
+          "text": "The team copes, painfully",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q12-c4",
+          "text": "The work continues",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "number": 13,
+      "text": "How visible are live jobs, flights, and approvals right now?",
+      "choices": [
+        {
+          "id": "q13-c1",
+          "text": "Not visible",
+          "value": 0,
+          "pressure": "pipeline"
+        },
+        {
+          "id": "q13-c2",
+          "text": "Partly visible",
+          "value": 1,
+          "pressure": "partial-pipe"
+        },
+        {
+          "id": "q13-c3",
+          "text": "Mostly visible",
+          "value": 1,
+          "pressure": "partial-pipe"
+        },
+        {
+          "id": "q13-c4",
+          "text": "Visible as they change",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "number": 14,
+      "text": "How does the agency get better at the work it ships?",
+      "choices": [
+        {
+          "id": "q14-c1",
+          "text": "It doesn't",
+          "value": 0,
+          "pressure": "loop"
+        },
+        {
+          "id": "q14-c2",
+          "text": "Informally, in conversation",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q14-c3",
+          "text": "We review sometimes",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q14-c4",
+          "text": "We review results and change how the next job runs",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "number": 15,
+      "text": "Which word best describes the studio today?",
+      "choices": [
+        {
+          "id": "q15-c1",
+          "text": "Chaos",
+          "value": 0,
+          "pressure": "shape"
+        },
+        {
+          "id": "q15-c2",
+          "text": "Reactive",
+          "value": 0,
+          "pressure": "shape"
+        },
+        {
+          "id": "q15-c3",
+          "text": "Building",
+          "value": 1,
+          "pressure": null
+        },
+        {
+          "id": "q15-c4",
+          "text": "Compounding",
+          "value": 2,
+          "pressure": null
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "FRAGMENTED",
+      "min": 0,
+      "max": 7
+    },
+    {
+      "id": "STALLED",
+      "min": 8,
+      "max": 14
+    },
+    {
+      "id": "SCALING",
+      "min": 15,
+      "max": 22
+    },
+    {
+      "id": "COMPOUNDING",
+      "min": 23,
+      "max": 30
+    }
+  ]
+}

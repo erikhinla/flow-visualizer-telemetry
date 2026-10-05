@@ -63,7 +63,7 @@ export function buildRecord(input: PortableRecordInput) {
           profile: map.profile,
           profileStatement: PROFILE_COPY[map.profile],
           pressures: map.allPressures.map((id) => ({ id, label: PRESSURE_LABEL[id] })),
-          archetype: { id: map.archetype, label: ARCHETYPE_LABEL[map.archetype] },
+          archetype: map.archetype ? { id: map.archetype, label: ARCHETYPE_LABEL[map.archetype] } : null,
           historicalCampaignReference: {
             path: map.destination,
             note: 'Not a route in this app.',

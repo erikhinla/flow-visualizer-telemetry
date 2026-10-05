@@ -21,12 +21,12 @@ function record(inputs = getDepartment('ACC').sample, answers = emptyAnswers()) 
 }
 
 describe('PR #4 audit regressions', () => {
-  it('exports pressures beyond four without changing saved routing', () => {
+  it('exports pressures beyond four and routes from all pressures', () => {
     const answers = selected([0, 0, 0, 3, 0, 3, 0, 3, 3, 3, 3, 3, 3, 3, 3]);
     const score = scoreMap(answers)!;
     assert.deepEqual(score.pressures, ['start', 'next', 'memory', 'learning']);
     assert.deepEqual(score.allPressures, ['start', 'next', 'memory', 'learning', 'ownership']);
-    assert.equal(score.archetype, 'executionStall');
+    assert.equal(score.archetype, 'bottleneckOperator');
     assert.deepEqual(record(undefined, answers).map!.pressures.map(p => p.id), score.allPressures);
   });
   it('preserves every option identity and the saved isolated-answer routing', () => {
@@ -52,7 +52,7 @@ describe('PR #4 audit regressions', () => {
       const answers = selected(indices); const score = scoreMap(answers)!;
       assert.equal(answers.optionIds[q], `q${q + 1}-c${c + 1}`);
       assert.equal(score.raw, 28 + choice.value);
-      assert.equal(score.archetype, expected[q][c]);
+      assert.equal(score.archetype, choice.pressure ? expected[q][c] : null);
       assert.deepEqual(score.allPressures, choice.pressure ? [choice.pressure] : []);
       assert.equal(record(undefined, answers).map!.answerIndex, score.index);
     }));

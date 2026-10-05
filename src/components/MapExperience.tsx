@@ -6,7 +6,6 @@ import { trace } from '../lib/diagnostics';
 import { formatHours } from '../lib/format';
 import { scenarioDirty } from '../lib/operational';
 import {
-  ARCHETYPE_FALLBACK,
   ARCHETYPE_LABEL,
   PRESSURE_LABEL,
   PROFILE_COPY,
@@ -53,9 +52,9 @@ export function MapExperience() {
     const open = session.values.findIndex((value) => value === null);
     if (session.mapCompleted && open === -1) setMode('result');
     else setCursor(open === -1 ? 0 : open);
-    // Only when storage finishes loading. Reviewing an answer should not jump the cursor.
+    // Restore or accept a completed handoff. Reviewing an answer does not change completion.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready]);
+  }, [ready, session.mapCompleted]);
 
   useEffect(() => {
     if (mode !== 'ask') return;
@@ -93,7 +92,8 @@ export function MapExperience() {
   if (mode === 'result' && score) {
     const hours = teamHours(score.profile, session.teamSize);
     const range = PROFILE_HOURS[score.profile];
-    const department = getDepartment(suggestDepartment(score.pressures));
+    const departmentId = suggestDepartment(score.allPressures);
+    const department = departmentId ? getDepartment(departmentId) : null;
     return (
       <article className="map-result">
         <p className="kicker">Agency scan · answers, not a measurement</p>
@@ -108,11 +108,7 @@ export function MapExperience() {
           Zero-point answers come first, then one-point answers. These are the first four. Two-point
           answers add no pressure.
         </p>
-        {score.pressures.length === 0 ? (
-          <p>
-            <span className="kicker">Default hint</span> {ARCHETYPE_FALLBACK}
-          </p>
-        ) : (
+        {score.pressures.length === 0 ? null : (
           <ol className="pressure-list">
             {score.pressures.map((id) => (
               <li key={id}>
@@ -128,10 +124,10 @@ export function MapExperience() {
             Profile token {score.profile}. Raw score {score.raw} of 30. Answer index {score.index} of
             100. The index is the rounded share of the raw score. It is not a health percentage.
           </p>
-          <p className="archetype">
+          {score.archetype ? <p className="archetype">
             <span>Routing hint</span>
             {ARCHETYPE_LABEL[score.archetype]} <code>{score.archetype}</code>
-          </p>
+          </p> : null}
         </details>
         <div className="team">
           <label htmlFor="team-size">
@@ -161,7 +157,7 @@ export function MapExperience() {
           <Link className="button" href="/offer">
             Book the Desk Trace
           </Link>
-          <Link
+          {department ? <Link
             className="button ghost"
             href="/visualizer?from=map"
             onClick={(event) => {
@@ -177,7 +173,7 @@ export function MapExperience() {
             }}
           >
             Trace {department.name}
-          </Link>
+          </Link> : null}
           <button
             type="button"
             className="button ghost"

@@ -108,3 +108,13 @@ Regression fixtures cover all 60 option identities, the documented isolated-answ
 Public prices are removed, with no replacement price. Public questionnaire references read Fifteen Answers. The homepage account-sample link selects ACC rather than PR.
 
 Source provenance: main at e68df29 lacks the public offer, evidence controls, and yes/no presentation found on production. A separate recovery commit captures the application source from `/Users/test/Documents/flow-visualizer-telemetry-main`. Production page content matches this snapshot in inspected areas, but exact deployment revision remains unverified because the Vercel connector denied access to the project scope. This is a review blocker, not a claim of a canonical source update.
+
+### 2026-10-05 - Product review: one Scan and completed-answer handoff
+
+The owner's Oct 5 product decisions supersede the earlier first-four archetype limitation. `map-proof-2026-10-05` preserves question/choice IDs, point values, bands, and precedence but selects the archetype from all prioritized pressures. Empty pressure sets return null rather than fragmentedWorkflow. Display retains the first four; the record retains all.
+
+Completed handoffs carry canonical choice IDs and the model version. Both surfaces can consume the same generated browser module. The instrument validates the payload and recalculates it, opens the existing suggested function sample, and marks the Scan completed. No submitted score or department is trusted. No-pressure results open their completed reading. Invalid payloads open a fresh Scan. Counts remain simulated until independently entered under the existing evidence controls.
+
+Subpath support uses build-time PROOF_BASE_PATH=/proof/screen, Next.js basePath, and a prefixed raw API fetch. Company rewrites and film consumption remain unimplemented.
+
+No further copy lines are approved in /Users/test/Downloads/copy-decisions.md. I changed no visible wording to its proposals. Q4/Q8 inversion and non-monotonicity in manifestation-revision-3 remain open because the approved replacement formula is unspecified. Questionnaire point monotonicity is verified separately; it does not certify that illustration.

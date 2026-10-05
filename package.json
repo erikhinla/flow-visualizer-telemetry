@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "tsc --noEmit",
     "type-check": "tsc --noEmit",
-    "test": "tsx --test tests/**/*.test.ts"
+    "test": "tsx --test tests/**/*.test.ts",
+    "export:scan": "node scripts/export-scan.mjs",
+    "prebuild": "npm run export:scan",
+    "predev": "npm run export:scan"
   },
   "dependencies": {
     "next": "^14.0.0",
@@ -18,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^5.0.0"
   }

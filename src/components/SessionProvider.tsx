@@ -1,11 +1,14 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { decodeHandoff, HANDOFF_PARAM } from '../lib/handoff';
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useState,
+  useRef,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
@@ -35,21 +38,50 @@ interface SessionApi {
 const SessionContext = createContext<SessionApi | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const bootSession = useRef<SessionState | null>(null);
   const [session, setSession] = useState(createDefaultSession);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let restored = bootSession.current ?? createDefaultSession();
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = parseSession(raw);
-        if (parsed) setSession(parsed);
-      }
+      if (!bootSession.current && raw) restored = parseSession(raw) ?? restored;
     } catch {
       // Keep the sample session if storage is unavailable.
     }
+
+    const receive = () => {
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      if (!fragment.has(HANDOFF_PARAM)) return;
+      const handoff = decodeHandoff(fragment.get(HANDOFF_PARAM) ?? '');
+      fragment.delete(HANDOFF_PARAM);
+      const cleanHash = fragment.size ? `#${fragment}` : '';
+      window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}${cleanHash}`);
+      if (!handoff) {
+        router.replace('/map');
+        setSession(current => ({ ...current, ...emptyAnswers(), mapCompleted: false }));
+        bootSession.current = { ...restored, ...emptyAnswers(), mapCompleted: false };
+        return;
+      }
+      // Start from a simulated sample, never carry an old observed claim into a new Scan.
+      const next = handoff.departmentId
+        ? withDepartment(createDefaultSession(), handoff.departmentId)
+        : createDefaultSession();
+      router.replace(handoff.departmentId ? '/visualizer' : '/map');
+      const received = { ...next, ...handoff.answers, mapCompleted: true };
+      bootSession.current = received;
+      setSession(received);
+    };
+    setSession(restored);
+    receive();
+    bootSession.current ??= restored;
     setReady(true);
-  }, []);
+    const onHashChange = () => receive();
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [router]);
 
   useEffect(() => {
     if (!ready) return;
