@@ -33,9 +33,12 @@ export function KeystonePath({
   return (
     <section className="stones" aria-labelledby="stones-title" data-open={open ? 'true' : 'false'}>
       <div className="trace-head">
-        <p className="kicker">Quad keystones</p>
+        <p className="kicker">Context keystones</p>
         <h2 id="stones-title">Rebuild the foundation.</h2>
         <p className="state-line">{line}</p>
+        <p className="note">A context keystone preserves what the next person or agent needs to act.
+          Folders, Markdown, Scripts, and Protocols are the starting set. Current policies,
+          decision logs, approved versions, and rights records can hold that context too.</p>
         {open && evidenceKind === 'simulated' ? (
           <p className="note">Actions below are for the simulated sample.</p>
         ) : null}

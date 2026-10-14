@@ -84,3 +84,12 @@ Each entry includes:
 ## Future Decisions
 
 _To be filled as the project evolves_
+
+### Decision #006 - Context Keystone scope
+
+**Date**: 2026-10-13
+**Category**: Product language
+**Decision**: Context Keystones include any artifact that preserves the reusable context needed for action. Folders, Markdown, Scripts and Protocols remain the default path. This language update implements the owner-requested October 12 refinement.
+**Impact**: Homepage, keystone path and technical documentation explain the broader principle. The four stored keystone IDs, record schema, scoring, weights and operational calculations remain unchanged. This does not implement pricing or establish observed findings from answer patterns.
+**Authority**: The existing October 7 Master Operating Book remains the sole operating guide.
+**Status**: Active

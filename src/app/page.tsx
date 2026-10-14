@@ -28,7 +28,7 @@ export default function HomePage() {
           <p className="lede">
             Those four facts are the foundation of a job. Digital fog hides them. Digital friction
             stalls the desk that has to rebuild them. After the Trace, PROOF opens a path back onto
-            four keystones: Folders, Markdown, Scripts, and Protocols.
+            context keystones, starting with Folders, Markdown, Scripts, and Protocols.
           </p>
           <div className="actions">
             <Link className="button" href="/visualizer">
