@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Balance } from './Balance';
+import { EngagementPrice } from './EngagementPrice';
 import { DepartmentMark } from './DepartmentMark';
 import { FlowTrack } from './FlowTrack';
 import { KeystonePath } from './KeystonePath';
@@ -251,6 +252,8 @@ export function VisualizerExperience() {
         net={showChange ? comparison.netReleasedHours : null}
         pressureWithOngoing={showChange ? comparison.pressureWithOngoing : null}
       />
+
+      <EngagementPrice optionIds={session.optionIds} departmentId={session.departmentId} modifierOn={session.modifierOn} />
 
       <section className="action-card">
         <p className="kicker">Who carries it</p>
