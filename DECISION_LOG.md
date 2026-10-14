@@ -84,3 +84,20 @@ Each entry includes:
 ## Future Decisions
 
 _To be filled as the project evolves_
+
+### Decision #006 - Context Keystone scope
+
+**Date**: 2026-10-13
+**Category**: Product language
+**Decision**: Context Keystones include any artifact that preserves the reusable context needed for action. Folders, Markdown, Scripts and Protocols remain the default path. This language update implements the owner-requested October 12 refinement.
+**Impact**: Homepage, keystone path and technical documentation explain the broader principle. The four stored keystone IDs, record schema, scoring, weights and operational calculations remain unchanged. This does not implement pricing or establish observed findings from answer patterns.
+**Authority**: The existing October 7 Master Operating Book remains the sole operating guide.
+**Status**: Active
+
+### Decision #007 - Locked indicative engagement pricing
+
+**Date**: 2026-10-13
+**Decision**: Apply the owner-supplied locked equation: annual modeled load = 95000 × manifestation().score / 100; raw engagement amount = annual load × 0.15; indicative USD price = max(round(raw engagement amount), 1500). This supersedes the October 12 approximate 1.5% shorthand.
+**Boundary**: The $95,000 base-salary basis and uncalibrated score are model assumptions, not measured business loss or guaranteed ROI. Scope and contracted price remain to be agreed. Quotes preserve the selected modifier; an enabled modifier remains an illustrative scenario.
+**Implementation**: `src/lib/pricing.ts` contains the pure calculation. The endpoint derives values from validated choice identities and returns no proprietary coefficients. The Visualizer presents the breakdown and POSTs a handoff to the website booking journey. Monetary prices are not inferred from the answer-average index or accepted from a client payload.
+**Authority**: The original pricing specification supplied October 13 is recorded in the existing Master Operating Book. Implementation, test results and production release are separate states.

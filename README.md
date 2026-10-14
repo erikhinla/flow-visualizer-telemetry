@@ -2,7 +2,7 @@
 
 A trace for marketing agencies. It shows where a project is, what needs done, who has it, and by when. Digital fog hides those four facts. Digital friction stalls the desk that rebuilds them.
 
-Once the Trace can see the desk, the path back is the four keystones: Folders, Markdown, Scripts, and Protocols. The waiting curve still marks when that load is forming and when it has seized the desk. If a fix costs more than it returns, the balance says so.
+Once the Trace can see the desk, the path back starts with Folders, Markdown, Scripts, and Protocols. Context Keystones include any current artifact that preserves what the next person or agent needs to act. The four are a practical starting set, not an exhaustive taxonomy. The waiting curve still marks when that load is forming and when it has seized the desk. If a fix costs more than it returns, the balance says so.
 
 ## Run
 
@@ -46,3 +46,5 @@ hermes config set terminal.container_memory 4096
 ```
 
 Set `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, and `VERCEL_TEAM_ID` in the Hermes environment. The ids are the `projectId` and `orgId` in `.vercel/project.json`. Do not commit the token. With those three values, Hermes can deploy, read logs, and change the project. `hermes setup terminal` reads the same project file when this directory is the working directory.
+
+Brand and offer authority stays in the existing [Master Operating Book](https://docs.google.com/document/d/1Kq6leQTLg7HLI6BUgI6gys3XxE5hme4gXjnX3UaW6_8/edit). This repository documents implementation, not a competing operating guide. The manifestation index is an uncalibrated scenario. The locked pricing function uses its returned score to calculate an indicative USD engagement price: max(round(95000 × score / 100 × 0.15), 1500). The selected modifier is passed through to manifestation before pricing; an enabled modifier is labeled illustrative. The Visualizer shows the price after a completed scan and carries the answers to booking by POST, where the site recalculates it. Scope and the final price remain to be agreed.
