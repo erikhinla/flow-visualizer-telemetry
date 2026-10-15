@@ -96,12 +96,10 @@ export function MapExperience() {
     const department = departmentId ? getDepartment(departmentId) : null;
     return (
       <article className="map-result">
-        <p className="kicker">Agency scan · answers, not a measurement</p>
+        <p className="kicker">PROOF · Business Diagnostic</p>
         <h1>{PROFILE_COPY[score.profile]}</h1>
         <p className="lede">
-          Answers suggest {range.low}–{range.high} hours a person, every week, spent finding the work
-          instead of doing it. If you get those hours back, the judgment still stays with your
-          people. PROOF has not counted your desk.
+          This business diagnostic traces recurring tasks from request to completion. The answers suggest where to reclaim wasted project management and operations capacity. PROOF is a diagnostic, not a measurement of your team.
         </p>
         <h2>Places to check</h2>
         <p className="note">
@@ -155,7 +153,7 @@ export function MapExperience() {
         </div>
         <div className="actions">
           <Link className="button" href="/offer">
-            Book the Desk Trace
+            Choose One Task to Follow
           </Link>
           {department ? <Link
             className="button ghost"

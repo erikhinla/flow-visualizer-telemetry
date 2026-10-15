@@ -123,7 +123,7 @@ export function VisualizerExperience() {
   return (
     <article className="see">
       <header className="see-intro">
-        <p className="kicker">{department.name} · sample until you replace the numbers</p>
+        <p className="kicker">{department.name}</p>
         <h1>{department.mirror}</h1>
         <p className="benefit">{department.relief}</p>
         {department.campaignLine ? <p className="campaign">{department.campaignLine}</p> : null}
@@ -358,7 +358,7 @@ export function VisualizerExperience() {
 
       <section className="action-card">
         <p className="kicker">Who carries it</p>
-        <h2>Your people still do the work. The judgment stays.</h2>
+        <h2>The Owner Keeps the Judgment</h2>
         <dl>
           <div>
             <dt>Owner role</dt>
@@ -378,7 +378,7 @@ export function VisualizerExperience() {
           </div>
         </dl>
         <Link className="button" href="/record">
-          Take the record
+          Follow This Task
         </Link>
       </section>
 
