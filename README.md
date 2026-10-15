@@ -1,48 +1,49 @@
-# PROOF
+# PROOF: Context Computator & Friction Forensics
 
-A trace for marketing agencies. It shows where a project is, what needs done, who has it, and by when. Digital fog hides those four facts. Digital friction stalls the desk that rebuilds them.
+> Standalone diagnostic instrument and operational friction engine for measuring context coordination gaps and capacity pressure.
 
-Once the Trace can see the desk, the path back is the four keystones: Folders, Markdown, Scripts, and Protocols. The waiting curve still marks when that load is forming and when the desk has stalled. If a fix costs more than it returns, the balance says so.
+---
 
-## Run
+## Overview
 
-```bash
-npm install
-npm test
-npm run dev
-```
+**PROOF: Context Computator & Friction Forensics** exposes and quantifies human repair work (searching, chasing, checking, rebuilding) between departmental handoffs. It uses a 15-question Momentum Map diagnostic engine (`map-proof-2026-10-05`) and contract payloads to trace recurring tasks from request to completion.
 
-Open [http://localhost:3000](http://localhost:3000).
+### Key Capabilities
+- **15-Question Diagnostic Engine:** Maps answer patterns to specific operational pressure signals.
+- **Contract & Handoff Module:** Decodes and validates versioned URL payloads (`/proof/screen/visualizer#proof=<payload>`).
+- **Subpath Hosting Support:** Designed for subpath routing under `/proof/screen`.
+- **Hermes Agent Ready:** Configured for local automated management and deployment via Hermes Agent on a self-hosted Netcup VPS.
 
-- **Scan** — Fifteen Answers about how the agency runs campaign work. Scores and routing follow the saved point values. Unanswered questions stay unknown.
-- **Trace** — where, what, who, and when on one desk. The keystone actions stay dark until the scenario is known. A sample stays simulated until you say otherwise.
-- **Record** — the four facts, the keystone path, the balance of the fix, and a JSON download.
+---
 
-## Models
+## Tech Stack & Architecture
 
-| Model                      | What it is                                                    |
-| -------------------------- | ------------------------------------------------------------- |
-| `map-saved-2026-09-06`     | Answer index, profile, four pressures, archetype              |
-| `operational-1.0`          | Repair hours, capacity pressure, Kingman waiting illustration |
-| `manifestation-revision-3` | Recorded scenario index. Inspector only. Uncalibrated         |
+- **Framework:** Next.js (App Router, Node.js standalone build target)
+- **Language:** TypeScript
+- **Testing:** Vitest / Node Test Runner (`npm run test`)
+- **Containerization:** Docker & Docker Compose
+- **Hosting Environment:** Netcup VPS (Self-Hosted)
 
-The formulas and their limits are in `src/telemetry/VISUALIZER_MASTER.md`. `npm test` checks the published audit values, including the 120-package week and the revision-3 index.
+---
 
-## Telemetry
+## Deployment Architecture (Netcup VPS & Hermes Agent)
 
-`POST /api/telemetry` accepts event batches and holds a short in-memory buffer for the life of the process. It is not a warehouse and it stores no secrets.
+This project is configured to run in a standalone Docker container on a self-hosted **Netcup VPS**. It does **not** rely on third-party PaaS platforms (such as Vercel).
 
-## Deploy
+### Why Netcup VPS + Hermes Agent?
+- **Hermes Agent Integration:** Hermes Agent manages, inspects, and executes deployments on the VPS environment via local script and SSH access.
+- **Full Control & Low Latency:** Dockerized standalone output guarantees zero external deployment dependencies and consistent subpath routing (`/proof/screen`).
 
-Production is [flow-visualizer-telemetry.vercel.app](https://flow-visualizer-telemetry.vercel.app), project `flow-visualizer-telemetry` on the Vercel team `erikhbush-8628s-projects`. `.vercel/project.json` holds the team and project ids. It holds no token.
+---
 
-Hermes Agent manages this project from a checkout of the repo. Point its terminal at the Vercel Sandbox backend, then give it the project token outside git:
+## Local Development & Setup
 
-```bash
-hermes config set terminal.backend vercel_sandbox
-hermes config set terminal.vercel_runtime node24
-hermes config set terminal.container_cpu 2
-hermes config set terminal.container_memory 4096
-```
+### Prerequisites
+- Node.js 18+ or 20+
+- npm 9+
 
-Set `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, and `VERCEL_TEAM_ID` in the Hermes environment. The ids are the `projectId` and `orgId` in `.vercel/project.json`. Do not commit the token. With those three values, Hermes can deploy, read logs, and change the project. `hermes setup terminal` reads the same project file when this directory is the working directory.
+### Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   npm install
