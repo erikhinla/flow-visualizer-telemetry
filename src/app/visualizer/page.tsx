@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { QUESTIONS, QUESTIONS as ALL_QUESTIONS, evaluateQuestionnaire } from '@/lib/questionnaire';
-import { buildFragmentUrl, parseFragmentUrl } from '@/lib/scan-contract';
+import { QUESTIONS, scoreMap } from '@/lib/questionnaire';
+import { createHandoffPayload, parseHandoffPayload } from '@/lib/handoff';
 
 export default function VisualizerPage() {
   const [answers, setAnswers] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
-    ALL_QUESTIONS.forEach((q) => {
+    QUESTIONS.forEach((q) => {
       initial[q.id] = `${q.id}-c1`;
     });
     return initial;
@@ -19,8 +19,9 @@ export default function VisualizerPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
-      const parsedChoices = parseFragmentUrl(window.location.hash);
-      if (parsedChoices && parsedChoices.length === ALL_QUESTIONS.length) {
+      const hash = window.location.hash.replace('#proof=', '');
+      const parsedChoices = parseHandoffPayload(hash);
+      if (parsedChoices && parsedChoices.length === QUESTIONS.length) {
         const newAnswers: Record<string, string> = {};
         parsedChoices.forEach((choiceId) => {
           const qId = choiceId.split('-')[0];
@@ -31,13 +32,13 @@ export default function VisualizerPage() {
     }
   }, []);
 
-  const choiceList = ALL_QUESTIONS.map((q) => answers[q.id] || `${q.id}-c1`);
-  const result = evaluateQuestionnaire(choiceList);
+  const choiceList = QUESTIONS.map((q) => answers[q.id] || `${q.id}-c1`);
+  const result = scoreMap(choiceList);
 
   useEffect(() => {
     try {
-      const fragmentUrl = buildFragmentUrl(choiceList);
-      setShareUrl(fragmentUrl);
+      const payload = createHandoffPayload(choiceList);
+      setShareUrl(`/proof/screen/visualizer#proof=${payload}`);
     } catch (e) {
       console.error(e);
     }
@@ -58,8 +59,8 @@ export default function VisualizerPage() {
 
   const handleGoToResults = () => {
     if (typeof window !== 'undefined') {
-      const base64url = shareUrl.split('#proof=')[1] || '';
-      window.location.href = `/results#proof=${base64url}`;
+      const payload = shareUrl.split('#proof=')[1] || '';
+      window.location.href = `/results#proof=${payload}`;
     }
   };
 
@@ -74,7 +75,7 @@ export default function VisualizerPage() {
       {/* Top Banner */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <span className="text-xs font-mono tracking-widest text-indigo-400 uppercase">Diagnostic Instrument</span>
+          <span className="text-xs font-mono tracking-widest text-indigo-400 uppercase">PROOF · Business Diagnostic</span>
           <h2 className="text-2xl font-bold text-white mt-1">15-Question Momentum Map Engine</h2>
           <p className="text-slate-400 text-sm mt-1">Select choices to evaluate real-time diagnostic score and pressure indicators.</p>
         </div>
@@ -117,12 +118,12 @@ export default function VisualizerPage() {
           <div key={q.id} className="bg-slate-900/60 border border-slate-800/80 rounded-xl p-6 space-y-4">
             <div className="flex justify-between items-center border-b border-slate-800/60 pb-3">
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
-                Question {idx + 1} • {q.category}
+                Question {idx + 1}
               </span>
               <span className="text-xs font-mono text-indigo-400">ID: {q.id}</span>
             </div>
             
-            <h3 className="text-lg font-medium text-slate-100">{q.title}</h3>
+            <h3 className="text-lg font-medium text-slate-100">{q.prompt}</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
               {q.choices.map((c) => {
