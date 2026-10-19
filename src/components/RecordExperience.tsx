@@ -126,7 +126,7 @@ export function RecordExperience() {
           <p>
             {record.map.profile}. {record.map.profileStatement} Raw score {record.map.rawScore} of
             30, answer index {record.map.answerIndex}. Preset range{' '}
-            {record.map.presetHoursPerWeek?.low}–{record.map.presetHoursPerWeek?.high} hours per
+            {record.map.presetHoursPerWeek?.low} to {record.map.presetHoursPerWeek?.high} hours per
             week for {record.map.teamSize} {record.map.teamSize === 1 ? 'person' : 'people'}.
           </p>
           <p className="note">{record.map.note}</p>
@@ -186,7 +186,7 @@ export function RecordExperience() {
           Print
         </button>
         <Link className="button ghost" href="/visualizer">
-          Back to the Trace
+          Back to the desk
         </Link>
         <button type="button" className="button ghost" onClick={clearSession}>
           Clear this browser

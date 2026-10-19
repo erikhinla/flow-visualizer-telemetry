@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { BOOKING_MAILTO } from '../../lib/offer';
 
 export const metadata: Metadata = {
-  title: 'Trace — Erik H Bush',
+  title: 'Talk through the pattern · PROOF',
   description:
     'Ninety minutes on one function. Your counts. A yes or a no on the fix. No client result is published yet.',
 };
@@ -32,22 +32,22 @@ export default function OfferPage() {
       </p>
       <p className="lede">
         Twenty years in marketing operations and project management. The last three, building with
-        AI on the crew. A client has not published a result from this trace. This page will not
+        AI on the crew. No client result is published yet. This page won’t
         invent one.{' '}
         <a href="https://erikhbush.com/story">Operating history.</a>{' '}
         <a href="https://www.linkedin.com/in/erik-h-bush/">LinkedIn.</a>
       </p>
       <div className="actions">
         <a className="button" href={BOOKING_MAILTO}>
-          Book the trace
+          Talk through the pattern
         </a>
         <Link className="button ghost" href="/map">
-          Scan the agency
+          Start PROOF
         </Link>
       </div>
 
       <section className="sequence">
-        <h2>What the trace includes</h2>
+        <h2>What the conversation includes</h2>
         <p className="lede">
           Ninety minutes with me. Not a tour of the company. Not me watching the team. You bring
           one function’s last week, and you leave with a record.
@@ -92,27 +92,27 @@ export default function OfferPage() {
         <ol>
           <li>
             <span>Free</span>
-            <strong>Scan</strong>
+            <strong>PROOF</strong>
             Fifteen Answers. A profile and an hour band. A suggestion, not a measurement.
           </li>
           <li>
-            <strong>Trace</strong>
+            <strong>The conversation</strong>
             The ninety minutes above. Account, creative, production, public relations, or media are
             the five I will book first.
           </li>
           <li>
             <strong>Install</strong>
             Two weeks putting the file, the written decision, the check, and the owner where the
-            next person can use them. Only after the trace says the hours come back.
+            next person can use them. Only after the numbers say the hours come back.
           </li>
           <li>
-            <strong>Re-trace</strong>
+            <strong>Completion review</strong>
             The same function, one quarter later. New counts. The window opened, or it did not.
           </li>
         </ol>
         <div className="actions">
           <a className="button" href={BOOKING_MAILTO}>
-            Book the trace
+            Talk through the pattern
           </a>
           <Link className="button ghost" href="/visualizer?desk=ACC">
             See the account sample

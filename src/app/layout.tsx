@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import { Barlow, Barlow_Condensed, IBM_Plex_Mono } from 'next/font/google';
+import { Archivo, Barlow, Barlow_Condensed, IBM_Plex_Mono } from 'next/font/google';
 import { SessionProvider } from '../components/SessionProvider';
 import { Shell } from '../components/Shell';
 import './globals.css';
+import './proof.css';
 
 const display = Barlow_Condensed({
   subsets: ['latin'],
@@ -19,6 +20,13 @@ const sans = Barlow({
   variable: '--font-sans',
 });
 
+const grotesk = Archivo({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-grotesk',
+});
+
 const mono = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
@@ -27,9 +35,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'PROOF — Erik H Bush',
+  title: 'PROOF · See where Digital Friction shows up',
   description:
-    'Ninety minutes on one function. Your counts. A yes or a no on the fix. No client result is published for this trace yet.',
+    'Nobody hired a Context Coordinator. So everyone became one. AI sped up the work, but context still gets carried by hand. 15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for. Free, from TransformBy10X.',
 };
 
 export const viewport: Viewport = {
@@ -40,7 +48,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${grotesk.variable} ${mono.variable}`}>
       <body>
         <SessionProvider>
           <Shell>{children}</Shell>

@@ -53,7 +53,7 @@ var QUESTIONS = [
     ["Follow-up runs without relying on memory", 2, null]
   ]),
   q(7, "How clear is ownership when a deliverable must move?", [
-    ["Unclear \u2014 it often falls through", 0, "ownership"],
+    ["Unclear. It often falls through", 0, "ownership"],
     ["It depends on who is free", 1, "informal-owner"],
     ["Ownership is informal", 1, "informal-owner"],
     ["Every deliverable has an owner and a routing rule", 2, null]
@@ -74,13 +74,13 @@ var QUESTIONS = [
     ["Almost all of it", 0, "revenue"],
     ["Most of it", 0, "revenue"],
     ["Some of it", 1, "some-manual"],
-    ["Very little \u2014 the system carries most of it", 2, null]
+    ["Very little. The system carries most of it", 2, null]
   ]),
   q(11, "How often does a desk remake or re-find work that already existed?", [
     ["Frequently", 0, "repeat"],
     ["Often", 0, "repeat"],
     ["Sometimes", 1, "sometimes-repeat"],
-    ["Rarely \u2014 masters and decisions are reusable", 2, null]
+    ["Rarely. Masters and decisions are reusable", 2, null]
   ]),
   q(12, "What happens when the person who holds the client or the craft is out?", [
     ["The work stops", 0, "key-person"],

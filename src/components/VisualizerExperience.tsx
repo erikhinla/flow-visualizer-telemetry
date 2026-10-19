@@ -115,7 +115,7 @@ export function VisualizerExperience() {
   };
 
   if (!ready || !settled) {
-    return <p className="note">Opening the Trace…</p>;
+    return <p className="note">Opening the desk…</p>;
   }
 
   const bannerName = bannerDesk ? getDepartment(bannerDesk).name : '';
@@ -132,7 +132,7 @@ export function VisualizerExperience() {
       {bannerDesk ? (
         <div className="desk-banner" role="status">
           <p>
-            This link opens the {bannerName} sample. This Trace is still {department.name}.
+            This link opens the {bannerName} sample. This desk is still {department.name}.
           </p>
           <div className="actions">
             <button
@@ -417,7 +417,7 @@ export function VisualizerExperience() {
         <h3>Recorded scenario index · {MANIFESTATION_MODEL_VERSION}</h3>
         <p>
           This index is the old illustration. Its exponent, weights, and modifier are uncalibrated.
-          It is not repair hours and not a loss percentage. Height is an artistic 0–30 scale.
+          It is not repair hours and not a loss percentage. Height is an artistic 0 to 30 scale.
         </p>
         {index ? (
           <>
@@ -429,7 +429,7 @@ export function VisualizerExperience() {
                   setSession((current) => ({ ...current, modifierOn: event.target.checked }))
                 }
               />
-              FLOW modifier — multiplies the assumed fragility by 0.25. It does not deploy anything.
+              FLOW modifier. Multiplies the assumed fragility by 0.25. It does not deploy anything.
             </label>
             <p className="index-figure">
               Index {index.score.toFixed(2)} · height {index.height.toFixed(2)}

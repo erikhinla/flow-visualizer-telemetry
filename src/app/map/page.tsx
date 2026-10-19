@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
-import { MapExperience } from '../../components/MapExperience';
+import { ProofFlow } from '../../components/ProofFlow';
 
 export const metadata: Metadata = {
-  title: 'Scan — PROOF',
-  description:
-    'Fifteen Answers about how an agency runs campaign work. The reading is an answer profile, not a measurement of the jobs.',
+  title: 'PROOF · 15 answers',
+  description: '15 answers that show where Digital Fog turns into Digital Friction in your business.',
 };
 
 export default function MapPage() {
-  return <MapExperience />;
+  return <ProofFlow startAt="ask" />;
 }
