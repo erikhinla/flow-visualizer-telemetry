@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "tsc --noEmit",
     "type-check": "tsc --noEmit",
-    "test": "tsx --test tests/**/*.test.ts",
+    "test": "tsx --test tests/*.test.ts",
     "export:scan": "node scripts/export-scan.mjs",
     "prebuild": "npm run export:scan",
     "predev": "npm run export:scan"

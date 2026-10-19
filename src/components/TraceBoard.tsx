@@ -42,7 +42,7 @@ export function TraceBoard({
   return (
     <section className="trace" aria-labelledby="trace-title" data-state={state}>
       <div className="trace-head">
-        <p className="kicker">Trace · {department.name}</p>
+        <p className="kicker">Desk · {department.name}</p>
         <h2 id="trace-title">Can your people see the job?</h2>
         <p className={`state-line is-${state}`}>{line}</p>
         {evidenceKind === 'simulated' ? (

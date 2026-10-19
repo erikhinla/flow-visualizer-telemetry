@@ -4,17 +4,14 @@ export default function NotFound() {
   return (
     <article className="offer">
       <p className="kicker">PROOF</p>
-      <h1>This page is not on the desk.</h1>
-      <p className="lede">Scan, Trace, and Record are the three places this site keeps.</p>
+      <h1>This page isn’t here.</h1>
+      <p className="lede">PROOF is 15 answers. Start there, or open the desk model.</p>
       <div className="actions">
-        <Link className="button" href="/map">
-          Scan
+        <Link className="button" href="/">
+          Start PROOF
         </Link>
         <Link className="button ghost" href="/visualizer">
-          Trace
-        </Link>
-        <Link className="button ghost" href="/record">
-          Record
+          Desk model
         </Link>
       </div>
     </article>

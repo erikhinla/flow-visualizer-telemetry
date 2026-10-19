@@ -6,13 +6,27 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { diagnosticsOn, setDiagnostics } from '../lib/telemetry';
 
 const LINKS = [
-  { href: '/map', label: 'Scan' },
-  { href: '/visualizer', label: 'Trace' },
+  { href: '/', label: 'PROOF' },
+  { href: '/visualizer', label: 'Desk model' },
   { href: '/record', label: 'Record' },
 ];
 
+const APP_ROUTES = new Set(['/', '/map']);
+
 export function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  if (APP_ROUTES.has(pathname)) {
+    return (
+      <>
+        <a className="skip" href="#proof-stage">
+          Skip to content
+        </a>
+        <main id="content" className="app-main">
+          {children}
+        </main>
+      </>
+    );
+  }
   return (
     <>
       <a className="skip" href="#content">
@@ -35,10 +49,11 @@ export function Shell({ children }: { children: ReactNode }) {
       </header>
       <main id="content">{children}</main>
       <footer className="colophon">
-        <p>Erik H Bush. One function, last week’s counts, a yes or a no on the fix.</p>
-        <p>A client result from this trace is not published yet.</p>
         <p>
-          <Link href="/offer">Desk Trace</Link>
+          <img className="colophon-mark" src={`${process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? ''}/brand/tbtx-wordmark-white.png`} alt="TransformBy10X" width={284} height={143} />
+          PROOF is 15 answers that show where Digital Friction shows up.</p>
+        <p>
+          <Link href="/">Back to PROOF</Link> · <Link href="/offer">Talk through the pattern</Link>
         </p>
         <DiagnosticsToggle />
       </footer>
@@ -46,7 +61,7 @@ export function Shell({ children }: { children: ReactNode }) {
   );
 }
 
-function DiagnosticsToggle() {
+export function DiagnosticsToggle() {
   const [on, setOn] = useState(false);
   useEffect(() => {
     setOn(diagnosticsOn());

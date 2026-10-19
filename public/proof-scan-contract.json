@@ -194,7 +194,7 @@
       "choices": [
         {
           "id": "q7-c1",
-          "text": "Unclear — it often falls through",
+          "text": "Unclear. It often falls through",
           "value": 0,
           "pressure": "ownership"
         },
@@ -305,7 +305,7 @@
         },
         {
           "id": "q10-c4",
-          "text": "Very little — the system carries most of it",
+          "text": "Very little. The system carries most of it",
           "value": 2,
           "pressure": null
         }
@@ -336,7 +336,7 @@
         },
         {
           "id": "q11-c4",
-          "text": "Rarely — masters and decisions are reusable",
+          "text": "Rarely. Masters and decisions are reusable",
           "value": 2,
           "pressure": null
         }

@@ -121,7 +121,7 @@ export function buildRecord(input: PortableRecordInput) {
       keystones: deskTrace(input.departmentId).keystones,
       ownerRole: department.action.ownerRole,
       reviewInDays: department.action.reviewInDays,
-      note: 'On screen, keystone actions stay hidden until the scenario is known. This record keeps the planned actions and marks whether the Trace was complete.',
+      note: 'On screen, keystone actions stay hidden until the scenario is known. This record keeps the planned actions and marks whether the desk was complete.',
     },
     balance: AGENCY_BALANCE[input.departmentId],
     action: {
