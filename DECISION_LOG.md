@@ -77,7 +77,7 @@ Each entry includes:
 **Decision**: After a desk scenario is known, PROOF shows a rebuild path on the quad keystones: Folders, Markdown, Scripts, and Protocols. The Trace reads four facts — where the project is, what needs done, who is doing it, and by when — from the existing display band. Unknown and zero-capacity desks stay untraced. Keystone actions are hidden on screen until the scenario is known. The downloaded record keeps the planned actions and a complete flag.  
 **Rationale**: Agencies asked for the operating context fog and friction erase, and a visible path to put that foundation back. The keystones already had this meaning in the master document. They were supporting concepts, not the opening pitch. They are now the close of the Trace.  
 **Impact**: Navigation reads Scan, Trace, and Record. Sample desks are known, so their stones are visible and labeled simulated. Clearing an input locks the stones. Scoring, repair-hour accounting, and the revision-3 index are unchanged.  
-**Status**: Active
+**Status**: Active (terminology superseded by Decision #007)
 
 ---
 
@@ -88,6 +88,17 @@ Each entry includes:
 **Decision**: Diagnostics stay off until the visitor turns them on. A batch is accepted only when every event matches the closed schema, the batch holds 1 to 40 events, and the body is at most 8,192 UTF-8 octets. The response is `{ accepted }` and does not include the buffer length.  
 **Rationale**: The route was accepting arbitrary events, and the buffer length leaked other requests. Record was posting on arrival.  
 **Impact**: `POST /api/telemetry` rejects a bad batch with nothing stored. The footer control is the only switch. Session inputs are not sent.  
+**Status**: Active
+
+---
+
+### Decision #007 - Context Keystones, principle-first
+
+**Date**: 2026-10-19  
+**Category**: Product  
+**Decision**: A context keystone is any artifact that holds the context a team needs so the next person or agent can act without rebuilding it. Folders, Markdown, Scripts, and Protocols are the default starting set in the Trace. PDFs, Google Docs, spreadsheets, locked Figma versions, decision logs, and named masters with rights and approval records also qualify. Test: if losing it would push someone into chasing and reconstructing context, it's a keystone.  
+**Rationale**: Aligns the repo with the TBTX canon in the Context-Coordination-Map vault (Context-Keystones, Handoff-2026-10-12).  
+**Impact**: Wording only. Trace logic, scoring, and the four default stones stay the same.  
 **Status**: Active
 
 ---
