@@ -656,7 +656,7 @@ The existing engine stores answer values, so equal-valued options can lose their
 
 Context Architecture connects work to its source, current version, brief, owner, approval decision, acceptance criteria, and next step. Those relationships can be held in an appropriate record or manifest and referenced from the asset. A hash can identify a particular file; it does not prove approval, rights, correctness, or immutability by itself.
 
-The Quad Keystones retain their Master's meaning: **Folders, Markdown, Scripts, Protocols**. They provide structure, written context, repeatable checks, and operating rules. They are supporting implementation concepts, not the opening pitch.
+The Context Keystones retain their Master's meaning. Their default starting set is **Folders, Markdown, Scripts, Protocols**. They provide structure, written context, repeatable checks, and operating rules. They are supporting implementation concepts, not the opening pitch.
 
 The proposed review behavior checks the applicable requirement against the correct item version and authorized role. A coverage ratio can count completed applicable reviews divided by required applicable reviews, with zero requirements marked not applicable. Coverage does not establish review quality. Checkpoint counts divided by “high-risk nodes” do not establish an enforcement system.
 
