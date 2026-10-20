@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, PROFILE_WORD, isAudienceId, type AudienceId } from '../lib/audiences';
 import { QUESTIONS, isComplete, scoreMap, suggestDepartment } from '../lib/questionnaire';
+import { narrative } from '../lib/narrative';
 import { BANDS, DEFAULT_SALARY, HOURS_PER_YEAR, POINTS_MAX, RAW_MAX, WEEKS_PER_YEAR, WEIGHT, estimate, liveMath, type LiveMath } from '../lib/math';
 import type { Choice } from '../lib/types';
 import { DiagnosticsToggle } from './Shell';
@@ -209,7 +210,10 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
               </h1>
               <p className="px-lede">
-                {audience.lede[0]} <strong>{audience.lede[1]}</strong>
+                {audience.lede[0]}
+              </p>
+              <p className="px-lede">
+                <strong>{audience.lede[1]}</strong>
               </p>
               <div className="px-actions">
                 <button type="button" className="px-btn" onClick={begin}>
@@ -545,15 +549,18 @@ function Readout({
     ],
     [
       'Where it shows up',
-      score.pressures.length ? (
-        <ul key="w">
-          {score.pressures.map((id) => (
-            <li key={id}>{audience.pressure[id]}</li>
-          ))}
-        </ul>
-      ) : (
-        <p key="w">None of your answers flagged a pressure.</p>
-      ),
+      <div key="w">
+        {score.pressures.length ? (
+          <ul>
+            {score.pressures.map((id) => (
+              <li key={id}>{audience.pressure[id]}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>None of your answers flagged a pressure.</p>
+        )}
+        <p className="px-story-weave">{narrative({ audienceId, profile: score.profile, where, pressures: score.pressures, archetype: score.archetype })}</p>
+      </div>,
     ],
     [
       'What it’s taking away',
