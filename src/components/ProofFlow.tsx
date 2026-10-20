@@ -488,7 +488,7 @@ function Result({
         <WorkedMath live={live} score={score} />
         <Estimate />
         <p className="px-result-links">
-          <button type="button" onClick={review}>Review answers</button>
+          <button type="button" onClick={review}>Redo PROOF</button>
           <button type="button" onClick={restart}>Start again</button>
           <Link href="/visualizer?from=map">Open the desk model</Link>
         </p>
@@ -770,7 +770,8 @@ function Estimate() {
   return (
     <section className="px-est" aria-labelledby="px-est-h">
       <div className="px-est-head">
-        <h2 id="px-est-h">Your estimate</h2>
+        <h2 id="px-est-h">What context repair costs you</h2>
+        <p className="px-est-sub">Payroll hours spent repairing context, per year.</p>
         <p>Capacity-cost equivalent, not cash savings or ROI</p>
       </div>
       <div className="px-est-fields">
