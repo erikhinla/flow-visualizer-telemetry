@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, PROFILE_WORD, isAudienceId, type AudienceId } from '../lib/audiences';
 import { QUESTIONS, isComplete, scoreMap, suggestDepartment } from '../lib/questionnaire';
+import { BANDS, DEFAULT_SALARY, HOURS_PER_YEAR, POINTS_MAX, RAW_MAX, WEEKS_PER_YEAR, WEIGHT, estimate, liveMath, type LiveMath } from '../lib/math';
 import type { Choice } from '../lib/types';
 import { DiagnosticsToggle } from './Shell';
 import { useSession } from './SessionProvider';
@@ -20,14 +21,6 @@ const LETTERS = [
   ['F', 'Friction'],
 ] as const;
 
-const SIDE = [
-  ['Your progress isn’t slow.', 'Your system is unclear.'],
-  ['The tools answer fast.', 'The handoffs don’t.'],
-  ['More output.', 'Same infrastructure.'],
-  ['Good people.', 'Carrying what the system can’t.'],
-  ['This is where', 'the friction shows up.'],
-] as const;
-
 const STORY = [
   {
     no: '01',
@@ -37,8 +30,8 @@ const STORY = [
   },
   {
     no: '02',
-    title: 'The Context Coordinator',
-    line: 'A job nobody hired for.',
+    title: 'The Role Reversal',
+    line: 'AI was meant to help your team. Now your team helps the AI.',
     body: '',
   },
   {
@@ -49,13 +42,20 @@ const STORY = [
   },
 ] as const;
 
+const BOOKING_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL ?? '';
+const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/index.html';
+
 const PATH = [
-  ['PROOF', '15 answers. Free.'],
-  ['Agreed engagement', 'Scope set with you.'],
-  ['BizBlueprint', 'The paid fix plan.'],
-  ['Implementation', 'BizBuilders AI builds it.'],
-  ['Completion review', 'The work is checked.'],
+  ['PROOF', 'Free. 15 answers. Your map.'],
+  ['Friction Audit', 'Paid. 2 weeks. Delivers your FACT report and your BizBlueprint.'],
+  ['The Pipeline Airlock', 'Built by BizBuilders AI.'],
 ] as const;
+
+/** Keep the last two words together so a line never ends on one short word. */
+function tie(text: string): string {
+  const i = text.lastIndexOf(' ');
+  return i > 0 && text.length - i < 16 ? text.slice(0, i) + '\u00a0' + text.slice(i + 1) : text;
+}
 
 type Stage = 'intro' | 'ask' | 'result';
 
@@ -68,6 +68,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   const [tab, setTab] = useState(0);
   const [sheet, setSheet] = useState<null | 'path' | 'readout' | 'privacy' | 'story'>(null);
   const [storyIndex, setStoryIndex] = useState(0);
+  const [last, setLast] = useState<number | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const audience = AUDIENCES[audienceId];
 
@@ -112,6 +113,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
     (choice: Choice) => {
       const values = [...session.values];
       const optionIds = [...session.optionIds];
+      setLast(cursor);
       values[cursor] = choice.value;
       optionIds[cursor] = choice.id;
       const done = values.every((value) => value !== null);
@@ -154,6 +156,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
 
   const answers = { values: session.values, optionIds: session.optionIds };
   const answered = session.values.filter((value) => value !== null).length;
+  const live = useMemo(() => liveMath(answers), [session.values, session.optionIds]); // eslint-disable-line react-hooks/exhaustive-deps
   const score = useMemo(() => (ready ? scoreMap(answers) : null), [ready, session.values, session.optionIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const begin = () => {
@@ -177,7 +180,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-mark-dot" aria-hidden="true" />
           PROOF
         </Link>
-        <span className="px-bar-sub">Fog &amp; Friction Forensics</span>
+        <span className="px-bar-sub">Fog &amp; friction diagnostic</span>
         <Letters filled={stage === 'intro' ? 0 : Math.floor(answered / 3)} current={stage === 'ask' ? letterIndex : -1} />
         <label className="px-select">
           <span>For</span>
@@ -201,8 +204,8 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 <b>01</b> // The condition
               </p>
               <h1 id="px-title" className="px-display px-display--long">
-                <span>Nobody hired a</span>
-                <span className="px-fog">Context Coordinator.</span>
+                <span>AI was meant to help your team.</span>
+                <span className="px-fog">Now your team helps the AI.</span>
                 <span className="px-red px-display-q">{audience.headQuestion}</span>
               </h1>
               <p className="px-lede">
@@ -261,17 +264,14 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           </section>
         ) : stage === 'ask' ? (
           <section className="px-ask" aria-labelledby="px-q">
-            <aside className="px-ask-side" aria-hidden="true">
+            <aside className="px-ask-side" aria-label="The math, live">
               <p className="px-kicker px-kicker-light">
-                <b>02</b> // {LETTERS[letterIndex][0]} · {LETTERS[letterIndex][1]}
+                <b>{LETTERS[letterIndex][0]}</b> // {LETTERS[letterIndex][1]} · question {cursor + 1} of 15
               </p>
-              <p className="px-side-big" key={letterIndex}>
-                {SIDE[letterIndex][0]}
-                <span>{SIDE[letterIndex][1]}</span>
-              </p>
-              <p className="px-side-tag">&gt;&gt;&gt; That’s Digital Fog.</p>
+              <MathPanel live={live} current={cursor} last={last} />
             </aside>
             <div className="px-ask-main">
+              <MathStrip live={live} />
               <div className="px-progress" aria-hidden="true">
                 {QUESTIONS.map((item, index) => (
                   <i key={item.id} className={session.values[index] !== null ? 'on' : index === cursor ? 'now' : undefined} />
@@ -281,7 +281,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 [ {String(cursor + 1).padStart(2, '0')} / 15 ]
               </p>
               <h1 id="px-q" ref={headingRef} tabIndex={-1} className="px-question">
-                {audience.questions[cursor]}
+                {tie(audience.questions[cursor])}
               </h1>
               <div className="px-options" role="group" aria-labelledby="px-q">
                 {QUESTIONS[cursor].choices.map((choice, index) => {
@@ -294,7 +294,8 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                       aria-pressed={selected}
                       onClick={() => choose(choice)}
                     >
-                      <span>{audience.choices[cursor][index]}</span>
+                      <span>{tie(audience.choices[cursor][index])}</span>
+                      <b className="px-option-pts">{choice.value} pt</b>
                       <kbd>[{index + 1}]</kbd>
                     </button>
                   );
@@ -318,6 +319,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <Result
             audienceId={audienceId}
             score={score}
+            live={live}
             tab={tab}
             setTab={setTab}
             openReadout={() => setSheet('readout')}
@@ -342,7 +344,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-foot-label">What happens after</span>
           <span className="px-foot-steps" aria-hidden="true">
             {PATH.map(([name], index) => (
-              <span key={name} className={index === 0 ? 'is-here' : undefined}>
+              <span key={name} className={index === 0 ? 'is-here' : index === 2 ? 'is-bbai' : undefined}>
                 {name}
               </span>
             ))}
@@ -415,6 +417,7 @@ type Score = NonNullable<ReturnType<typeof scoreMap>>;
 function Result({
   audienceId,
   score,
+  live,
   tab,
   setTab,
   openReadout,
@@ -423,6 +426,7 @@ function Result({
 }: {
   audienceId: AudienceId;
   score: Score;
+  live: LiveMath;
   tab: number;
   setTab: (n: number) => void;
   openReadout: () => void;
@@ -433,7 +437,17 @@ function Result({
   const departmentId = suggestDepartment(score.allPressures);
   const where = departmentId ? audience.department[departmentId] : 'Nothing stood out';
   const first = score.pressures[0] ? audience.pressure[score.pressures[0]] : 'No pressure was selected';
-  const mail = bookingLink(audience.label, PROFILE_WORD[score.profile], where);
+  const note = bookingNote(audience.label, PROFILE_WORD[score.profile], where, first, score.raw, score.index);
+  const [copied, setCopied] = useState(false);
+  const book = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!BOOKING_URL) return;
+    try {
+      void navigator.clipboard?.writeText(note).then(() => setCopied(true), () => undefined);
+    } catch {
+      // Clipboard can be blocked. The booking page still opens.
+    }
+    void event;
+  };
 
   return (
     <section className="px-result" aria-labelledby="px-done">
@@ -444,22 +458,35 @@ function Result({
           </span>
           <span>ANSWERS: 15/15</span>
           <span className="px-hide-sm">
-            FIRST LOOK: <b className="px-blue">{where.toUpperCase()}</b>
+            STALL POINT: <b className="px-blue">{where.toUpperCase()}</b>
           </span>
         </p>
         <h1 id="px-done" className="px-done" tabIndex={-1}>
-          <span>Your system is mapped.</span>
-          <span className="px-blue">Your bottleneck is identified.</span>
-          <span>Your blueprint is ready to scope.</span>
+          <span>Your map is ready.</span>
         </h1>
-        <div className="px-actions">
-          <a className="px-btn px-btn-light" href={mail}>
-            Talk through the pattern <Arrow />
+        <p className="px-stall">
+          Your work stalls in <b>{where.toLowerCase()}</b>. {tie(first)}.
+        </p>
+        <div className="px-actions px-book">
+          <a
+            className="px-btn px-btn-light"
+            href={BOOKING_URL || mailtoLink(note)}
+            target={BOOKING_URL ? '_blank' : undefined}
+            rel={BOOKING_URL ? 'noopener' : undefined}
+            onClick={book}
+          >
+            Book your 45-minute readout <Arrow />
           </a>
           <button type="button" className="px-link px-link-light px-show-sm" onClick={openReadout}>
             Open the readout <Arrow />
           </button>
         </div>
+        <p className="px-book-sub">
+          We go through your map, the stall point, and what to fix first.
+          {BOOKING_URL ? <span> {copied ? 'Your map summary is copied. Paste it in the booking note.' : 'We copy your map summary for the booking note.'}</span> : null}
+        </p>
+        <WorkedMath live={live} score={score} />
+        <Estimate />
         <p className="px-result-links">
           <button type="button" onClick={review}>Review answers</button>
           <button type="button" onClick={restart}>Start again</button>
@@ -489,6 +516,8 @@ function Result({
     </section>
   );
 }
+
+const READOUT_TABS = ['Feeling', 'Cause', 'Where', 'Cost', 'Fix first', 'Next'] as const;
 
 function Readout({
   audienceId,
@@ -529,16 +558,18 @@ function Readout({
     [
       'What it’s taking away',
       <p key="t">
-        Time that should go to the {audience.client} goes to finding, checking and rebuilding context. That’s the Context Coordinator job, and it isn’t on anyone’s job description.
+        Time that should go to the {audience.client} goes to finding, checking and rebuilding context. That work isn’t on anyone’s job description.
       </p>,
     ],
     [
-      'What matters first',
+      'What to fix first',
       <p key="m">{where ? `Start with ${where.toLowerCase()}. ` : ''}{score.pressures[0] ? audience.pressure[score.pressures[0]] + '.' : 'Keep the connections you already have.'}</p>,
     ],
     [
       'What happens next',
-      <p key="n">We talk through this pattern. If it’s worth changing, we agree the engagement, then the BizBlueprint. A number can’t unlock BizBot Mrktng. The completion review does.</p>,
+      <p key="n">
+        Book the 45-minute readout and we go through this map with you. If the stall is worth fixing, the Friction Audit runs for 2 weeks and delivers your FACT report and your BizBlueprint. BizBuilders AI then builds The Pipeline Airlock.
+      </p>,
     ],
   ];
   return (
@@ -554,7 +585,8 @@ function Readout({
             onClick={() => setTab(index)}
             title={label}
           >
-            {String(index + 1).padStart(2, '0')}
+            <i>{String(index + 1).padStart(2, '0')}</i>
+            <span>{READOUT_TABS[index]}</span>
           </button>
         ))}
       </div>
@@ -572,12 +604,12 @@ function PathPanel() {
       <p className="px-kicker">What happens after PROOF</p>
       <ol className="px-path">
         {PATH.map(([name, line], index) => (
-          <li key={name}>
+          <li key={name} className={index === 2 ? 'is-bbai' : undefined}>
             <span className="px-no">{String(index + 1).padStart(2, '0')}</span>
             <strong>{name}</strong>
             <em>
               {line}
-              {name === 'Implementation' ? (
+              {index === 2 ? (
                 <img className="px-step-mark" src={`${BASE}/brand/bbai-wordmark-black.png`} alt="BizBuilders AI" width={274} height={138} />
               ) : null}
             </em>
@@ -585,10 +617,191 @@ function PathPanel() {
         ))}
       </ol>
       <p className="px-path-note">
-        <img className="px-path-mark" src={`${BASE}/brand/bbm-wordmark-white.png`} alt="BizBot Mrktng" width={322} height={138} />
-        <span><b>A number can’t unlock BizBot Mrktng.</b> The completion review does.</span>
+        <span>Friction Audit and the readout are booked on the result screen.</span>
       </p>
     </div>
+  );
+}
+
+/** The live instrument. Every number is read from liveMath, which mirrors scoreMap. */
+function MathPanel({ live, current, last }: { live: LiveMath; current: number; last: number | null }) {
+  const lastValue = last !== null ? live.dimensions.flatMap((d) => d.values)[last] : null;
+  return (
+    <div className="px-math">
+      <p className="px-math-head">
+        <span>The math</span>
+        <span>answer pts × weight {WEIGHT} = contribution</span>
+      </p>
+      <ol className="px-math-dims">
+        {live.dimensions.map((d, di) => {
+          const active = Math.floor(current / 3) === di;
+          return (
+            <li key={d.name} className={active ? 'is-now' : undefined}>
+              <b className="px-math-letter">{d.letter}</b>
+              <span className="px-math-name">{d.name}</span>
+              <span className="px-math-cells">
+                {d.values.map((v, vi) => (
+                  <i key={vi} className={di * 3 + vi === current ? 'is-cur' : v === null ? undefined : `v${v}`}>
+                    {v === null ? '·' : v}
+                  </i>
+                ))}
+              </span>
+              <span className="px-math-bar" aria-hidden="true">
+                <span style={{ width: `${(100 * d.points) / d.max}%` }} />
+              </span>
+              <span className="px-math-sub">
+                {d.points}/{d.max}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="px-math-last" key={`${last}-${lastValue}`}>
+        {last !== null && lastValue !== null ? (
+          <>
+            Q{String(last + 1).padStart(2, '0')} <span>{lastValue} pt × {WEIGHT}</span> = <b>+{lastValue * WEIGHT}</b>
+          </>
+        ) : (
+          <>Each answer adds 0, 1 or {POINTS_MAX} points.</>
+        )}
+      </p>
+      <div className="px-math-total">
+        <p>
+          <span>Raw</span>
+          <b>{live.raw}</b>
+          <em>/ {RAW_MAX}</em>
+        </p>
+        <p>
+          <span>{live.answered === 15 ? 'Index' : 'Can still finish'}</span>
+          {live.answered === 15 ? <b>{live.index}</b> : <b className="px-math-range">{live.floor} to {live.ceiling}</b>}
+          <em>{live.answered === 15 ? '/ 100' : 'raw'}</em>
+        </p>
+      </div>
+      <BandScale live={live} />
+      <p className="px-math-foot">
+        Index = round(100 × raw ÷ {RAW_MAX}) at 15/15 · Pressures flagged: <b>{live.pressureAtZero}</b> at 0 pt (ranked first), <b>{live.pressureAtOne}</b> at 1 pt
+      </p>
+    </div>
+  );
+}
+
+function BandScale({ live }: { live: LiveMath }) {
+  const pct = (n: number) => `${(100 * n) / RAW_MAX}%`;
+  return (
+    <div className="px-band" aria-label="Pattern bands on raw points">
+      <div className="px-band-track">
+        {BANDS.map((band) => (
+          <span
+            key={band.id}
+            className={live.profile === band.id ? 'is-on' : undefined}
+            style={{ left: pct(band.from), width: pct(band.to - band.from + 1) }}
+          >
+            <em>{PROFILE_WORD[band.id]}</em>
+            <i>
+              {band.from}-{band.to}
+            </i>
+          </span>
+        ))}
+        <b className="px-band-range" style={{ left: pct(live.floor), width: `max(3px, ${pct(live.ceiling - live.floor)})` }} />
+      </div>
+    </div>
+  );
+}
+
+function MathStrip({ live }: { live: LiveMath }) {
+  return (
+    <p className="px-math-strip px-show-sm" aria-label="Running score">
+      {live.dimensions.map((d) => (
+        <span key={d.name}>
+          {d.letter} <b>{d.points}</b>/{d.max}
+        </span>
+      ))}
+      <span className="px-math-strip-raw">
+        Raw <b>{live.raw}</b>/{RAW_MAX}
+      </span>
+    </p>
+  );
+}
+
+function WorkedMath({ live, score }: { live: LiveMath; score: Score }) {
+  const band = BANDS.find((b) => b.id === score.profile)!;
+  return (
+    <div className="px-worked" aria-label="How your pattern was calculated">
+      <p className="px-worked-row">
+        {live.dimensions.map((d, i) => (
+          <span key={d.name}>
+            {i > 0 ? <i>+</i> : null}
+            <b>{d.points}</b>
+            <em>{d.letter}</em>
+          </span>
+        ))}
+        <span>
+          <i>=</i>
+          <b className="px-blue">{score.raw}</b>
+          <em>raw / {RAW_MAX}</em>
+        </span>
+      </p>
+      <p className="px-worked-line">
+        Index = round(100 × {score.raw} ÷ {RAW_MAX}) = <b>{score.index}</b> · Raw {band.from} to {band.to} reads <b>{PROFILE_WORD[score.profile]}</b> · {score.allPressures.length} pressures flagged
+      </p>
+    </div>
+  );
+}
+
+const usd0 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const usd2 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const num = (v: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(v);
+
+function Estimate() {
+  const [team, setTeam] = useState(1);
+  const [salary, setSalary] = useState(DEFAULT_SALARY);
+  const [hours, setHours] = useState(8);
+  const e = estimate(team, salary, hours);
+  const field = (label: string, value: number, set: (n: number) => void, step: number, unit?: string) => (
+    <label className="px-est-field">
+      <span>{label}</span>
+      <span className="px-est-input">
+        {unit === '$' ? <i>$</i> : null}
+        <input type="number" inputMode="decimal" min={0} step={step} value={Number.isFinite(value) ? value : ''} onChange={(ev) => set(ev.target.value === '' ? 0 : Number(ev.target.value))} />
+        {unit && unit !== '$' ? <i>{unit}</i> : null}
+      </span>
+    </label>
+  );
+  return (
+    <section className="px-est" aria-labelledby="px-est-h">
+      <div className="px-est-head">
+        <h2 id="px-est-h">Your estimate</h2>
+        <p>Capacity-cost equivalent, not cash savings or ROI</p>
+      </div>
+      <div className="px-est-fields">
+        {field('Team size', team, setTeam, 1, 'people')}
+        {field('Average salary', salary, setSalary, 1000, '$')}
+        {field('Repair hours per week, per person', hours, setHours, 0.5, 'h')}
+      </div>
+      <ol className="px-est-steps" aria-live="polite">
+        <li>
+          <span className="px-eq"><var>C</var><sub>hour</sub> = <span className="px-frac"><span>salary</span><span>{num(HOURS_PER_YEAR)}</span></span> = <span className="px-frac"><span>{usd0.format(salary)}</span><span>{num(HOURS_PER_YEAR)}</span></span> = <b>{usd2.format(e.hourly)}</b></span>
+          <small>What one paid hour costs. 2,080 is 40 hours over 52 weeks.</small>
+        </li>
+        <li>
+          <span className="px-eq">weekly = hours × team × <var>C</var><sub>hour</sub> = {num(hours)} × {num(team)} × {usd2.format(e.hourly)} = <b>{usd2.format(e.weekly)}</b></span>
+          <small>Paid time spent each week repairing work that arrived without what it needed.</small>
+        </li>
+        <li>
+          <span className="px-eq">annual = weekly × {WEEKS_PER_YEAR} = {usd2.format(e.weekly)} × {WEEKS_PER_YEAR} = <b className="px-est-total">{usd0.format(e.annual)}</b></span>
+          <small>Equal to {num(Math.round(e.salaryShare * 1000) / 10)}% of one {usd0.format(salary)} salary.</small>
+        </li>
+      </ol>
+      <p className="px-est-note">These hours are your own estimate. The figure prices that time. It does not predict money saved.</p>
+      <p className="px-est-bridge">
+        This estimate used 2 of 9 equations. <a href={FRICTION_MODEL_URL}>The Friction Audit runs all 9 on your real handoffs in your FACT report (Friction Audit Context Telemetry).</a>
+      </p>
+      <div className="px-actions">
+        <a className="px-btn px-btn-light" href={BOOKING_URL || 'https://calendar.app.google/ecuH2cxigdh5NQKy9'} target="_blank" rel="noopener">
+          Book your 45-minute readout <Arrow />
+        </a>
+      </div>
+    </section>
   );
 }
 
@@ -612,8 +825,11 @@ function Arrow({ back = false }: { back?: boolean }) {
   );
 }
 
-function bookingLink(audience: string, pattern: string, where: string): string {
-  const subject = 'PROOF: talk through my pattern';
-  const body = `Business: ${audience}\nPattern: ${pattern}\nFirst place to look: ${where}\n\nA good time to talk:\n`;
-  return `mailto:erik@transformby10x.ai?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+function bookingNote(audience: string, pattern: string, where: string, gap: string, raw: number, index: number): string {
+  return `PROOF map\nBusiness: ${audience}\nPattern: ${pattern} (raw ${raw}/30, index ${index})\nStall point: ${where}\nPrimary gap: ${gap}`;
+}
+
+function mailtoLink(note: string): string {
+  const subject = 'PROOF: book my 45-minute readout';
+  return `mailto:erik@transformby10x.ai?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(note + '\n\nA good time to talk:\n')}`;
 }

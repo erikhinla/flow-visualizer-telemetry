@@ -20,7 +20,7 @@ export interface Audience {
   moment: string;
   /** Intro headline: the question line, in this audience's words. */
   headQuestion: string;
-  /** Intro subhead: the leak, then what PROOF shows. */
+  /** Intro subhead: the stall, then what PROOF shows. */
   lede: readonly [string, string];
   /** 15 question lines, in canonical order. */
   questions: readonly string[];
@@ -45,7 +45,7 @@ const AGENCY: Audience = {
   business: 'agency',
   client: 'client',
   moment:
-    'The client asks where the approval stands. Someone rebuilds the answer from Slack, email and memory.',
+    'The client asks where the approval stands. Someone rebuilds the answer from chat threads, email and memory.',
   headQuestion: 'So everyone became one.',
   lede: ['AI sped up the work, but context still gets carried by hand from first brief to final delivery.', '15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for.'],
   questions: QUESTIONS.map((question) => noDash(question.text)),
