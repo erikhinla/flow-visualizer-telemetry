@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const HUNTS = [
-  ['Account', 'The client asks where the approval stands and someone rebuilds it from Slack, email, and memory.', 'Another project tool, or a coordinator hired to own status.'],
+  ['Account', 'The client asks where the approval stands and someone rebuilds it from chat threads, email, and memory.', 'Another project tool, or a coordinator hired to own status.'],
   ['Finance', 'The invoice is late because the charge cannot be tied to the job that approved it.', 'A new billing system, or writing the invoice off.'],
   ['Legal', 'A version is ready and nobody can show who cleared the rights.', 'Shipping it unsigned, or another reviewer hired to hunt.'],
   ['Production', 'Delivery is waiting on the one person who remembers which file is the master.', 'Another asset library.'],
@@ -18,7 +18,7 @@ const HUNTS = [
   ['Public relations', 'The statement can still go out, and the window is closing while someone hunts the facts and the person allowed to say yes.', 'A junior hitting send.'],
   ['Media', 'The spend is in the platform and the reason for it is in someone’s head.', 'Scaling the buy, or a third name for the same dollar.'],
   ['People', 'A decision is drafted and the policy it depends on is not on the page.', 'Sending it on a stale rule.'],
-  ['Handoff', 'The job is ready and nobody has accepted it, so it sits between teams.', 'Counting a Slack ping as a handoff.'],
+  ['Handoff', 'The job is ready and nobody has accepted it, so it sits between teams.', 'Counting a chat message as a handoff.'],
 ] as const;
 
 export default function OfferPage() {
@@ -27,7 +27,7 @@ export default function OfferPage() {
       <p className="kicker">Erik H Bush · TransformBy10X</p>
       <h1>The client asked where the approval stands.</h1>
       <p className="benefit">
-        Someone is rebuilding that answer from Slack, email, and memory. The purchase to refuse is
+        Someone is rebuilding that answer from chat threads, email, and memory. The purchase to refuse is
         another project tool, or a coordinator hired to own status.
       </p>
       <p className="lede">

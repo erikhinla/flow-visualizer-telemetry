@@ -37,7 +37,8 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: 'PROOF · See where Digital Friction shows up',
   description:
-    'Nobody hired a Context Coordinator. So everyone became one. AI sped up the work, but context still gets carried by hand. 15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for. Free, from TransformBy10X.',
+    'AI was meant to help your team. Now your team helps the AI. AI sped up the work, but context still gets carried by hand. 15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for. Free, from TransformBy10X.',
+  ...(process.env.NEXT_PUBLIC_PROOF_NOINDEX ? { robots: { index: false, follow: false } } : {}),
 };
 
 export const viewport: Viewport = {

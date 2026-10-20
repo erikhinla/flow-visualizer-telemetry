@@ -1,0 +1,15 @@
+services:
+  proof-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROOF_BASE_PATH: /proof/screen
+        PROOF_BOOKING_URL: ${PROOF_BOOKING_URL:-}
+    container_name: flow-visualizer-telemetry
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PROOF_BASE_PATH=/proof/screen
+      - NODE_ENV=production
