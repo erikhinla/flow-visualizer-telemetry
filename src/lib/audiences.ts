@@ -46,7 +46,7 @@ const AGENCY: Audience = {
   client: 'client',
   moment:
     'The client asks where the approval stands. Someone rebuilds the answer from chat threads, email and memory.',
-  headQuestion: 'So everyone became one.',
+  headQuestion: '',
   lede: ['AI sped up the work, but context still gets carried by hand from first brief to final delivery.', '15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for.'],
   questions: QUESTIONS.map((question) => noDash(question.text)),
   choices: agencyChoices,
@@ -74,7 +74,7 @@ const CONSULTING: Audience = {
   client: 'client',
   moment:
     'The client asks which version of the deck is final. Someone rebuilds the answer from three email threads.',
-  headQuestion: 'So everyone became one.',
+  headQuestion: '',
   lede: ['AI sped up the work, but context still gets carried by hand from engagement kickoff to final deliverable.', '15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for.'],
   questions: [
     'Where does client work lose momentum most often?',
@@ -168,7 +168,7 @@ const SERVICE: Audience = {
   client: 'customer',
   moment:
     'A customer calls about their quote. Someone digs through texts and the office calendar to find what was promised.',
-  headQuestion: 'So everyone became one.',
+  headQuestion: '',
   lede: ['AI sped up the work, but context still gets carried by hand from first call to finished job.', '15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for.'],
   questions: [
     'Where does a customer job lose momentum most often?',

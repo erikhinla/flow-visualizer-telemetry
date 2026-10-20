@@ -1359,3 +1359,6 @@ body:has(.app-main) {
 /* Keep the end of the result clear of the bottom bar. */
 .px-result { padding-bottom: calc(clamp(1rem, 3.5vh, 2.6rem) + 3rem); }
 @media (max-width: 900px) { .px-result { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6rem); } }
+
+/* Mirrored story lines render on two lines. */
+.px-story-head em, .px-sheet-title { white-space: pre-line; }

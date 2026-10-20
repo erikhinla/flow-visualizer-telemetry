@@ -31,14 +31,14 @@ const STORY = [
   {
     no: '02',
     title: 'The Role Reversal',
-    line: 'AI was meant to help your team. Now your team helps the AI.',
+    line: 'AI was meant to help your team.\nNow your team helps the AI.',
     body: '',
   },
   {
     no: '03',
     title: 'Digital Friction',
     line: 'When the fog stops the work.',
-    body: 'Handoffs stall. Rework grows. Momentum stops. The tools still work. The business just can’t carry what they produce.',
+    body: 'Rework grows. Handoffs stall. Momentum stops. The process just can’t carry what AI produces.',
   },
 ] as const;
 
@@ -206,7 +206,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               <h1 id="px-title" className="px-display px-display--long">
                 <span>AI was meant to help your team.</span>
                 <span className="px-fog">Now your team helps the AI.</span>
-                <span className="px-red px-display-q">{audience.headQuestion}</span>
+                {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
               </h1>
               <p className="px-lede">
                 {audience.lede[0]} <strong>{audience.lede[1]}</strong>
