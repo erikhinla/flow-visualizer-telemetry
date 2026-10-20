@@ -462,7 +462,7 @@ function Result({
           </span>
         </p>
         <h1 id="px-done" className="px-done" tabIndex={-1}>
-          <span>Your map is ready.</span>
+          <span>Your PROOF is ready.</span>
         </h1>
         <p className="px-stall">
           Your work stalls in <b>{where.toLowerCase()}</b>. {tie(first)}.
@@ -493,8 +493,8 @@ function Result({
           <Link href="/visualizer?from=map">Open the desk model</Link>
         </p>
       </div>
-      <aside className="px-snapshot" aria-label="Your snapshot">
-        <p className="px-kicker">Your snapshot</p>
+      <aside className="px-snapshot" aria-label="Your PROOF">
+        <p className="px-kicker">Your PROOF</p>
         <dl>
           <div>
             <dt>Pattern</dt>
