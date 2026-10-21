@@ -2,7 +2,8 @@
 
 import { AUDIENCES, type AudienceId } from '../lib/audiences';
 import { suggestDepartment } from '../lib/questionnaire';
-import { FACT_QUESTION, deskTrace, type KeystoneId } from '../lib/trace';
+import { FACT_QUESTION, type KeystoneId } from '../lib/trace';
+import { deskTraceFor } from '../lib/traceAudience';
 import type { PressureId } from '../lib/types';
 
 const REVIEW_URL = 'https://calendar.app.google/ecuH2cxigdh5NQKy9';
@@ -20,6 +21,7 @@ const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['Review your PROOF', 'Free. 45 minutes. We go through your map and your stall point.'],
   ['Friction Audit', 'Paid. 2 weeks. Delivers your FACT report and your BizBlueprint.'],
   ['BizBlueprint', 'Names the Keystones your route needs, and where each one goes.'],
+  ['Install', 'BizBuilders AI installs your Keystones.'],
   ['The Pipeline Airlock', 'Built by BizBuilders AI.'],
 ];
 
@@ -35,7 +37,7 @@ export function KeystonesPreview({
   const audience = AUDIENCES[audienceId];
   const dept = suggestDepartment(allPressures) ?? 'ACC';
   const where = audience.department[dept];
-  const trace = deskTrace(dept);
+  const trace = deskTraceFor(audienceId, dept);
   const stall = pressures[0] ? audience.pressure[pressures[0]] : null;
 
   return (
