@@ -3,11 +3,9 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
-import { AUDIENCES, AUDIENCE_ORDER, PROFILE_WORD, isAudienceId, type AudienceId } from '../lib/audiences';
-import { QUESTIONS, isComplete, scoreMap, suggestDepartment } from '../lib/questionnaire';
-import { narrative } from '../lib/narrative';
-import { KeystonesPreview } from './KeystonesPreview';
-import { BANDS, DEFAULT_SALARY, HOURS_PER_YEAR, POINTS_MAX, RAW_MAX, WEEKS_PER_YEAR, WEIGHT, estimate, liveMath, type LiveMath } from '../lib/math';
+import { AUDIENCES, AUDIENCE_ORDER, isAudienceId, type AudienceId } from '../lib/audiences';
+import { QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
+import { LADDER, Ladder, Result } from './ProofResult';
 import type { Choice } from '../lib/types';
 import { DiagnosticsToggle } from './Shell';
 import { useSession } from './SessionProvider';
@@ -44,14 +42,7 @@ const STORY = [
   },
 ] as const;
 
-const BOOKING_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL ?? '';
-const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/index.html';
 
-const PATH = [
-  ['PROOF', 'Free. 15 answers. Your map.'],
-  ['Friction Audit', 'Paid. 2 weeks. Delivers your FACT report and your BizBlueprint.'],
-  ['The Pipeline Airlock', 'Built by BizBuilders AI.'],
-] as const;
 
 /** Keep the last two words together so a line never ends on one short word. */
 function tie(text: string): string {
@@ -68,7 +59,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   const [audienceId, setAudienceId] = useState<AudienceId>('agency');
   const [openStory, setOpenStory] = useState<number | null>(1);
   const [tab, setTab] = useState(0);
-  const [sheet, setSheet] = useState<null | 'path' | 'readout' | 'privacy' | 'story'>(null);
+  const [sheet, setSheet] = useState<null | 'path' | 'privacy' | 'story'>(null);
   const [storyIndex, setStoryIndex] = useState(0);
   const [last, setLast] = useState<number | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -158,7 +149,6 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
 
   const answers = { values: session.values, optionIds: session.optionIds };
   const answered = session.values.filter((value) => value !== null).length;
-  const live = useMemo(() => liveMath(answers), [session.values, session.optionIds]); // eslint-disable-line react-hooks/exhaustive-deps
   const score = useMemo(() => (ready ? scoreMap(answers) : null), [ready, session.values, session.optionIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const begin = () => {
@@ -182,7 +172,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-mark-dot" aria-hidden="true" />
           PROOF
         </Link>
-        <span className="px-bar-sub">Fog &amp; friction diagnostic</span>
+        <span className="px-bar-sub">15 answers. Free. No email.</span>
         <Letters filled={stage === 'intro' ? 0 : Math.floor(answered / 3)} current={stage === 'ask' ? letterIndex : -1} />
         <label className="px-select">
           <span>For</span>
@@ -269,14 +259,12 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           </section>
         ) : stage === 'ask' ? (
           <section className="px-ask" aria-labelledby="px-q">
-            <aside className="px-ask-side" aria-label="The math, live">
-              <p className="px-kicker px-kicker-light">
-                <b>{LETTERS[letterIndex][0]}</b> // {LETTERS[letterIndex][1]} · question {cursor + 1} of 15
-              </p>
-              <MathPanel live={live} current={cursor} last={last} />
+            <aside className="px-ask-side" aria-label="Progress">
+              <p className="px-kicker px-kicker-light">Question {cursor + 1} of 15</p>
+              <p className="px-ask-tip">Answer for how the work runs today, not how it should run.</p>
+              <p className="px-ask-tip px-ask-tip-sub">{15 - answered > 0 ? `${15 - answered} to go. About ${Math.max(1, Math.round((15 - answered) / 6))} minute${Math.round((15 - answered) / 6) > 1 ? 's' : ''} left.` : 'All 15 answered.'}</p>
             </aside>
             <div className="px-ask-main">
-              <MathStrip live={live} />
               <div className="px-progress" aria-hidden="true">
                 {QUESTIONS.map((item, index) => (
                   <i key={item.id} className={session.values[index] !== null ? 'on' : index === cursor ? 'now' : undefined} />
@@ -300,7 +288,6 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                       onClick={() => choose(choice)}
                     >
                       <span>{tie(audience.choices[cursor][index])}</span>
-                      <b className="px-option-pts">{choice.value} pt</b>
                       <kbd>[{index + 1}]</kbd>
                     </button>
                   );
@@ -312,7 +299,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 </button>
                 {isComplete(answers) ? (
                   <button type="button" className="px-link" onClick={() => setStage('result')}>
-                    See the pattern <Arrow />
+                    See your PROOF <Arrow />
                   </button>
                 ) : (
                   <span className="px-hint">Keys 1 to 4 answer</span>
@@ -321,19 +308,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             </div>
           </section>
         ) : score ? (
-          <Result
-            audienceId={audienceId}
-            score={score}
-            live={live}
-            tab={tab}
-            setTab={setTab}
-            openReadout={() => setSheet('readout')}
-            review={() => {
-              setCursor(0);
-              setStage('ask');
-            }}
-            restart={restart}
-          />
+          <Result audienceId={audienceId} score={score} restart={restart} />
         ) : (
           <section className="px-intro">
             <p className="px-lede">Some answers are missing.</p>
@@ -348,8 +323,8 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
         <button type="button" className="px-foot-path" onClick={() => setSheet(sheet === 'path' ? null : 'path')} aria-expanded={sheet === 'path'}>
           <span className="px-foot-label">What happens after</span>
           <span className="px-foot-steps" aria-hidden="true">
-            {PATH.map(([name], index) => (
-              <span key={name} className={index === 0 ? 'is-here' : index === 2 ? 'is-bbai' : undefined}>
+            {LADDER.map(([name], index) => (
+              <span key={name} className={index === 0 ? 'is-here' : index >= 4 ? 'is-bbai' : undefined}>
                 {name}
               </span>
             ))}
@@ -409,217 +384,9 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 <DiagnosticsToggle />
               </div>
             ) : null}
-            {sheet === 'readout' && score ? <Readout audienceId={audienceId} score={score} tab={tab} setTab={setTab} /> : null}
           </div>
         </div>
       ) : null}
-    </div>
-  );
-}
-
-type Score = NonNullable<ReturnType<typeof scoreMap>>;
-
-function Result({
-  audienceId,
-  score,
-  live,
-  tab,
-  setTab,
-  openReadout,
-  review,
-  restart,
-}: {
-  audienceId: AudienceId;
-  score: Score;
-  live: LiveMath;
-  tab: number;
-  setTab: (n: number) => void;
-  openReadout: () => void;
-  review: () => void;
-  restart: () => void;
-}) {
-  const audience = AUDIENCES[audienceId];
-  const departmentId = suggestDepartment(score.allPressures);
-  const where = departmentId ? audience.department[departmentId] : null;
-  const first = score.pressures[0] ? audience.pressure[score.pressures[0]] : null;
-  const note = bookingNote(audience.label, PROFILE_WORD[score.profile], where ?? 'None flagged', first ?? 'None flagged', score.raw, score.index);
-  const story = narrative({ audienceId, profile: score.profile, where, pressures: score.pressures, archetype: score.archetype });
-  const [copied, setCopied] = useState(false);
-  const book = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!BOOKING_URL) return;
-    try {
-      void navigator.clipboard?.writeText(note).then(() => setCopied(true), () => undefined);
-    } catch {
-      // Clipboard can be blocked. The booking page still opens.
-    }
-    void event;
-  };
-
-  return (
-    <section className="px-result" aria-labelledby="px-done">
-      <div className="px-result-main">
-        <p className="px-status">
-          <span>
-            PATTERN: <b className="px-red">{PROFILE_WORD[score.profile].toUpperCase()}</b>
-          </span>
-          <span>ANSWERS: 15/15</span>
-          <span className="px-hide-sm">
-            STALL POINT: <b className="px-blue">{where ? where.toUpperCase() : 'NONE FLAGGED'}</b>
-          </span>
-        </p>
-        <h1 id="px-done" className="px-done" tabIndex={-1}>
-          <span>Your PROOF is ready.</span>
-        </h1>
-        <p className="px-stall">
-          {where && first ? (
-            <>
-              Your work stalls in <b>{where.toLowerCase()}</b>. {tie(first)}.
-            </>
-          ) : (
-            <>No single stall point stood out. {tie('The friction is spread across the route.')}</>
-          )}
-        </p>
-        <p className="px-story-weave px-story-top px-show-sm">{story}</p>
-        <div className="px-actions px-book">
-          <a
-            className="px-btn px-btn-light"
-            href={BOOKING_URL || mailtoLink(note)}
-            target={BOOKING_URL ? '_blank' : undefined}
-            rel={BOOKING_URL ? 'noopener' : undefined}
-            onClick={book}
-          >
-            Book your 45-minute readout <Arrow />
-          </a>
-          <button type="button" className="px-link px-link-light px-show-sm" onClick={openReadout}>
-            Open the readout <Arrow />
-          </button>
-        </div>
-        <p className="px-book-sub">
-          We go through your map, the stall point, and what to fix first.
-          {BOOKING_URL ? <span> {copied ? 'Your map summary is copied. Paste it in the booking note.' : 'We copy your map summary for the booking note.'}</span> : null}
-        </p>
-        <WorkedMath live={live} score={score} />
-        <Estimate />
-        <KeystonesPreview audienceId={audienceId} where={where} first={first} />
-        <p className="px-result-links">
-          <button type="button" onClick={review}>Redo PROOF</button>
-          <button type="button" onClick={restart}>Start again</button>
-          <Link href="/visualizer?from=map">Open the desk model</Link>
-        </p>
-      </div>
-      <aside className="px-snapshot" aria-label="Your PROOF">
-        <p className="px-kicker">Your PROOF</p>
-        <p className="px-story-weave px-story-top">{story}</p>
-        <dl>
-          <div>
-            <dt>Pattern</dt>
-            <dd>{PROFILE_WORD[score.profile]}</dd>
-          </div>
-          {where && first ? (
-            <>
-              <div>
-                <dt>Primary gap</dt>
-                <dd>{first}</dd>
-              </div>
-              <div>
-                <dt>Where it sits</dt>
-                <dd>{where}</dd>
-              </div>
-            </>
-          ) : (
-            <div>
-              <dt>Stall point</dt>
-              <dd>None stood out. The friction is spread across the route.</dd>
-            </div>
-          )}
-        </dl>
-        <div className="px-hide-sm">
-          <Readout audienceId={audienceId} score={score} tab={tab} setTab={setTab} compact />
-        </div>
-      </aside>
-    </section>
-  );
-}
-
-const READOUT_TABS = ['Feeling', 'Cause', 'Where', 'Cost', 'Fix first', 'Next'] as const;
-
-function Readout({
-  audienceId,
-  score,
-  tab,
-  setTab,
-  compact = false,
-}: {
-  audienceId: AudienceId;
-  score: Score;
-  tab: number;
-  setTab: (n: number) => void;
-  compact?: boolean;
-}) {
-  const audience = AUDIENCES[audienceId];
-  const departmentId = suggestDepartment(score.allPressures);
-  const where = departmentId ? audience.department[departmentId] : null;
-  const parts: Array<[string, React.ReactNode]> = [
-    ['What you’re feeling', <p key="f">{audience.profile[score.profile]}</p>],
-    [
-      'What’s causing it',
-      <p key="c">
-        {score.archetype ? audience.archetype[score.archetype] + '.' : 'No single cause stood out.'} The tools work. The context around them didn’t keep up, so people carry it.
-      </p>,
-    ],
-    [
-      'Where it shows up',
-      <div key="w">
-        {score.pressures.length ? (
-          <ul>
-            {score.pressures.map((id) => (
-              <li key={id}>{audience.pressure[id]}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>None of your answers flagged a pressure.</p>
-        )}
-      </div>,
-    ],
-    [
-      'What it’s taking away',
-      <p key="t">
-        Time that should go to the {audience.client} goes to finding, checking and rebuilding context. That work isn’t on anyone’s job description.
-      </p>,
-    ],
-    [
-      'What to fix first',
-      <p key="m">{where ? `Start with ${where.toLowerCase()}. ` : ''}{score.pressures[0] ? audience.pressure[score.pressures[0]] + '.' : 'Keep the connections you already have.'}</p>,
-    ],
-    [
-      'What happens next',
-      <p key="n">
-        Book the 45-minute readout and we go through this map with you. If the stall is worth fixing, the Friction Audit runs for 2 weeks and delivers your FACT report and your BizBlueprint. BizBuilders AI then builds The Pipeline Airlock.
-      </p>,
-    ],
-  ];
-  return (
-    <div className={compact ? 'px-readout is-compact' : 'px-readout'}>
-      <div className="px-tabs" role="tablist" aria-label="Readout">
-        {parts.map(([label], index) => (
-          <button
-            key={label}
-            type="button"
-            role="tab"
-            aria-selected={tab === index}
-            className={tab === index ? 'is-on' : undefined}
-            onClick={() => setTab(index)}
-            title={label}
-          >
-            <i>{String(index + 1).padStart(2, '0')}</i>
-            <span>{READOUT_TABS[index]}</span>
-          </button>
-        ))}
-      </div>
-      <div className="px-tab-panel" role="tabpanel">
-        <p className="px-tab-title">{parts[tab][0]}</p>
-        {parts[tab][1]}
-      </div>
     </div>
   );
 }
@@ -628,207 +395,11 @@ function PathPanel() {
   return (
     <div className="px-sheet-body">
       <p className="px-kicker">What happens after PROOF</p>
-      <ol className="px-path">
-        {PATH.map(([name, line], index) => (
-          <li key={name} className={index === 2 ? 'is-bbai' : undefined}>
-            <span className="px-no">{String(index + 1).padStart(2, '0')}</span>
-            <strong>{name}</strong>
-            <em>
-              {line}
-              {index === 2 ? (
-                <img className="px-step-mark" src={`${BASE}/brand/bbai-wordmark-black.png`} alt="BizBuilders AI" width={274} height={138} />
-              ) : null}
-            </em>
-          </li>
-        ))}
-      </ol>
+      <Ladder light />
       <p className="px-path-note">
-        <span>Friction Audit and the readout are booked on the result screen.</span>
+        <span>Book Review your PROOF on the results screen. The Friction Audit is scoped in that call.</span>
       </p>
     </div>
-  );
-}
-
-/** The live instrument. Every number is read from liveMath, which mirrors scoreMap. */
-function MathPanel({ live, current, last }: { live: LiveMath; current: number; last: number | null }) {
-  const lastValue = last !== null ? live.dimensions.flatMap((d) => d.values)[last] : null;
-  return (
-    <div className="px-math">
-      <p className="px-math-head">
-        <span>The math</span>
-        <span>answer pts × weight {WEIGHT} = contribution</span>
-      </p>
-      <ol className="px-math-dims">
-        {live.dimensions.map((d, di) => {
-          const active = Math.floor(current / 3) === di;
-          return (
-            <li key={d.name} className={active ? 'is-now' : undefined}>
-              <b className="px-math-letter">{d.letter}</b>
-              <span className="px-math-name">{d.name}</span>
-              <span className="px-math-cells">
-                {d.values.map((v, vi) => (
-                  <i key={vi} className={di * 3 + vi === current ? 'is-cur' : v === null ? undefined : `v${v}`}>
-                    {v === null ? '·' : v}
-                  </i>
-                ))}
-              </span>
-              <span className="px-math-bar" aria-hidden="true">
-                <span style={{ width: `${(100 * d.points) / d.max}%` }} />
-              </span>
-              <span className="px-math-sub">
-                {d.points}/{d.max}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
-      <p className="px-math-last" key={`${last}-${lastValue}`}>
-        {last !== null && lastValue !== null ? (
-          <>
-            Q{String(last + 1).padStart(2, '0')} <span>{lastValue} pt × {WEIGHT}</span> = <b>+{lastValue * WEIGHT}</b>
-          </>
-        ) : (
-          <>Each answer adds 0, 1 or {POINTS_MAX} points.</>
-        )}
-      </p>
-      <div className="px-math-total">
-        <p>
-          <span>Raw</span>
-          <b>{live.raw}</b>
-          <em>/ {RAW_MAX}</em>
-        </p>
-        <p>
-          <span>{live.answered === 15 ? 'Index' : 'Can still finish'}</span>
-          {live.answered === 15 ? <b>{live.index}</b> : <b className="px-math-range">{live.floor} to {live.ceiling}</b>}
-          <em>{live.answered === 15 ? '/ 100' : 'raw'}</em>
-        </p>
-      </div>
-      <BandScale live={live} />
-      <p className="px-math-foot">
-        Index = round(100 × raw ÷ {RAW_MAX}) at 15/15 · Pressures flagged: <b>{live.pressureAtZero}</b> at 0 pt (ranked first), <b>{live.pressureAtOne}</b> at 1 pt
-      </p>
-    </div>
-  );
-}
-
-function BandScale({ live }: { live: LiveMath }) {
-  const pct = (n: number) => `${(100 * n) / RAW_MAX}%`;
-  return (
-    <div className="px-band" aria-label="Pattern bands on raw points">
-      <div className="px-band-track">
-        {BANDS.map((band) => (
-          <span
-            key={band.id}
-            className={live.profile === band.id ? 'is-on' : undefined}
-            style={{ left: pct(band.from), width: pct(band.to - band.from + 1) }}
-          >
-            <em>{PROFILE_WORD[band.id]}</em>
-            <i>
-              {band.from}-{band.to}
-            </i>
-          </span>
-        ))}
-        <b className="px-band-range" style={{ left: pct(live.floor), width: `max(3px, ${pct(live.ceiling - live.floor)})` }} />
-      </div>
-    </div>
-  );
-}
-
-function MathStrip({ live }: { live: LiveMath }) {
-  return (
-    <p className="px-math-strip px-show-sm" aria-label="Running score">
-      {live.dimensions.map((d) => (
-        <span key={d.name}>
-          {d.letter} <b>{d.points}</b>/{d.max}
-        </span>
-      ))}
-      <span className="px-math-strip-raw">
-        Raw <b>{live.raw}</b>/{RAW_MAX}
-      </span>
-    </p>
-  );
-}
-
-function WorkedMath({ live, score }: { live: LiveMath; score: Score }) {
-  const band = BANDS.find((b) => b.id === score.profile)!;
-  return (
-    <div className="px-worked" aria-label="How your pattern was calculated">
-      <p className="px-worked-row">
-        {live.dimensions.map((d, i) => (
-          <span key={d.name}>
-            {i > 0 ? <i>+</i> : null}
-            <b>{d.points}</b>
-            <em>{d.letter}</em>
-          </span>
-        ))}
-        <span>
-          <i>=</i>
-          <b className="px-blue">{score.raw}</b>
-          <em>raw / {RAW_MAX}</em>
-        </span>
-      </p>
-      <p className="px-worked-line">
-        Index = round(100 × {score.raw} ÷ {RAW_MAX}) = <b>{score.index}</b> · Raw {band.from} to {band.to} reads <b>{PROFILE_WORD[score.profile]}</b> · {score.allPressures.length} pressures flagged
-      </p>
-    </div>
-  );
-}
-
-const usd0 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-const usd2 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const num = (v: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(v);
-
-function Estimate() {
-  const [team, setTeam] = useState(1);
-  const [salary, setSalary] = useState(DEFAULT_SALARY);
-  const [hours, setHours] = useState(8);
-  const e = estimate(team, salary, hours);
-  const field = (label: string, value: number, set: (n: number) => void, step: number, unit?: string) => (
-    <label className="px-est-field">
-      <span>{label}</span>
-      <span className="px-est-input">
-        {unit === '$' ? <i>$</i> : null}
-        <input type="number" inputMode="decimal" min={0} step={step} value={Number.isFinite(value) ? value : ''} onChange={(ev) => set(ev.target.value === '' ? 0 : Number(ev.target.value))} />
-        {unit && unit !== '$' ? <i>{unit}</i> : null}
-      </span>
-    </label>
-  );
-  return (
-    <section className="px-est" aria-labelledby="px-est-h">
-      <div className="px-est-head">
-        <h2 id="px-est-h">What context repair costs you</h2>
-        <p className="px-est-sub">Payroll hours spent repairing context, per year.</p>
-        <p>Capacity-cost equivalent, not cash savings or ROI</p>
-      </div>
-      <div className="px-est-fields">
-        {field('Team size', team, setTeam, 1, 'people')}
-        {field('Average salary', salary, setSalary, 1000, '$')}
-        {field('Repair hours per week, per person', hours, setHours, 0.5, 'h')}
-      </div>
-      <ol className="px-est-steps" aria-live="polite">
-        <li>
-          <span className="px-eq"><var>C</var><sub>hour</sub> = <span className="px-frac"><span>salary</span><span>{num(HOURS_PER_YEAR)}</span></span> = <span className="px-frac"><span>{usd0.format(salary)}</span><span>{num(HOURS_PER_YEAR)}</span></span> = <b>{usd2.format(e.hourly)}</b></span>
-          <small>What one paid hour costs. 2,080 is 40 hours over 52 weeks.</small>
-        </li>
-        <li>
-          <span className="px-eq">weekly = hours × team × <var>C</var><sub>hour</sub> = {num(hours)} × {num(team)} × {usd2.format(e.hourly)} = <b>{usd2.format(e.weekly)}</b></span>
-          <small>Paid time spent each week repairing work that arrived without what it needed.</small>
-        </li>
-        <li>
-          <span className="px-eq">annual = weekly × {WEEKS_PER_YEAR} = {usd2.format(e.weekly)} × {WEEKS_PER_YEAR} = <b className="px-est-total">{usd0.format(e.annual)}</b></span>
-          <small>Equal to {num(Math.round(e.salaryShare * 1000) / 10)}% of one {usd0.format(salary)} salary.</small>
-        </li>
-      </ol>
-      <p className="px-est-note">These hours are your own estimate. The figure prices that time. It does not predict money saved.</p>
-      <p className="px-est-bridge">
-        This estimate used 2 of 9 equations. <a href={FRICTION_MODEL_URL}>The Friction Audit runs all 9 on your real handoffs in your FACT report (Friction Audit Context Telemetry).</a>
-      </p>
-      <div className="px-actions">
-        <a className="px-btn px-btn-light" href={BOOKING_URL || 'https://calendar.app.google/ecuH2cxigdh5NQKy9'} target="_blank" rel="noopener">
-          Book your 45-minute readout <Arrow />
-        </a>
-      </div>
-    </section>
   );
 }
 
@@ -850,13 +421,4 @@ function Arrow({ back = false }: { back?: boolean }) {
       <path d="M0 6h16M11 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="2" />
     </svg>
   );
-}
-
-function bookingNote(audience: string, pattern: string, where: string, gap: string, raw: number, index: number): string {
-  return `PROOF map\nBusiness: ${audience}\nPattern: ${pattern} (raw ${raw}/30, index ${index})\nStall point: ${where}\nPrimary gap: ${gap}`;
-}
-
-function mailtoLink(note: string): string {
-  const subject = 'PROOF: book my 45-minute readout';
-  return `mailto:erik@transformby10x.ai?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(note + '\n\nA good time to talk:\n')}`;
 }

@@ -14,19 +14,19 @@
         },
         {
           "id": "q1-c2",
-          "text": "Switching tools or desks",
+          "text": "Handoffs, or waiting on the client",
           "value": 1,
           "pressure": "handoff"
         },
         {
           "id": "q1-c3",
-          "text": "Waiting on the client or another desk",
+          "text": "Finishing and getting it live",
           "value": 1,
-          "pressure": "handoff"
+          "pressure": null
         },
         {
           "id": "q1-c4",
-          "text": "Finishing and getting it live",
+          "text": "It rarely loses momentum",
           "value": 2,
           "pressure": null
         }
@@ -88,7 +88,7 @@
         },
         {
           "id": "q3-c4",
-          "text": "In one record the next desk can open",
+          "text": "In one record anyone on the job can open",
           "value": 2,
           "pressure": null
         }
@@ -102,8 +102,8 @@
         {
           "id": "q4-c1",
           "text": "None yet",
-          "value": 0,
-          "pressure": "tools"
+          "value": 1,
+          "pressure": null
         },
         {
           "id": "q4-c2",
@@ -212,7 +212,7 @@
         },
         {
           "id": "q7-c4",
-          "text": "Every deliverable has an owner and a routing rule",
+          "text": "Every deliverable has an owner and a clear next step",
           "value": 2,
           "pressure": null
         }
@@ -221,7 +221,7 @@
     {
       "id": "q8",
       "number": 8,
-      "text": "How do AI tools sit inside the work?",
+      "text": "How is AI used in the work today?",
       "choices": [
         {
           "id": "q8-c1",
@@ -252,7 +252,7 @@
     {
       "id": "q9",
       "number": 9,
-      "text": "How are decisions made when a client or a flight is pressing?",
+      "text": "How are decisions made when a deadline is close?",
       "choices": [
         {
           "id": "q9-c1",
@@ -314,17 +314,17 @@
     {
       "id": "q11",
       "number": 11,
-      "text": "How often does a desk remake or re-find work that already existed?",
+      "text": "How often does the team remake or hunt for work that already exists?",
       "choices": [
         {
           "id": "q11-c1",
-          "text": "Frequently",
+          "text": "Every week",
           "value": 0,
           "pressure": "repeat"
         },
         {
           "id": "q11-c2",
-          "text": "Often",
+          "text": "Most months",
           "value": 0,
           "pressure": "repeat"
         },
@@ -345,7 +345,7 @@
     {
       "id": "q12",
       "number": 12,
-      "text": "What happens when the person who holds the client or the craft is out?",
+      "text": "What happens when the person who knows the client best is out?",
       "choices": [
         {
           "id": "q12-c1",
@@ -376,7 +376,7 @@
     {
       "id": "q13",
       "number": 13,
-      "text": "How visible are live jobs, flights, and approvals right now?",
+      "text": "How visible are live jobs and approvals right now?",
       "choices": [
         {
           "id": "q13-c1",
@@ -438,11 +438,11 @@
     {
       "id": "q15",
       "number": 15,
-      "text": "Which word best describes the studio today?",
+      "text": "Which word best describes the agency today?",
       "choices": [
         {
           "id": "q15-c1",
-          "text": "Chaos",
+          "text": "Chaotic",
           "value": 0,
           "pressure": "shape"
         },
@@ -454,13 +454,13 @@
         },
         {
           "id": "q15-c3",
-          "text": "Building",
+          "text": "Steady",
           "value": 1,
           "pressure": null
         },
         {
           "id": "q15-c4",
-          "text": "Compounding",
+          "text": "Improving each month",
           "value": 2,
           "pressure": null
         }
