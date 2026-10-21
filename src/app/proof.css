@@ -1363,3 +1363,38 @@ body:has(.app-main) {
 /* Mirrored story lines render on two lines. */
 .px-story-head em, .px-sheet-title { white-space: pre-line; }
 .px-story-weave { margin: .8rem 0 0; padding-top: .7rem; border-top: 1px solid rgba(243,242,238,.2); font-size: .95rem; line-height: 1.45; }
+
+/* What fixed looks like: Context Keystones preview */
+.px-ks { display: grid; gap: 1rem; padding: clamp(1rem, 2vw, 1.4rem); border: 1px solid rgba(243,242,238,.25); background: rgba(255,255,255,.03); }
+.px .px-ks h2 { margin: 0; font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: clamp(1.3rem, 2.4vw, 2rem); line-height: 1; letter-spacing: -.02em; }
+.px-ks-head { display: grid; gap: .5rem; }
+.px .px-ks-lede { margin: 0; max-width: 62ch; font-size: .95rem; line-height: 1.45; color: rgba(243,242,238,.85); }
+.px .px-ks-stall { margin: 0; font-size: 1rem; line-height: 1.4; }
+.px-ks-stall span, .px-ks-no, .px-ks-holds span, .px-ks-act span, .px-ks-row-head span { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--tbtx); }
+.px-ks-stall b { color: var(--paper); font-weight: 800; }
+.px-ks-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+.px-ks-cards li { display: grid; align-content: start; gap: .35rem; padding: .85rem .9rem; border: 1px solid rgba(243,242,238,.25); border-top: 3px solid var(--tbtx); }
+.px .px-ks-cards h3 { margin: 0; font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 1.15rem; line-height: 1; }
+.px .px-ks-cards p { margin: 0; font-size: .86rem; line-height: 1.4; }
+.px .px-ks-canon { color: rgba(243,242,238,.7); }
+.px-ks-holds span, .px-ks-act span { display: block; margin-bottom: .1rem; }
+.px-ks-route { display: grid; border: 1px solid rgba(243,242,238,.25); }
+.px-ks-row { display: grid; grid-template-columns: 9rem 1fr 1fr; gap: .8rem; padding: .6rem .8rem; font-size: .86rem; line-height: 1.4; }
+.px-ks-row + .px-ks-row { border-top: 1px solid rgba(243,242,238,.15); }
+.px-ks-q { font-weight: 700; }
+.px-ks-now { color: rgba(243,242,238,.65); }
+.px-ks-held { color: var(--paper); }
+.px-ks-ladder { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.px-ks-ladder li { display: grid; grid-template-columns: 2rem 11rem 1fr; gap: .6rem; align-items: baseline; padding: .5rem 0; border-top: 1px solid rgba(243,242,238,.15); font-size: .88rem; }
+.px-ks-ladder .px-no { font-family: var(--mono); font-size: .7rem; color: var(--tbtx); }
+.px-ks-ladder em { font-style: normal; color: rgba(243,242,238,.75); }
+.px-ks-ladder li.is-here strong { color: var(--tbtx); }
+@media (max-width: 720px) {
+  .px-ks-cards { grid-template-columns: 1fr; }
+  .px-ks-row { grid-template-columns: 1fr; gap: .2rem; }
+  .px-ks-row-head { display: none; }
+  .px-ks-now::before { content: "Today: "; font-weight: 700; }
+  .px-ks-held::before { content: "Fixed: "; font-weight: 700; color: var(--tbtx); }
+  .px-ks-ladder li { grid-template-columns: 2rem 1fr; }
+  .px-ks-ladder em { grid-column: 2; }
+}

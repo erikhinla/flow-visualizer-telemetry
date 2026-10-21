@@ -6,6 +6,7 @@ import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, PROFILE_WORD, isAudienceId, type AudienceId } from '../lib/audiences';
 import { QUESTIONS, isComplete, scoreMap, suggestDepartment } from '../lib/questionnaire';
 import { narrative } from '../lib/narrative';
+import { KeystonesPreview } from './KeystonesPreview';
 import { BANDS, DEFAULT_SALARY, HOURS_PER_YEAR, POINTS_MAX, RAW_MAX, WEEKS_PER_YEAR, WEIGHT, estimate, liveMath, type LiveMath } from '../lib/math';
 import type { Choice } from '../lib/types';
 import { DiagnosticsToggle } from './Shell';
@@ -491,6 +492,7 @@ function Result({
         </p>
         <WorkedMath live={live} score={score} />
         <Estimate />
+        <KeystonesPreview audienceId={audienceId} pressures={score.pressures} allPressures={score.allPressures} />
         <p className="px-result-links">
           <button type="button" onClick={review}>Redo PROOF</button>
           <button type="button" onClick={restart}>Start again</button>
