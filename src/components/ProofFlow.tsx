@@ -440,9 +440,10 @@ function Result({
 }) {
   const audience = AUDIENCES[audienceId];
   const departmentId = suggestDepartment(score.allPressures);
-  const where = departmentId ? audience.department[departmentId] : 'Nothing stood out';
-  const first = score.pressures[0] ? audience.pressure[score.pressures[0]] : 'No pressure was selected';
-  const note = bookingNote(audience.label, PROFILE_WORD[score.profile], where, first, score.raw, score.index);
+  const where = departmentId ? audience.department[departmentId] : null;
+  const first = score.pressures[0] ? audience.pressure[score.pressures[0]] : null;
+  const note = bookingNote(audience.label, PROFILE_WORD[score.profile], where ?? 'None flagged', first ?? 'None flagged', score.raw, score.index);
+  const story = narrative({ audienceId, profile: score.profile, where, pressures: score.pressures, archetype: score.archetype });
   const [copied, setCopied] = useState(false);
   const book = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (!BOOKING_URL) return;
@@ -463,15 +464,22 @@ function Result({
           </span>
           <span>ANSWERS: 15/15</span>
           <span className="px-hide-sm">
-            STALL POINT: <b className="px-blue">{where.toUpperCase()}</b>
+            STALL POINT: <b className="px-blue">{where ? where.toUpperCase() : 'NONE FLAGGED'}</b>
           </span>
         </p>
         <h1 id="px-done" className="px-done" tabIndex={-1}>
           <span>Your PROOF is ready.</span>
         </h1>
         <p className="px-stall">
-          Your work stalls in <b>{where.toLowerCase()}</b>. {tie(first)}.
+          {where && first ? (
+            <>
+              Your work stalls in <b>{where.toLowerCase()}</b>. {tie(first)}.
+            </>
+          ) : (
+            <>No single stall point stood out. {tie('The friction is spread across the route.')}</>
+          )}
         </p>
+        <p className="px-story-weave px-story-top px-show-sm">{story}</p>
         <div className="px-actions px-book">
           <a
             className="px-btn px-btn-light"
@@ -492,7 +500,7 @@ function Result({
         </p>
         <WorkedMath live={live} score={score} />
         <Estimate />
-        <KeystonesPreview audienceId={audienceId} pressures={score.pressures} allPressures={score.allPressures} />
+        <KeystonesPreview audienceId={audienceId} where={where} first={first} />
         <p className="px-result-links">
           <button type="button" onClick={review}>Redo PROOF</button>
           <button type="button" onClick={restart}>Start again</button>
@@ -501,19 +509,29 @@ function Result({
       </div>
       <aside className="px-snapshot" aria-label="Your PROOF">
         <p className="px-kicker">Your PROOF</p>
+        <p className="px-story-weave px-story-top">{story}</p>
         <dl>
           <div>
             <dt>Pattern</dt>
             <dd>{PROFILE_WORD[score.profile]}</dd>
           </div>
-          <div>
-            <dt>Primary gap</dt>
-            <dd>{first}</dd>
-          </div>
-          <div>
-            <dt>Where it sits</dt>
-            <dd>{where}</dd>
-          </div>
+          {where && first ? (
+            <>
+              <div>
+                <dt>Primary gap</dt>
+                <dd>{first}</dd>
+              </div>
+              <div>
+                <dt>Where it sits</dt>
+                <dd>{where}</dd>
+              </div>
+            </>
+          ) : (
+            <div>
+              <dt>Stall point</dt>
+              <dd>None stood out. The friction is spread across the route.</dd>
+            </div>
+          )}
         </dl>
         <div className="px-hide-sm">
           <Readout audienceId={audienceId} score={score} tab={tab} setTab={setTab} compact />
@@ -561,7 +579,6 @@ function Readout({
         ) : (
           <p>None of your answers flagged a pressure.</p>
         )}
-        <p className="px-story-weave">{narrative({ audienceId, profile: score.profile, where, pressures: score.pressures, archetype: score.archetype })}</p>
       </div>,
     ],
     [

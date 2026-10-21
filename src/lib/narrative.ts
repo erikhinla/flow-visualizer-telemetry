@@ -70,7 +70,9 @@ export function narrative(input: {
       out.push(`From there, ${c}, and the ${r.client} feels the wait.`);
     }
   } else {
-    out.push('None of your answers flagged a stall point, so the route mostly holds.');
+    out.push('No single stall point stood out in your answers. What friction there is sits across the route, not in one place.');
+    out.push(`The fix is one shared record for the whole route, from ${r.start} to ${r.end}, so it holds as the work grows.`);
+    return out.join(' ');
   }
   out.push(input.archetype ? CAUSE[input.archetype](r) : 'No single cause stood out, so the fix starts where the first stall sits.');
   return out.join(' ');

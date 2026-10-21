@@ -1,19 +1,31 @@
 'use client';
 
-import { AUDIENCES, type AudienceId } from '../lib/audiences';
-import { suggestDepartment } from '../lib/questionnaire';
-import { FACT_QUESTION, type KeystoneId } from '../lib/trace';
-import { deskTraceFor } from '../lib/traceAudience';
-import type { PressureId } from '../lib/types';
+import type { AudienceId } from '../lib/audiences';
 
 const REVIEW_URL = 'https://calendar.app.google/ecuH2cxigdh5NQKy9';
 
 /** Canon: Context-Keystones.md, "Where most teams start". */
-const CANON: Record<KeystoneId, string> = {
-  folders: 'Folders with a clear structure.',
-  markdown: 'Markdown for decision logs, SOPs, and context files.',
-  scripts: 'Scripts for repeatable actions.',
-  protocols: 'Protocols for handoffs and checks.',
+const KEYSTONES: ReadonlyArray<readonly [string, string]> = [
+  ['Folders', 'Folders with a clear structure.'],
+  ['Markdown', 'Markdown for decision logs, SOPs, and context files.'],
+  ['Scripts', 'Scripts for repeatable actions.'],
+  ['Protocols', 'Protocols for handoffs and checks.'],
+];
+
+/** One line per business type. "Fixed" lines are Erik's exact wording. */
+const ROUTE: Record<AudienceId, { today: string; fixed: string }> = {
+  agency: {
+    today: 'The current version is split across mail, decks, and desktops.',
+    fixed: 'One folder holds the current project.',
+  },
+  consulting: {
+    today: 'The current deck is split across email threads and desktops.',
+    fixed: 'One engagement folder holds the current deliverable.',
+  },
+  service: {
+    today: 'What was promised is spread across texts, calls, and the office calendar.',
+    fixed: 'One job folder holds the current quote and the promise.',
+  },
 };
 
 const LADDER: ReadonlyArray<readonly [string, string]> = [
@@ -27,19 +39,15 @@ const LADDER: ReadonlyArray<readonly [string, string]> = [
 
 export function KeystonesPreview({
   audienceId,
-  pressures,
-  allPressures,
+  where,
+  first,
 }: {
   audienceId: AudienceId;
-  pressures: readonly PressureId[];
-  allPressures: readonly PressureId[];
+  /** Department name from the answers, or null when no stall point was flagged. */
+  where: string | null;
+  first: string | null;
 }) {
-  const audience = AUDIENCES[audienceId];
-  const dept = suggestDepartment(allPressures) ?? 'ACC';
-  const where = audience.department[dept];
-  const trace = deskTraceFor(audienceId, dept);
-  const stall = pressures[0] ? audience.pressure[pressures[0]] : null;
-
+  const route = ROUTE[audienceId];
   return (
     <section className="px-ks" aria-labelledby="px-ks-h">
       <div className="px-ks-head">
@@ -51,35 +59,30 @@ export function KeystonesPreview({
       </div>
 
       <p className="px-ks-stall">
-        <span>Your stall</span> <b>{where}</b>
-        {stall ? <> · {stall}</> : null}
+        {where && first ? (
+          <>
+            <span>Your stall</span> <b>{where}</b> · {first}. The Keystones start there.
+          </>
+        ) : (
+          <>
+            <span>Your stall</span> No single stall point stood out. The Keystones hold context across the whole route.
+          </>
+        )}
       </p>
 
       <ol className="px-ks-cards">
-        {trace.keystones.map((stone, i) => (
-          <li key={stone.id}>
+        {KEYSTONES.map(([name, line], i) => (
+          <li key={name}>
             <p className="px-ks-no">{String(i + 1).padStart(2, '0')} · Keystone</p>
-            <h3>{stone.name}</h3>
-            <p className="px-ks-canon">{CANON[stone.id]}</p>
-            <p className="px-ks-holds"><span>Puts back</span> {stone.holds}</p>
-            <p className="px-ks-act"><span>In {where.toLowerCase()}</span> {stone.action}</p>
+            <h3>{name}</h3>
+            <p className="px-ks-canon">{line}</p>
           </li>
         ))}
       </ol>
 
-      <div className="px-ks-route" role="table" aria-label="Your route, before and after">
-        <div className="px-ks-row px-ks-row-head" role="row">
-          <span role="columnheader">The question</span>
-          <span role="columnheader">Today: carried by people</span>
-          <span role="columnheader">Fixed: held by the system</span>
-        </div>
-        {trace.facts.map((fact) => (
-          <div className="px-ks-row" role="row" key={fact.id}>
-            <span role="cell" className="px-ks-q">{FACT_QUESTION[fact.id]}</span>
-            <span role="cell" className="px-ks-now">{fact.now}</span>
-            <span role="cell" className="px-ks-held">{fact.held}</span>
-          </div>
-        ))}
+      <div className="px-ks-ba">
+        <p><span>Today</span> {route.today}</p>
+        <p><span>Fixed</span> <b>{route.fixed}</b></p>
       </div>
 
       <ol className="px-ks-ladder" aria-label="From PROOF to installed Keystones">
