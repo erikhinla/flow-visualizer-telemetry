@@ -1,0 +1,41 @@
+{
+  "agency_name": "SAMPLE: Harbor & Pine Advertising",
+  "_note": "SAMPLE agency, invented for this review build. Not a real company.",
+  "departments": [
+    {"name": "Account", "lead": "Account Director", "roles": ["Account Director", "Account Manager", "Account Coordinator"]},
+    {"name": "Strategy", "lead": "Strategy Director", "roles": ["Strategist"]},
+    {"name": "Creative", "lead": "Executive Creative Director", "roles": ["Creative Director", "Art Director", "Copywriter", "Designer"]},
+    {"name": "Production", "lead": "Head of Production", "roles": ["Producer", "Editor", "Post Producer"]},
+    {"name": "Media", "lead": "Media Director", "roles": ["Media Planner", "Media Buyer"]},
+    {"name": "Business Affairs", "lead": "Business Affairs Manager", "roles": ["Business Affairs Manager", "Legal Counsel (external)"]}
+  ],
+  "stages": ["Kickoff", "Brief", "Concept", "Production", "Review", "Delivery"],
+  "rounds": [
+    {"id": "R1", "name": "First internal review", "reviewers": ["Creative Director", "Account Director", "Business Affairs Manager"], "business_affairs": true, "client_sees": false, "purpose": "Does the work answer the brief, and is anything in it hard to clear"},
+    {"id": "R2", "name": "Pre-client review", "reviewers": ["Executive Creative Director", "Account Director", "Strategy Director", "Business Affairs Manager"], "business_affairs": true, "client_sees": false, "purpose": "Ready to show the client, with mandatories and legal lines in place"},
+    {"id": "R3", "name": "Client concept review", "reviewers": ["Client marketing lead", "Account Director", "Creative Director"], "business_affairs": false, "client_sees": true, "purpose": "Client picks a route and gives notes"},
+    {"id": "R4", "name": "Concept lock", "reviewers": ["Client marketing lead", "Account Director", "Executive Creative Director", "Business Affairs Manager"], "business_affairs": true, "client_sees": true, "purpose": "The route is locked and licensing is confirmed before production spend"},
+    {"id": "R5", "name": "Rough cut review", "reviewers": ["Creative Director", "Producer", "Client marketing lead"], "business_affairs": false, "client_sees": true, "purpose": "Edit, pacing and supers"},
+    {"id": "R6", "name": "Pre-release check", "reviewers": ["Account Director", "Producer", "Media Director", "Business Affairs Manager"], "business_affairs": true, "client_sees": false, "purpose": "Final masters, legal lines, rights against the media plan"}
+  ],
+  "deliverables": ["TV spots", "Social cutdowns", "OOH", "Digital display"],
+  "mandatory_types": ["Logo lockup", "Tagline", "Website URL", "Hashtag"],
+  "mandatory_values": {"Logo lockup": "Horizontal lockup, white on navy, v2025", "Tagline": "Built for the long haul.", "Website URL": "northwind-outfitters.example/trail", "Hashtag": "#TrailReady"},
+  "legal_line_types": ["Offer terms", "Disclaimer", "Trademark notice"],
+  "legal_values": {"Offer terms": "Offer valid 11/1/26 to 12/31/26 at participating stores. While supplies last.", "Disclaimer": "Professional athlete. Do not attempt.", "Trademark notice": "Northwind and the N logo are trademarks of Northwind Outfitters Inc."},
+  "rights_types": ["music", "talent", "stock footage", "fonts"],
+  "usual_media": ["TV", "Social", "Online video", "OOH"],
+  "usual_territories": ["US", "Canada"],
+  "storage": "cloud file storage",
+  "change_channels": ["email", "a team chat channel", "the Monday status meeting"],
+  "version_style": "v1, v2, v3 at the end of the file name",
+  "record_owner": "Account Director",
+  "rights_owner": "Business Affairs Manager",
+  "handoffs": [
+    {"from": "Strategy", "to": "Creative", "items": ["The agreed brief in project.md, with the thinking behind it filled in", "Research files and the client's own words from kickoff", "Who to ask once the strategist has moved on (named in project.md)"]},
+    {"from": "Creative", "to": "Production", "items": ["The approved version only, named in decisions.md", "Every licensed asset listed in rights-and-licenses.md, with what it's cleared for", "Mandatories and legal lines the deliverable must carry"]},
+    {"from": "Production", "to": "Media", "items": ["Approved masters in the delivery folder", "Spec sheets per placement", "The rights check result against the current media plan"]},
+    {"from": "Account", "to": "Business Affairs", "items": ["The media plan and territories", "Every client legal change since the last Business Affairs round", "Talent and music usage being asked for"]}
+  ],
+  "first_project": {"client": "SAMPLE Northwind Outfitters", "project": "Winter Trail Campaign", "code": "NWO-2611", "due": "2026-12-15", "flight_start": "2026-11-02", "flight_end": "2027-01-31"}
+}

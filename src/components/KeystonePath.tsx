@@ -26,20 +26,20 @@ export function KeystonePath({
   const open = known && band !== 'unknown';
   const line = open
     ? state === 'untraced'
-      ? 'The desk is full and the hours are zero. You can still name the file, the brief, the check, and the owner.'
+      ? "There's work here but no hours to do it. The file, brief, check and owner can still be named."
       : state === 'held'
-        ? 'You can see the job. These four keep it where the next person can find it.'
-        : 'The job is still hard to see. These four put it where the next person can find it.'
-    : 'Name the hours on this desk first. Until then, these stay dark.';
+        ? 'This team is on track. These four steps keep it that way.'
+        : 'Four steps that make the status, next step, owner and deadline easy to find.'
+    : 'Add hours for this team to see the steps.';
 
   return (
     <section className="stones" aria-labelledby="stones-title" data-open={open ? 'true' : 'false'}>
       <div className="trace-head">
-        <p className="kicker">What you put back</p>
-        <h2 id="stones-title">Put the job where the next person can find it.</h2>
+        <p className="kicker">Context Keystones</p>
+        <h2 id="stones-title">Four steps to keep this team on track</h2>
         <p className="state-line">{line}</p>
         {open && evidenceKind === 'simulated' ? (
-          <p className="note">Actions below are for the simulated sample.</p>
+          <p className="note">These steps use sample numbers.</p>
         ) : null}
       </div>
       <ol className="stone-path">
@@ -53,12 +53,12 @@ export function KeystonePath({
             </span>
             <h3>{stone.name}</h3>
             <p className="holds">
-              <span>Puts back</span> {stone.holds}
+              <span>Covers</span> {stone.holds}
             </p>
             {open ? (
               <p className="stone-action">{stone.action}</p>
             ) : (
-              <p className="stone-action locked">Locked until the hours are named.</p>
+              <p className="stone-action locked">Add hours to unlock.</p>
             )}
           </li>
         ))}

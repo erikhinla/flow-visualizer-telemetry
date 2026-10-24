@@ -10,7 +10,7 @@ export function SeizureCurve({
   compareRho,
   variability,
   accent,
-  caption = 'How long a job waits, compared with the time it takes to handle it. The cliff is the picture, not a measured delay.',
+  caption = 'How long each item waits, compared with the time to handle the item. The curve is an illustration, not a measured delay.',
 }: {
   rho: number | null;
   compareRho: number | null;
@@ -28,10 +28,10 @@ export function SeizureCurve({
 
   const label =
     rho === null
-      ? 'Waiting picture. How full the desk is remains unknown.'
+      ? "How full the team is isn't known yet."
       : rho >= 1
-        ? 'The desk has stalled. This picture has no finite wait.'
-        : `The desk is this full: ${rho.toFixed(2)}.`;
+        ? 'This team is stalled, so the wait has no end.'
+        : `This team is ${rho.toFixed(2)} full.`;
 
   return (
     <figure className="curve">

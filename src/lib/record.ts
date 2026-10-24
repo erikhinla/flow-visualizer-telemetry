@@ -70,7 +70,7 @@ export function buildRecord(input: PortableRecordInput) {
           },
           teamSize: input.teamSize,
           presetHoursPerWeek: hours,
-          note: 'The answer index and the hour range come from the questionnaire. They are not measured workload.',
+          note: "The answer index and the hour range come from the questionnaire. They aren't measured workload.",
         }
       : null,
     workflow: {
@@ -94,14 +94,14 @@ export function buildRecord(input: PortableRecordInput) {
       netReleasedHours: comparison.netReleasedHours,
       pressureWithOngoing: comparison.pressureWithOngoing,
       assumptions: [
-        'Hours spent finding it equal the job count × the share still being searched for × the minutes to find one ÷ 60.',
-        'Hours the desk needs equal the real work + the search + other hours.',
-        'How full the desk is equals the hours it needs ÷ the hours it has.',
-        'Waiting uses a single-desk approximation. Arrivals are treated as spread across the desk hours.',
-        'A variability of 1 is an assumption. It is not measured from timestamps.',
-        'The second column is the same week with one fix. It is not an observed improvement.',
-        'The hours to keep the fix are its weekly cost. What comes back can be negative.',
-        'The client’s review and the craft are not counted as time spent finding the work.',
+        'Search hours equal the item count × the share still being searched for × the minutes to find one ÷ 60.',
+        'Total hours required equal the real work + the search + other hours.',
+        'How full the team is equals total hours required ÷ team hours available.',
+        'Waiting uses a single-team approximation. Work is treated as arriving evenly across the team hours.',
+        "A variability of 1 is an assumption, not a measurement from timestamps.",
+        'The second column is the same week with one change. The column is modeled, not an observed improvement.',
+        'The hours to keep the change are the weekly cost of the change. What comes back can be negative.',
+        "Review by the client and the craft aren't counted as time spent finding the work.",
       ],
     },
     manifestation: index
@@ -121,7 +121,7 @@ export function buildRecord(input: PortableRecordInput) {
       keystones: deskTrace(input.departmentId).keystones,
       ownerRole: department.action.ownerRole,
       reviewInDays: department.action.reviewInDays,
-      note: 'On screen, keystone actions stay hidden until the scenario is known. This record keeps the planned actions and marks whether the desk was complete.',
+      note: 'On screen, keystone actions stay hidden until the scenario is known. This record keeps the planned actions and marks whether the team numbers were complete.',
     },
     balance: AGENCY_BALANCE[input.departmentId],
     action: {

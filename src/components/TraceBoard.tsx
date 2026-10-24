@@ -36,17 +36,17 @@ export function TraceBoard({
   const seatVisible = showSeat(band, known);
   const line =
     band === 'unavailable' && known
-      ? 'Work is here and the hours are zero. The four questions stay unanswered until there is time to do the work.'
+      ? "There's work here but no hours to do it, so nothing gets tracked."
       : STATE_LINE[state];
 
   return (
     <section className="trace" aria-labelledby="trace-title" data-state={state}>
       <div className="trace-head">
-        <p className="kicker">Desk · {department.name}</p>
-        <h2 id="trace-title">Can your people see the job?</h2>
+        <p className="kicker">Team · {department.name}</p>
+        <h2 id="trace-title">Status, next step, owner and deadline for every project in {department.name}</h2>
         <p className={`state-line is-${state}`}>{line}</p>
         {evidenceKind === 'simulated' ? (
-          <p className="note">Simulated sample. Not a measured agency.</p>
+          <p className="note">Sample numbers, not a real agency.</p>
         ) : null}
       </div>
       <div className="foundation">
@@ -66,7 +66,7 @@ export function TraceBoard({
                   <span className={`state-pill is-${state}`}>{STATE_LABEL[state]}</span>
                 </h3>
                 {state === 'untraced' && !seatVisible ? (
-                  <p className="now">Not visible yet.</p>
+                  <p className="now">No numbers yet.</p>
                 ) : state === 'held' ? (
                   <p className="now">{fact.held}</p>
                 ) : (
@@ -74,12 +74,12 @@ export function TraceBoard({
                 )}
                 {state !== 'held' && !(state === 'untraced' && !seatVisible) ? (
                   <p className="held">
-                    <span>Holds as</span> {fact.held}
+                    <span>Goal</span> {fact.held}
                   </p>
                 ) : null}
                 {seat && seatVisible ? (
                   <p className="seat">
-                    <span>{fact.id === 'who' ? 'Seat' : 'Review'}</span> {seat}
+                    <span>{fact.id === 'who' ? 'Role' : 'Review'}</span> {seat}
                   </p>
                 ) : null}
               </div>

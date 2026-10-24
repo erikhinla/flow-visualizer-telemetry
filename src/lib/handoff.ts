@@ -6,7 +6,7 @@ export const HANDOFF_VERSION = 1;
 export const HANDOFF_PARAM = 'proof';
 const MAX_PAYLOAD_LENGTH = 1024;
 
-/** Carries choices, never trusts a caller's score, band, archetype, or function. */
+/** Carries choices, never trusts a score from the caller, band, archetype, or function. */
 export function encodeHandoff(answers: MapAnswers): string {
   if (!isComplete(answers)) throw new Error('A handoff requires 15 valid choices.');
   const json = JSON.stringify({ v: HANDOFF_VERSION, m: MAP_MODEL_VERSION, c: answers.optionIds });

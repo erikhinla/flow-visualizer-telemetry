@@ -10,11 +10,17 @@ RUN npm run build
 
 FROM node:18-alpine AS runner
 WORKDIR /app
-ENV NODE_ENV=production PROOF_BASE_PATH=/proof/screen
+# Context Keystones are built by the tested Python generator (standard library only).
+RUN apk add --no-cache python3
+# Keep the runtime base path and booking URL identical to the build arguments.
+ARG PROOF_BASE_PATH=/proof/screen
+ARG PROOF_BOOKING_URL=
+ENV NODE_ENV=production PROOF_BASE_PATH=${PROOF_BASE_PATH} PROOF_BOOKING_URL=${PROOF_BOOKING_URL}
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.mjs ./next.config.mjs
+COPY --from=builder /app/keystones ./keystones
 EXPOSE 3000
 CMD ["npm", "start"]

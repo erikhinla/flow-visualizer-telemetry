@@ -1,0 +1,64 @@
+.ks { max-width: 640px; margin: 0 auto; padding: 20px 16px 24px; }
+.ks-kicker { font-family: var(--font-mono), monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--brass); margin: 0 0 6px; }
+.ks h1 { font-family: var(--font-display), sans-serif; font-size: 34px; line-height: 1.05; margin: 0 0 14px; }
+.ks h2 { font-family: var(--font-display), sans-serif; font-size: 22px; margin: 0 0 8px; }
+.ks-progress { display: flex; gap: 4px; list-style: none; padding: 0; margin: 0 0 22px; }
+.ks-progress li { flex: 1; height: 4px; border-radius: 2px; background: var(--line); }
+.ks-progress li.done { background: var(--brass-deep); }
+.ks-progress li.now { background: var(--brass); }
+.ks-progress span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.ks-step { display: grid; gap: 18px; }
+.ks-card { background: var(--carbon-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.ks-card p { margin: 0 0 8px; line-height: 1.45; }
+.ks-field { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width: 0; }
+.ks-field legend, .ks-label { font-weight: 600; font-size: 17px; line-height: 1.3; margin-bottom: 6px; padding: 0; }
+.ks-hint { color: var(--muted); font-size: 14px; line-height: 1.4; margin: 0; }
+.ks input[type=text], .ks input:not([type]), .ks input[type=date], .ks textarea {
+  width: 100%; font: inherit; font-size: 16px; color: var(--ivory); background: var(--carbon); border: 1px solid var(--line);
+  border-radius: 8px; padding: 12px; min-height: 46px; }
+.ks input:focus, .ks textarea:focus, .ks button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.ks-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ks-chip { font: inherit; font-size: 15px; color: var(--ivory); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; min-height: 44px; cursor: pointer; }
+.ks-chip.sm { font-size: 14px; padding: 8px 12px; min-height: 40px; }
+.ks-chip.on { background: var(--brass); border-color: var(--brass); color: var(--carbon); font-weight: 600; }
+.ks-add { display: flex; gap: 8px; }
+.ks-ghost { font: inherit; font-size: 15px; color: var(--ivory); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; min-height: 44px; cursor: pointer; white-space: nowrap; }
+.ks-ghost:disabled { opacity: .4; }
+.ks-ghost.wide { width: 100%; }
+.ks-inline { display: grid; gap: 4px; }
+.ks-inline span { color: var(--muted); font-size: 14px; }
+.ks-round { border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 10px; }
+.ks-round-top { display: flex; gap: 8px; align-items: center; }
+.ks-rid { font-family: var(--font-mono), monospace; color: var(--brass); min-width: 26px; }
+.ks-toggles { display: grid; gap: 8px; font-size: 15px; }
+.ks-toggles label { display: flex; gap: 10px; align-items: center; min-height: 32px; }
+.ks-toggles input { width: 20px; height: 20px; accent-color: var(--brass); }
+.ks-radios { display: grid; gap: 8px; }
+.ks-radio { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 12px; min-height: 46px; cursor: pointer; }
+.ks-radio.on { border-color: var(--brass); }
+.ks-radio input { accent-color: var(--brass); width: 18px; height: 18px; }
+.ks-area { display: grid; gap: 6px; }
+.ks-area span { font-size: 15px; color: var(--muted); }
+.ks-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ks-carried summary { cursor: pointer; color: var(--brass); min-height: 32px; }
+.ks-carried ul { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 10px; }
+.ks-carried li { display: grid; gap: 2px; font-size: 14px; }
+.ks-carried li span { color: var(--muted); }
+.ks-list { margin: 0; padding-left: 20px; display: grid; gap: 8px; line-height: 1.45; }
+.ks-done { border-color: var(--brass); }
+.ks-download { display: block; text-align: center; margin-top: 10px; word-break: break-word; }
+.ks-error { color: var(--ember); margin: 16px 0 0; scroll-margin: 96px; }
+/* Static on every screen: a sticky bar covered the date error on phones. */
+.ks-nav { position: static; margin: 24px -16px 0; display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(18, 20, 22, .96); border-top: 1px solid var(--line); z-index: 5; }
+.ks-nav .px-btn { min-height: 48px; min-width: 140px; }
+@media (min-width: 900px) {
+  .ks { max-width: 760px; padding-top: 48px; }
+  .ks h1 { font-size: 48px; }
+  .ks-nav { position: static; background: none; border: 0; padding: 28px 0 0; margin: 0; }
+  .ks-inline { grid-template-columns: 180px 1fr; align-items: center; }
+}
+.ks-nav.ks-nav-static { position: static; background: none; border: 0; margin: 24px 0 0; padding: 0; }
+.ks-field-error { display: block; color: var(--ember); font-size: 0.9rem; margin-top: 6px; }
+.ks-field-note { display: block; opacity: 0.8; font-size: 0.9rem; margin-top: 6px; }
+.ks-field input[aria-invalid="true"] { border-color: var(--ember); }

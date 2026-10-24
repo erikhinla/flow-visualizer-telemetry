@@ -1,7 +1,7 @@
 import type { BandId, DepartmentId } from './types';
 
 /**
- * Where the project is, what needs done, who is doing it, and by when.
+ * Status, next step, owner and deadline.
  * One missing connection drops all four together. The keystones put them back.
  */
 export type FactId = 'where' | 'what' | 'who' | 'when';
@@ -28,26 +28,26 @@ export interface DeskTrace {
 }
 
 export const FACT_QUESTION: Record<FactId, string> = {
-  where: 'Where is the project now?',
-  what: 'What needs done?',
-  who: 'Who is doing it?',
-  when: 'By when?',
+  where: 'Status',
+  what: 'Next step',
+  who: 'Owner',
+  when: 'Deadline',
 };
 
 export const STATE_LABEL: Record<FactState, string> = {
-  held: 'Held',
-  fog: 'Fog',
+  held: 'On track',
+  fog: 'Drift',
   friction: 'Friction',
   seized: 'Stalled',
-  untraced: 'Untraced',
+  untraced: 'Unmapped',
 };
 
 export const STATE_LINE: Record<FactState, string> = {
-  held: 'You can see the job. Where it is, what is next, who has it, and by when are in one place.',
-  fog: 'The work is still going out. People are spending the day finding it first.',
-  friction: 'The desk is bending. Waiting is starting to cost more than the work itself.',
-  seized: 'This desk has stalled. There is more to do than the hours will hold.',
-  untraced: 'Add this desk’s real numbers. Until then, this is only a picture of the problem.',
+  held: 'Everyone can find the status, next step, owner and deadline.',
+  fog: 'Work still goes out, but people lose hours looking for files, decisions and owners.',
+  friction: 'This team is almost at capacity. Work is starting to wait.',
+  seized: "This team is stalled. There's more work than hours to do it.",
+  untraced: 'Add real numbers for this team. Until then, this is a sample.',
 };
 
 /** Hide the seat only when the desk is unknown. Unavailable keeps the seat. */
@@ -94,220 +94,142 @@ function stones(
 export const DESK_TRACE: Record<DepartmentId, DeskTrace> = {
   ACC: {
     facts: facts(
-      [
-        'The live version is split across mail, decks, and a desktop.',
-        'One folder holds the current package.',
-      ],
-      [
-        'What was approved, and what happens next, is reconstructed.',
-        'The decision and the next action are written on the package.',
-      ],
-      ['Account is rebuilding who decided.', 'The decision owner is named on the package.'],
-      ['The approval moves when the chase ends.', 'The package has a date it must move.']
+      ["The latest version is spread across email, decks and desktops.", "The current version sits in the project folder."],
+      ["Nobody's sure what the client approved or what comes next.", "The approval and the next step are written on the project."],
+      ["Account Management is piecing together who signed off.", "The person who signs off is named."],
+      ["The approval moves whenever the chasing stops.", "Each client approval has a due date."]
     ),
     keystones: stones(
-      ['Where', 'Keep only the current package in one folder. Older versions leave the live path.'],
-      ['What', 'On the package, write the decision, the change, and the next action.'],
-      [
-        'The check',
-        'Before a package moves, check that the folder, the note, the owner, and the date are present.',
-      ],
-      [
-        'Who and when',
-        'Name the owner and the date. The account lead reviews this desk in 14 days.',
-      ]
+      ["Where", "Keep only the current version in the project folder. Move old versions out."],
+      ["What", "Write down what was approved, what changed and the next step."],
+      ["The check", "Before anything goes to the client, check the folder, note, owner and date are there."],
+      ["Who and when", "Name the owner and the date. The account lead checks back in 14 days."]
     ),
   },
   FIN: {
     facts: facts(
-      [
-        'Charges and invoices sit in different systems.',
-        'One ledger view joins scope, authorization, and the invoice.',
-      ],
-      [
-        'The next exception is reconstructed each time.',
-        'The shared identifier says what still must match.',
-      ],
-      [
-        'Finance is matching records nobody owns.',
-        'The controller names who clears the exception.',
-      ],
-      ['Exceptions have no watched age limit.', 'Each exception has an age at which it escalates.']
+      ["Charges and invoices live in different systems.", "Each invoice links to the scope and sign-off behind it."],
+      ["Every invoice problem gets worked out from scratch.", "A shared ID shows what still has to match."],
+      ["Finance is matching records nobody owns.", "The controller names who clears each problem."],
+      ["Invoice problems sit with no time limit.", "Each problem has a date it gets escalated."]
     ),
     keystones: stones(
-      ['Where', 'Join scope, authorization, and the invoice in one ledger view.'],
-      ['What', 'Write the shared identifier and what still must match.'],
-      ['The check', 'Check the shared identifier before an exception can close.'],
-      ['Who and when', 'The controller names who clears it, and the age that escalates it.']
+      ["Where", "Link the scope, the sign-off and the invoice in the books."],
+      ["What", "Use one shared ID and note what still has to match."],
+      ["The check", "Don't close an invoice problem until the IDs match."],
+      ["Who and when", "The controller names an owner and an escalation date for each problem."]
     ),
   },
   LGL: {
     facts: facts(
-      ['The version is detached from its source and rights.', 'Evidence travels with the version.'],
-      [
-        'Gaps are found during review, not before it.',
-        'Source, rights, and approval are listed on the version.',
-      ],
-      ['Counsel hunts for proof instead of reviewing it.', 'The person who may review is named.'],
-      ['The date slips while proof is gathered.', 'Evidence is attached by the review date.']
+      ["Files lose track of their sources and rights.", "Sources and rights travel with the file."],
+      ["Gaps turn up halfway through review.", "Sources, rights and sign-off are listed on the file."],
+      ["Legal spends review time hunting for proof.", "The reviewer is named."],
+      ["The date slips while proof gets gathered.", "Proof is attached by the review date."]
     ),
     keystones: stones(
-      ['Where', 'File the evidence with the version under review.'],
-      ['What', 'List source, rights, and approval on that version.'],
-      [
-        'The check',
-        'Block the start of review if source, rights, or approval is absent. A material version change reopens review.',
-      ],
-      ['Who and when', 'Name who may review, and the date the evidence must be attached.']
+      ["Where", "Keep the proof with the file under review."],
+      ["What", "List sources, rights and sign-off on the file."],
+      ["The check", "Don't start review until sources, rights and sign-off are there. Big changes restart review."],
+      ["Who and when", "Name the reviewer and the date the proof is due."]
     ),
   },
   PRD: {
     facts: facts(
-      [
-        'Masters and variants share one stack.',
-        'The approved master has its own folder. Variants stay out.',
-      ],
-      [
-        'Which file is approved is a search.',
-        'Status, rights, the name, and the delivery requirements are written on the master.',
-      ],
-      [
-        'Production hunts for the file that may ship.',
-        'The person who may mark a master is named.',
-      ],
-      ['Delivery waits on the hunt.', 'The master carries its delivery date.']
+      ["Finals and drafts sit in the same folder.", "The final file has its own folder."],
+      ["Finding the approved file is a search.", "Status, rights, name and delivery specs are on the final file."],
+      ["Production hunts for the file that can ship.", "The person who marks a file final is named."],
+      ["Delivery waits on the hunt.", "The final file has a delivery date."]
     ),
     keystones: stones(
-      ['Where', 'Put the approved master in its own folder. Leave variants out.'],
-      ['What', 'Write status, rights, the file name, and the delivery requirements.'],
-      ['The check', 'Refuse delivery of a file that is not marked as the master.'],
-      ['Who and when', 'Name who may mark a master, and the delivery date.']
+      ["Where", "Give the approved final its own folder. Keep drafts out."],
+      ["What", "Write status, rights, file name and delivery specs."],
+      ["The check", "Don't deliver a file that isn't marked final."],
+      ["Who and when", "Name who marks files final, and the delivery date."]
     ),
   },
   STR: {
     facts: facts(
-      ['Notes and decks are everywhere. The question is not.', 'One brief folder holds the decision.'],
-      [
-        'The decision gets rebuilt every time the room needs it.',
-        'The question, sources, assumptions, criteria, and next action are written.',
-      ],
-      [
-        'The meeting is spent figuring out what you are deciding.',
-        'The decision owner is named.',
-      ],
-      ['Decisions reopen because nothing closed them.', 'The decision has a due date.']
+      ["Notes and decks are everywhere. The actual question isn't.", "Each decision has its own short brief."],
+      ["The decision gets rebuilt at every meeting.", "The question, sources, assumptions, criteria and next step are written down."],
+      ["Meetings go to working out what's being decided.", "The decision owner is named."],
+      ["Decisions reopen because nothing closed them.", "Each decision has a due date."]
     ),
     keystones: stones(
-      ['Where', 'Keep the decision in one brief folder.'],
-      [
-        'What',
-        'Write the question, the sources, the assumptions, the criteria, and the next action.',
-      ],
-      ['The check', 'A decision cannot open without those five lines.'],
-      ['Who and when', 'Name the decision owner and the due date.']
+      ["Where", "Keep each decision in its own brief."],
+      ["What", "Write the question, sources, assumptions, criteria and next step."],
+      ["The check", "No decision meeting without those five."],
+      ["Who and when", "Name the decision owner and the due date."]
     ),
   },
   CRT: {
     facts: facts(
-      [
-        'Feedback lives apart from the work.',
-        'The piece, the brief, and the live notes sit together.',
-      ],
-      [
-        'The ask is reconstructed each round.',
-        'Approved direction, criteria, and consolidated feedback are one note.',
-      ],
-      [
-        'Creative rebuilds the brief before making the work.',
-        'The person who accepts a round is named.',
-      ],
-      ['Rounds eat the time the craft needed.', 'The round has a due date.']
+      ["Feedback lives apart from the work.", "The work, the brief and the notes sit together."],
+      ["The brief gets rebuilt every round.", "The approved direction and feedback are in a single note."],
+      ["Creative rebuilds the brief before making anything.", "The person who signs off each round is named."],
+      ["Rounds eat the time the work needed.", "Each round has a due date."]
     ),
     keystones: stones(
-      ['Where', 'Keep the piece, the brief, and the live notes in one place.'],
-      ['What', 'Write the approved direction, the criteria, and the consolidated feedback.'],
-      ['The check', 'A new round starts only from that note.'],
-      ['Who and when', 'Name who accepts a round, and the due date.']
+      ["Where", "Keep the work, the brief and the notes in one folder."],
+      ["What", "Write the approved direction, the criteria and the combined feedback."],
+      ["The check", "Start each new round from that note."],
+      ["Who and when", "Name who signs off each round, and the due date."]
     ),
   },
   PR: {
     facts: facts(
-      ['The facts and the draft live apart.', 'The draft and the evidence sit together.'],
-      [
-        'The response waits on what is true and who may say it.',
-        'Current facts and the response type are written on the draft.',
-      ],
-      ['Someone is chasing the approver.', 'The approver is named.'],
-      ['The window closes during the chase.', 'The response has a window.']
+      ["The facts and the draft are in different places.", "The facts sit with the draft."],
+      ["The statement waits on facts and sign-off.", "Current facts are written on the draft."],
+      ["Someone's chasing the approver.", "The approver is named."],
+      ["The deadline passes during the chase.", "Each statement has a deadline."]
     ),
     keystones: stones(
-      ['Where', 'Keep the draft and the evidence together.'],
-      ['What', 'Write the current facts and the response type on the draft.'],
-      ['The check', 'A draft cannot start until the facts and the approver are on it.'],
-      ['Who and when', 'The communications lead names the approver and the window.']
+      ["Where", "Keep the draft and the facts together."],
+      ["What", "Write the current facts on the draft."],
+      ["The check", "Don't start a draft until the facts and the approver are on the draft."],
+      ["Who and when", "The communications lead names the approver and the deadline."]
     ),
   },
   MED: {
     facts: facts(
-      [
-        'Intent, platform, and spend use different names.',
-        'One record joins the plan, the action, and the spend.',
-      ],
-      ['Reconciliation is the work.', 'Shared definitions are written once.'],
-      [
-        'Media rebuilds the trail before anyone can read it.',
-        'The person who resolves a difference is named.',
-      ],
-      ['Reporting lags the flight.', 'Differences are resolved by the reporting date.']
+      ["The plan, the platform and the spend use different names.", "One record links the plan, the buy and the spend."],
+      ["Matching numbers is the whole job.", "Shared names are set once."],
+      ["Media rebuilds the numbers before anyone can read them.", "The person who sorts out mismatches is named."],
+      ["Reporting runs behind the campaign.", "Mismatches are sorted by the reporting date."]
     ),
     keystones: stones(
-      ['Where', 'Join the plan, the action, and the spend in one record.'],
-      ['What', 'Write the shared definitions once.'],
-      ['The check', 'Flag a spend line that has no definition before the report goes out.'],
-      ['Who and when', 'Name who resolves a difference, and by which reporting date.']
+      ["Where", "Link the plan, the buy and the spend in one record."],
+      ["What", "Set shared names once."],
+      ["The check", "Flag any spend with no matching plan before the report goes out."],
+      ["Who and when", "Name who sorts out mismatches, and by which reporting date."]
     ),
   },
   HR: {
     facts: facts(
-      [
-        'The draft points at an old policy, or at no situation.',
-        'The governing policy is filed with the case.',
-      ],
-      [
-        'Which rule applies is a search.',
-        'The situation and the applicable rule are on the draft.',
-      ],
-      [
-        'People operations verifies the policy before the case can move.',
-        'The reviewer for exceptions is named.',
-      ],
-      ['Corrections arrive after the decision.', 'The case has a date.']
+      ["Drafts point to an old policy, or none.", "The current policy is filed with the case."],
+      ["Finding which rule applies is a search.", "The facts and the rule are written on the draft."],
+      ["Human Resources double-checks policy before anything moves.", "The reviewer for exceptions is named."],
+      ["Corrections arrive after the decision.", "Each case has a due date."]
     ),
     keystones: stones(
-      ['Where', 'File the governing policy with the case.'],
-      ['What', 'Write the situation and the applicable rule on the draft.'],
-      ['The check', 'A decision cannot be issued against an unmarked policy version.'],
-      ['Who and when', 'Name the reviewer for exceptions, and the date.']
+      ["Where", "File the current policy with the case."],
+      ["What", "Write the facts and the rule on the draft."],
+      ["The check", "No decision goes out under an old policy."],
+      ["Who and when", "Name the reviewer for exceptions, and the date."]
     ),
   },
   OPS: {
     facts: facts(
-      [
-        'The handoff has no accepted place to land.',
-        'There is a place the next owner accepts the job.',
-      ],
-      ['Done is undefined.', 'The next action and the definition of done are written.'],
-      [
-        'Nobody accepted it, so a person bridges the gap.',
-        'The owner who accepted the handoff is named.',
-      ],
-      ['Handoffs age with no due date.', 'The handoff has a date.']
+      ["Handoffs have nowhere to land.", "Every handoff has a set spot where the next owner picks up the work."],
+      ["Nobody's defined done.", "The next step and what counts as done are written down."],
+      ["Nobody took the handoff, so someone carries the work across.", "The person who took the handoff is named."],
+      ["Handoffs sit with no due date.", "Each handoff has a due date."]
     ),
     keystones: stones(
-      ['Where', 'Give the job a place the next owner accepts.'],
-      ['What', 'Write the next action and the definition of done.'],
-      ['The check', 'A handoff without an accepted owner and a done-check stays open.'],
-      ['Who and when', 'Name the owner, the escalation, and the date.']
+      ["Where", "Give every handoff a set spot where the next owner picks up the work."],
+      ["What", "Write the next step and what counts as done."],
+      ["The check", "A handoff stays open until someone accepts the work and done is checked."],
+      ["Who and when", "Name the owner, who to escalate to, and the date."]
     ),
   },
 };

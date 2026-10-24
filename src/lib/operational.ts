@@ -59,7 +59,7 @@ export const CLOSING_RHO = 0.9;
 
 export const BAND_WORD: Record<BandId, string> = {
   open: 'Open',
-  fog: 'Fog',
+  fog: 'Drift',
   forming: 'Forming',
   closing: 'Closing',
   seized: 'Stalled',
@@ -68,13 +68,13 @@ export const BAND_WORD: Record<BandId, string> = {
 };
 
 export const BAND_COPY: Record<BandId, string> = {
-  open: 'This desk has room. The job is not waiting on a search.',
-  fog: 'The work still goes out. People are losing hours finding the file, the decision, or the owner.',
-  forming: 'The margin is getting thin. A little more work and the waiting jumps.',
-  closing: 'A small increase in work meets a long wait. Deadlines and approvals are exposed.',
-  seized: 'The desk has stalled. There is more to do than the hours will hold.',
-  unavailable: 'Work is here and the hours are zero. There is no percentage for that.',
-  unknown: 'A number is missing. PROOF will not invent the result.',
+  open: "This team has room. Nothing's waiting on a search.",
+  fog: 'Work still goes out, but people lose hours looking for files, decisions and owners.',
+  forming: 'This team is getting full. A little more work and things start to wait.',
+  closing: 'This team is nearly full. A small spike means long waits and missed deadlines.',
+  seized: "This team is stalled. There's more work than hours to do it.",
+  unavailable: "There's work here but no hours to do it.",
+  unknown: "A number is missing, so PROOF won't guess.",
 };
 
 export function repairHours(
@@ -228,7 +228,7 @@ function validate(input: ScenarioInputs, phase: 'baseline' | 'changed'): string[
   requireNumber(issues, 'Available hours', input.availableHours, { min: 0 });
   requireNumber(issues, 'Variability', input.variability, { min: 0 });
   if (input.itemCount === 0 && input.availableHours === 0) {
-    issues.push('Item count and available hours cannot both be zero.');
+    issues.push("Item count and available hours can't both be zero.");
   }
   return issues;
 }

@@ -4,13 +4,13 @@ import type { BalanceReason } from '../lib/operational';
 import type { DepartmentId } from '../lib/types';
 
 const REASON_COPY: Record<Exclude<BalanceReason, 'known'>, string> = {
-  'compare-off': 'The comparison is off, so this desk is not showing what comes back.',
+  'compare-off': "The comparison is off, so hours back aren't shown.",
   'baseline-unknown':
-    'What comes back is unknown because this desk is missing a number or is out of range.',
+    'Hours back are unknown. A number is missing or out of range.',
   'changed-invalid':
-    'What comes back is unknown because the week after the fix is missing a number or is out of range.',
+    'Hours back are unknown. A number for the week after the change is missing or out of range.',
   'ongoing-blank':
-    'What comes back is unknown until the hours to keep the fix are filled in with zero or more.',
+    'Hours back are unknown until the upkeep hours are filled in.',
 };
 
 export function Balance({
@@ -24,7 +24,7 @@ export function Balance({
 }: {
   departmentId: DepartmentId;
   change: string;
-  /** Hours the search gives back, before the cost of keeping the fix. */
+  /** Hours the search gives back, before the cost of keeping the change. */
   comesBack: number | null;
   ongoing: number | null;
   net: number | null;
@@ -36,10 +36,10 @@ export function Balance({
     reason !== 'known'
       ? REASON_COPY[reason]
       : net !== null && net < 0
-        ? 'On these numbers the fix costs more than it gives back. Leave it alone for now.'
+        ? 'On these numbers, the change costs more hours than it saves. Leave things as they are for now.'
         : net === 0
-          ? 'The fix pays for itself and nothing more. The review below still stays.'
-          : 'Hours come back once the fix is kept. The review below stays.';
+          ? 'The change pays for itself, and no more.'
+          : 'Hours come back once the change is in place.';
 
   return (
     <section className="balance">
@@ -49,20 +49,20 @@ export function Balance({
         <article>
           <span>Comes back</span>
           <strong>{comesBack === null ? 'Unknown' : `${formatHours(comesBack)} h`}</strong>
-          <p>Hours your people stop spending on the search, before the cost of keeping the fix.</p>
+          <p>Hours no longer spent searching, before upkeep.</p>
         </article>
         <article>
           <span>Costs to keep</span>
           <strong>{ongoing === null ? 'Unknown' : `${formatHours(ongoing)} h`}</strong>
-          <p>Hours the fix itself asks of this desk each week.</p>
+          <p>Hours a week the change takes to keep up.</p>
         </article>
         <article className={net !== null && net < 0 ? 'is-negative' : undefined}>
-          <span>Net on the desk</span>
+          <span>Net for the team</span>
           <strong>{formatSignedHoursUnit(net)}</strong>
           <p>
             {pressureWithOngoing === null
-              ? 'How full the desk stays, including those hours, is unknown.'
-              : `How full the desk stays, including those hours, is ${formatPressure(pressureWithOngoing)}.`}
+              ? 'How full the team stays is unknown.'
+              : `The team stays ${formatPressure(pressureWithOngoing)} full.`}
           </p>
         </article>
       </div>

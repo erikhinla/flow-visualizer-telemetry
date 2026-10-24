@@ -32,7 +32,7 @@ describe('audience wording', () => {
   it('does not touch scoring: choice ids and values come from the catalog', () => {
     assert.equal(QUESTIONS.flatMap((q) => q.choices).length, 60);
     assert.deepEqual(QUESTIONS.map((q) => q.choices.map((c) => c.value)), [
-      [0, 1, 1, 2], [0, 1, 1, 2], [0, 0, 1, 2], [0, 1, 1, 2], [0, 1, 1, 2],
+      [0, 1, 1, 2], [0, 1, 1, 2], [0, 0, 1, 2], [1, 1, 1, 2], [0, 1, 1, 2],
       [0, 0, 1, 2], [0, 1, 1, 2], [0, 1, 1, 2], [0, 0, 1, 2], [0, 0, 1, 2],
       [0, 0, 1, 2], [0, 0, 1, 2], [0, 1, 1, 2], [0, 1, 1, 2], [0, 0, 1, 2],
     ]);

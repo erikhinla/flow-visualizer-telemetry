@@ -37,7 +37,7 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: 'PROOF · See where Digital Friction shows up',
   description:
-    'AI was meant to help your team. Now your team helps the AI. AI sped up the work, but context still gets carried by hand. 15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for. Free, from TransformBy10X.',
+    "AI tools work. That's not the problem. AI tools increase output, but context doesn't keep up, so humans fill the gap. 15 answers map the route and show where the work stalls. So no one has to spend hours coordinating context. From TransformBy10X.",
   ...(process.env.NEXT_PUBLIC_PROOF_NOINDEX ? { robots: { index: false, follow: false } } : {}),
 };
 

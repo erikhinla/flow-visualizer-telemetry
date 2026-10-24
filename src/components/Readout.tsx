@@ -24,21 +24,21 @@ export function Readout({
         {BAND_COPY[baseline.band]}
       </p>
       {changed ? (
-        <p className="legend">The filled mark is this week. The ring is the same week after the fix.</p>
+        <p className="legend">The filled mark is this week. The ring is the same week after the change.</p>
       ) : null}
       <dl className="ledger">
         <Line
-          label="Hours finding it"
+          label="Hours searching"
           baseline={baseline.repairHours}
           changed={changed ? changed.repairHours : undefined}
         />
         <Line
-          label="Hours the desk needs"
+          label="Total hours required"
           baseline={baseline.requiredHours}
           changed={changed ? changed.requiredHours : undefined}
         />
         <div>
-          <dt>Desk hours</dt>
+          <dt>Team hours</dt>
           <dd>{formatHoursUnit(availableHours)}</dd>
         </div>
         <Line
@@ -72,14 +72,14 @@ export function Readout({
       </dl>
       {repairDelta !== null ? (
         <p className="delta">
-          The fix changes the search by {formatSignedHoursUnit(-repairDelta)} before the hours it
-          takes to keep.
+          The change moves search time by {formatSignedHoursUnit(-repairDelta)}, before the hours
+          to keep the change.
           {netReleased === null
-            ? ' The hours to keep the fix are unknown, so what comes back is unknown.'
-            : ` After those hours, the desk gets ${formatSignedHoursUnit(netReleased)} back.`}
+            ? ' The hours to keep the change are unknown, so what comes back is unknown.'
+            : ` After upkeep, the team gets ${formatSignedHoursUnit(netReleased)} back.`}
           {pressureWithOngoing === null
             ? ''
-            : ` How full the desk stays, including those hours, is ${formatPressure(pressureWithOngoing)}.`}
+            : ` The team stays ${formatPressure(pressureWithOngoing)} full.`}
         </p>
       ) : null}
       {baseline.issues.length > 0 ? (
