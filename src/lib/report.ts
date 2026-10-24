@@ -72,7 +72,7 @@ ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
 ${h2('How this was scored')}${p(v.SCORING)}
 ${h2('What it costs')}${p("PROOF doesn't measure hours. To price the stall, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
 ${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
-${h2('Next steps')}${p('The Remote mini FACT reads real handoffs from current work. The Friction Audit is the full 2-week version on site.')}
+${h2('Next steps')}${p('The Remote mini FACT reads real handoffs from current work. FACT is the full version on site.')}
 <p style="margin:18px 0"><a href="${v.REVIEW_URL}" style="background:${m};color:#fff;text-decoration:none;padding:12px 18px;font-weight:700;display:inline-block">Book a PROOF Review call</a></p>
 ${p(`Retake PROOF: ${v.RETAKE_URL}`)}
 <p style="font-size:13px;margin-top:24px;border-top:1px solid #1F1F1F;padding-top:10px">Questions about this report: reply to this email or write to erik@transformby10x.ai.</p>

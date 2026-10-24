@@ -220,7 +220,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               </p>
               <div className="px-actions">
                 <button type="button" className="px-btn" onClick={begin}>
-                  {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'Start PROOF'}
+                  {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'Start with PROOF'}
                   <Arrow />
                 </button>
                 <p className="px-meta">15 answers · no email</p>
@@ -386,7 +386,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                       begin();
                     }}
                   >
-                    Start PROOF <Arrow />
+                    Start with PROOF <Arrow />
                   </button>
                 )}
               </div>
@@ -411,7 +411,7 @@ function PathPanel() {
       <p className="px-kicker">What happens after PROOF</p>
       <Ladder light />
       <p className="px-path-note">
-        <span>Book a call on the results screen: a PROOF review call, or a FACT call about the Friction Audit. The audit runs 2 weeks on site and ends with the FACT report.</span>
+        <span>Book a call on the results screen: a mini FACT call or a FACT call. FACT runs on site and ends with the FACT report.</span>
       </p>
     </div>
   );

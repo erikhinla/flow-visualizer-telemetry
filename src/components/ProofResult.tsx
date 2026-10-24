@@ -16,8 +16,9 @@ const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/inde
 /** One ladder, used on the result page and in the footer sheet. */
 export const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['PROOF', '15 answers. One pattern. The result shows on screen.'],
-  ['Friction Audit', '2 weeks on site. Ends with the FACT report (Friction Audit Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel. $2,250 plus travel up front, $1,125 on arrival, $1,125 on completion. Fixed scope.'],
-  ['BizBlueprint', 'The audit findings become a plan of the changes, infrastructure, owners and checks the work needs. BizBuilders AI builds it and puts it into use. Scoped after the audit.'],
+  ['Context Keystones', 'The BACK offer. Built from the 15 answers and a short intake. Downloads right after the intake.'],
+  ['Remote mini FACT', 'Reads real handoffs from current work, remotely. $1,750. Call first.'],
+  ['FACT', 'On site. Ends with the FACT report (Friction Audit Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
 ]
 
 const PATTERN_LINE: Record<ProfileId, string> = {
@@ -40,7 +41,7 @@ export function Arrow() {
 function BookCta({ note }: { note: string }) {
   return (
     <div className="px-actions px-res-cta">
-      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a call to review the PROOF <Arrow /></a>
+      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a mini FACT call <Arrow /></a>
       <p className="px-meta">{note}</p>
     </div>
   );
@@ -83,7 +84,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <p className="px-res-label">Stall point</p>
             <p className="px-res-value">{stage ?? 'None stood out'}</p>
             <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'}</p>
-            <BookCta note="45-minute call. We walk through the result and whether a Friction Audit fits." />
+            <BookCta note="45-minute call. We walk through the result and whether a mini FACT or FACT fits." />
           </div>
           <div>
             <p className="px-res-label">What the answers show</p>
@@ -139,7 +140,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
         <p className="px-meta px-res-direct">
           <a href="https://calendar.app.google/4mgKAmouyucz7jk79" target="_blank" rel="noopener">Book a FACT call</a>
           <br />
-          45-minute call about the 2-week on-site Friction Audit: scope, dates and travel.
+          45-minute call about the on-site FACT: scope, dates and travel.
         </p>
 
         <section className="px-ks px-res-next" aria-labelledby="px-next-h">
@@ -224,7 +225,7 @@ function Estimate() {
       </div>
       <p className="px-est-note">These hours are an estimate. The figure prices that time, not money saved.</p>
       <p className="px-est-bridge">
-        This uses 2 of the 9 Friction Model measures. <a href={FRICTION_MODEL_URL}>The Friction Audit measures all 9 on real handoffs.</a>
+        This uses 2 of the 9 Friction Model measures. <a href={FRICTION_MODEL_URL}>FACT measures all 9 on real handoffs.</a>
       </p>
     </section>
   );
