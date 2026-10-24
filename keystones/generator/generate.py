@@ -74,7 +74,18 @@ def load(args):
             P = json.load(f)
     I.setdefault("agency_name", P.get("agency_name", "The agency"))
     I.setdefault("stages", DEFAULT_STAGES)
-    I.setdefault("storage", "cloud file storage")
+    I.setdefault("storage", "the team's shared cloud drive")
+    _seen, _types = set(), []
+    for _t in I.get("mandatory_types", []):
+        _t = _t.strip()
+        _k = _t.lower().rstrip("s")
+        if _t and _k not in _seen:
+            _seen.add(_k); _types.append(_t[0].upper() + _t[1:])
+    if "mandatory_types" in I:
+        I["mandatory_types"] = _types
+        _vals = {k.strip().lower(): v for k, v in (I.get("mandatory_values") or {}).items()}
+        if _vals:
+            I["mandatory_values"] = {t: _vals[t.lower()] for t in _types if t.lower() in _vals}
     I.setdefault("version_style", "v1, v2, v3")
     I.setdefault("change_channels", [])
     I.setdefault("deliverables", [])
@@ -491,7 +502,8 @@ the same facts. Every stage folder reads from there. `START HERE.md` in each pro
 `Start Keystones (Windows).bat` or `start-keystones-linux.sh`. A numbered menu opens. Type a number and press Enter:
 1 Start a new project, 2 Move old versions to the archive, 3 Update mandatories and legal lines,
 4 Build the next round's agenda, 5 Check rights and licenses, 6 Write the pending changes summary,
-7 Turn on watch mode, 9 Change notices. Anything that moves or rewrites files shows a preview first and waits for a yes.
+7 Turn on watch mode, 8 Switch to a different project, 9 Change notices.
+Anything that moves or rewrites files shows a preview first and waits for a yes.
 Python 3.8 or newer has to be installed once (python.org). On a Mac, the first open may need right-click, then Open.
 
 **Watch mode.** Menu option 7 checks the project every few minutes while the window stays open. Each check moves
@@ -536,7 +548,7 @@ Every template with that line updates and change-log.md records it. Production s
 `archive_old_versions.py --apply`, so v1 to v3 move to `_archive/`. Before the next round, `round_agenda.py --write`
 puts both changes on the agenda, and `rights_check.py` flags anything the plan has outgrown.
 
-Files live in {I['storage']}. The folders and scripts work on any synced folder on a computer.
+Files live in {"the team's shared cloud drive" if I['storage'].strip().lower() in ('cloud file storage', 'cloud storage') else I['storage']}. The folders and scripts work on any synced folder on a computer.
 """
 
 
@@ -614,7 +626,7 @@ def write_launchers(out):
                            ("Start Keystones (Windows).bat", WIN_LAUNCH, "\r\n")]:
         path = os.path.join(out, name)
         with open(path, "w", encoding="utf-8", newline=nl) as f:
-            f.write(text)
+            f.write(text if text.endswith("\n") else text + "\n")
         os.chmod(path, 0o755)
 
 
@@ -655,7 +667,7 @@ def build(I, out):
     w(os.path.join(out, "protocols", "handoff-protocol.md"), handoff_protocol(I))
     w(os.path.join(out, "HOW-IT-WORKS.md"), how_it_works(I))
     w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with HOW-IT-WORKS.md. Generated %s.\n\n"
-      "Get BACK to the work. (Business Aligned Context Keystones)\n" % (I["agency_name"], TODAY))
+      "Get BACK to work. (Business Aligned Context Keystones)\n" % (I["agency_name"], TODAY))
     os.makedirs(os.path.join(out, "scripts"))
     for f in sorted(os.listdir(os.path.join(HERE, "pack_scripts"))):
         if f.endswith(".py"):
