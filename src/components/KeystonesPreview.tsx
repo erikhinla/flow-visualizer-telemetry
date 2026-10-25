@@ -28,13 +28,13 @@ export function KeystonesPreview({ audienceId, stage }: { audienceId: AudienceId
         </p>
       </div>
       <p className="px-ks-stall">
-        <span>The stall</span>{' '}
+        <span>Where work stalls</span>{' '}
         {stage ? (
           <>
             <b>{stage}</b>. The Keystones start there.
           </>
         ) : (
-          <>No single stall point stood out. The Keystones apply across all the work.</>
+          <>Work doesn't stall at one stage. The Keystones apply across all the work.</>
         )}
       </p>
       <ol className="px-ks-cards">

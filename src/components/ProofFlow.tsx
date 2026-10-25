@@ -348,7 +348,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           Privacy
         </button>
         <a className="px-foot-brand" href="https://transformby10x.ai" aria-label="TransformBy10X">
-          <img src={`${BASE}/brand/k2-tbtx-wordmark-ink.png`} alt="TransformBy10X" width={284} height={143} />
+          <img src={`${BASE}/brand/tbtx-black.png`} alt="TransformBy10X" width={431} height={348} />
         </a>
       </footer>
 

@@ -31,12 +31,12 @@ export function narrative(input: {
   const out = [OPEN[input.profile](r)];
   const [p0, ...rest] = input.pressures;
   if (!p0) {
-    out.push('No single stall point stood out in the answers. What friction there is sits across the route, not at one stage.');
+    out.push("The answers don't show work stalling at one stage. What friction there is sits across the route.");
     out.push(`One shared record for the whole route, from ${r.start} to ${r.end}, keeps context with the work as the work grows.`);
     return out.join(' ');
   }
   const s0 = stageFor(input.audienceId, p0);
-  out.push(`The answers show the first stall at ${lower(s0)}: ${lower(input.label(p0))}.`);
+  out.push(`The answers show work stalling first at ${lower(s0)}: ${lower(input.label(p0))}.`);
   const p1 = rest.find((id) => stageFor(input.audienceId, id) !== s0);
   if (p1) out.push(`They also point to ${lower(stageFor(input.audienceId, p1))}: ${lower(input.label(p1))}.`);
   out.push("The tools work. The structure that keeps context with the work didn't keep up, so people carry the context by hand.");

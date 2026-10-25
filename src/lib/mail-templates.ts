@@ -76,7 +76,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     name: 'TBTX order: PROOF Refresh monthly reminder', subject: "Time for this month's PROOF", vars: ['RETAKE_URL'], plain: true,
     render: (v) => simpleMail("Time for this month's PROOF", [
       'The monthly PROOF Refresh payment went through. This is the reminder to retake PROOF.',
-      'Answer for the work as it runs today. Compare the stall point and pattern with last month to see what moved.',
+      'Answer for the work as it runs today. Compare where work stalls and the pattern with last month to see what moved.',
     ], { label: 'Retake PROOF', url: v.RETAKE_URL }),
   },
   audit_intake: {
@@ -87,7 +87,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
       '1. The workflow to review, in one or two sentences, from first brief to delivery.',
       '2. Three to five real handoffs from current work: briefs, handoff notes, feedback threads or status updates. Remove anything confidential.',
       '3. The roles involved, and who owns each step.',
-      '4. The one stall the team notices most.',
+      '4. The one place the team notices work stalling most.',
       'Erik will confirm receipt within one business day and send the written findings after the review.',
     ]),
   },

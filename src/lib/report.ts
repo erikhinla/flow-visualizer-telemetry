@@ -34,7 +34,7 @@ const FIX: Record<string, string> = {
   'key-person': 'Write down what only one person knows about each client: contacts, preferences and open approvals. Keep it in the job record.',
   pipeline: 'Put live jobs and pending approvals on one board the whole team can see, updated when the status changes.',
   repeat: "Keep masters and past decisions in one place that's easy to search, named the same way on every job.",
-  shape: 'Pick the first stall in this report and fix it before adding any new tool or process.',
+  shape: 'Pick the first place work stalls in this report and fix it before adding any new tool or process.',
 };
 const FIX_GROUP: Record<PressureId, string> = {
   start: 'start', handoff: 'handoff', next: 'next', priorities: 'next', memory: 'memory', scattered: 'memory',
@@ -70,7 +70,7 @@ ${h2('What the answers show')}${p(v.PATTERN_LINE)}${p(v.PROFILE_LINE)}${p(v.STOR
 ${h2('Where the work stalls')}${v.STALLS_HTML}
 ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
 ${h2('How this was scored')}${p(v.SCORING)}
-${h2('What it costs')}${p("PROOF doesn't measure hours. To price the stall, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
+${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost where work stalls, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
 ${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
 ${h2('Next steps')}${p('The Remote mini FACT reads real handoffs from current work. FACT is the full version on site.')}
 <p style="margin:18px 0"><a href="${v.REVIEW_URL}" style="background:${m};color:#fff;text-decoration:none;padding:12px 18px;font-weight:700;display:inline-block">Book a PROOF Review call</a></p>
@@ -114,7 +114,7 @@ export function buildReport(audienceId: AudienceId, answers: MapAnswers, retakeU
     if (f && !fixes.includes(f)) fixes.push(f);
     if (fixes.length === 3) break;
   }
-  if (!fixes.length) fixes.push('Keep the shared record current as the team grows. Retake PROOF each month to catch a new stall early.');
+  if (!fixes.length) fixes.push('Keep the shared record current as the team grows. Retake PROOF each month to catch new places where work stalls.');
 
   const answered = QUESTIONS.map((q, i) => {
     const c = q.choices.find((x) => x.id === answers.optionIds[i])!;
@@ -135,7 +135,7 @@ export function buildReport(audienceId: AudienceId, answers: MapAnswers, retakeU
     STALLS_TEXT: (byStage.length ? byStage.flatMap((r) => [r.stage, ...r.items.map((i) => `- ${i}`)]) : ['No single stage stood out.']).join('\n'),
     FIXES_HTML: fixes.map((f) => `<li style="margin:0 0 8px">${esc(f)}</li>`).join(''),
     FIXES_TEXT: fixes.map((f, i) => `${i + 1}. ${f}`).join('\n'),
-    SCORING: esc(`Each answer is worth 0, 1, or 2 points. The total is ${score.raw} of ${RAW_MAX}, which reads ${PROFILE_WORD[score.profile]} (${band.from} to ${band.to}). The bands are 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, and 23 to 30 Compounding. The stall point is the stage named by the lowest-scoring answer. PROOF doesn't name a department. Placing the stall inside the business is Friction Audit work.`),
+    SCORING: esc(`Each answer is worth 0, 1, or 2 points. The total is ${score.raw} of ${RAW_MAX}, which reads ${PROFILE_WORD[score.profile]} (${band.from} to ${band.to}). The bands are 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, and 23 to 30 Compounding. The lowest-scoring answer names the stage where work stalls. PROOF doesn't name a department. Finding where work stalls inside the business is Friction Audit work.`),
     ANSWERS_HTML: answered.map((r, i) => `<tr><td style="border-top:1px solid #1F1F1F33;width:24px;vertical-align:top">${i + 1}</td><td style="border-top:1px solid #1F1F1F33">${esc(r.q)}<br><b>${esc(r.a)}</b></td><td style="border-top:1px solid #1F1F1F33;width:40px;text-align:right;vertical-align:top">${r.v} pt</td></tr>`).join(''),
     ANSWERS_TEXT: answered.map((r, i) => `${i + 1}. ${r.q} ${r.a} (${r.v} pt)`).join('\n'),
     REVIEW_URL: esc(reviewUrl),
@@ -143,5 +143,5 @@ export function buildReport(audienceId: AudienceId, answers: MapAnswers, retakeU
   };
   const { html, text } = renderReport(vars);
 
-  return { subject: `PROOF report: ${PROFILE_WORD[score.profile]}, stall point ${stage ?? 'none'}`, html, text, profile: score.profile, raw: score.raw, vars };
+  return { subject: `PROOF report: ${PROFILE_WORD[score.profile]}, work stalls at ${stage ?? 'no single stage'}`, html, text, profile: score.profile, raw: score.raw, vars };
 }

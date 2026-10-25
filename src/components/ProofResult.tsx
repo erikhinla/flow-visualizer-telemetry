@@ -1,13 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AUDIENCES, PROFILE_WORD, type AudienceId } from '../lib/audiences';
 import { BANDS, HOURS_PER_YEAR, RAW_MAX, WEEKS_PER_YEAR, estimate } from '../lib/math';
 import { narrative } from '../lib/narrative';
 import { stageFor } from '../lib/stage';
 import type { scoreMap } from '../lib/questionnaire';
 import type { ProfileId } from '../lib/types';
-import { KeystonesPreview } from './KeystonesPreview';
 import { KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPrice';
 
 export const REVIEW_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL || 'https://calendar.app.google/GUyyj5aXpiarDWpg6';
@@ -16,7 +15,7 @@ const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/inde
 /** One ladder, used on the result page and in the footer sheet. */
 export const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['PROOF', '15 answers. One pattern. The result shows on screen.'],
-  ['Context Keystones', 'The BACK offer. Built from the 15 answers and a short intake. Downloads right after the intake.'],
+  ['Context Keystones', 'The BACK (Business Aligned Context Keystones) offer. Built from the 15 answers and a short intake. Downloads right after the intake.'],
   ['Remote mini FACT', 'Reads real handoffs from current work, remotely. $1,750. Call first.'],
   ['FACT', 'On site. Ends with the FACT report (Friction Audit Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
 ]
@@ -38,10 +37,11 @@ export function Arrow() {
   );
 }
 
-function BookCta({ note }: { note: string }) {
+function BookCta({ note, first = false }: { note: string; first?: boolean }) {
   return (
     <div className="px-actions px-res-cta">
-      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a mini FACT call <Arrow /></a>
+      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a Mini FACT Call <Arrow /></a>
+      {first ? <p className="px-meta px-res-expand">FACT: Friction Audit Context Telemetry</p> : null}
       <p className="px-meta">{note}</p>
     </div>
   );
@@ -69,89 +69,135 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
   const story = narrative({ audienceId, profile: score.profile, pressures: score.pressures, label: (id) => audience.pressure[id] });
   const band = BANDS.find((b) => b.id === score.profile)!;
   const offer = useKeystonesOffer();
+  const screens = code ? ['Where work stalls', 'What the answers show', 'Payroll hours', 'Context Keystones', 'What happens next'] : ['Where work stalls', 'What the answers show', 'Payroll hours', 'What happens next'];
+  const [step, setStep] = useState(0);
+  const [how, setHow] = useState(false);
+  const panel = useRef<HTMLDivElement>(null);
+  const last = screens.length - 1;
+  const current = screens[step];
+  useEffect(() => {
+    panel.current?.querySelector<HTMLElement>('h1, h2')?.focus({ preventScroll: true });
+  }, [step]);
+  useEffect(() => {
+    if (!how) return;
+    const onKey = (ev: KeyboardEvent) => { if (ev.key === 'Escape') setHow(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [how]);
 
   return (
-    <section className="px-result px-res" aria-labelledby="px-done">
-      <div className="px-res-col">
-        <h1 id="px-done" className="px-done" tabIndex={-1}>
-          <span>Here's where the work stalls.</span>
-        </h1>
-        <p className="px-res-sub">15 answers point to {stage ?? 'no single stage'}.</p>
-        <p className="px-res-sub">{PATTERN_LINE[score.profile]}</p>
-
-        <div className="px-res-facts">
-          <div>
-            <p className="px-res-label">Stall point</p>
-            <p className="px-res-value">{stage ?? 'None stood out'}</p>
-            <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'}</p>
-            <BookCta note="45-minute call. We walk through the result and whether a mini FACT or FACT fits." />
+    <section className="px-result px-res px-res-steps" aria-labelledby="px-done">
+      <div className="px-res-panel" ref={panel} key={current}>
+        {current === 'Where work stalls' ? (
+          <div className="px-res-screen">
+            <p className="px-res-label">Result · PROOF</p>
+            <h1 id="px-done" className="px-done" tabIndex={-1}>
+              <span>Here's where the work stalls.</span>
+            </h1>
+            <div className="px-res-box">
+              <p className="px-res-label">Where work stalls</p>
+              <p className="px-res-value px-res-big">{stage ?? 'No single stage'}</p>
+              <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'}</p>
+              <p className="px-res-sub">{PATTERN_LINE[score.profile]}</p>
+            </div>
+            <BookCta first note="45-minute call. We walk through the result and whether a Mini FACT or a FACT fits." />
           </div>
-          <div>
-            <p className="px-res-label">What the answers show</p>
-            <p className="px-res-sub px-res-feel">{audience.profile[score.profile]}</p>
-          </div>
-        </div>
-
-        <details className="px-res-how">
-          <summary>How we scored this</summary>
-          <p>
-            Each answer is worth 0, 1, or 2 points. The total is {score.raw} of {RAW_MAX}, which reads {PROFILE_WORD[score.profile]} ({band.from} to {band.to}). The bands are 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, and 23 to 30 Compounding.
-          </p>
-          <p>
-            The stall point is the stage of work named by the lowest-scoring answer. {score.allPressures.length ? `${score.allPressures.length} of the answers point to a stage worth a look.` : 'None of the answers pointed to one stage.'} PROOF doesn't name a department. Placing the stall inside the business is Friction Audit work.
-          </p>
-        </details>
-
-        <section className="px-res-sum" aria-labelledby="px-sum-h">
-          <p id="px-sum-h" className="px-res-label">Summary</p>
-          <p className="px-res-story">{story}</p>
-          {score.pressures.length ? (
-            <>
-              <p className="px-res-label">Where the stall shows up</p>
-              <ul className="px-res-list">
-                {score.pressures.map((id) => (
-                  <li key={id}>{audience.pressure[id]}</li>
-                ))}
-              </ul>
-            </>
-          ) : null}
-        </section>
-
-
-        <KeystonesPreview audienceId={audienceId} stage={stage} />
-
-        <Estimate />
-
-        {code ? (
-          <section className="px-back" aria-labelledby="px-back-h">
-            <p className="px-back-tag">The BACK offer</p>
-            <h2 id="px-back-h" className="px-back-h">Bridge the Context Gap now.</h2>
-            <p className="px-back-sub">Get BACK to the work.</p>
-            <p className="px-back-value">Context Keystones: the folders, markdown files, scripts and protocols the agency&apos;s work runs on, built from these 15 answers and a short intake.</p>
-            <p className="px-back-price"><KeystonesPrice offer={offer} /></p>
-            <a className="px-btn px-btn-light px-back-btn" href={checkoutHref(code)}>Build Context Keystones from these answers <Arrow /></a>
-            <p className="px-back-note">Downloads right after the intake. Business Aligned Context Keystones.</p>
-          </section>
         ) : null}
 
-
-        <BookCta note="45-minute call. No commitment." />
-        <p className="px-meta px-res-retake"><button type="button" className="px-link" onClick={restart} style={{ background: 'none', border: 0, padding: 0, color: '#e8e8e8', textDecoration: 'underline', cursor: 'pointer', font: 'inherit' }}>Retake PROOF</button></p>
-        <p className="px-meta px-res-direct">
-          <a href="https://calendar.app.google/4mgKAmouyucz7jk79" target="_blank" rel="noopener">Book a FACT call</a>
-          <br />
-          45-minute call about the on-site FACT: scope, dates and travel.
-        </p>
-
-        <section className="px-ks px-res-next" aria-labelledby="px-next-h">
-          <div className="px-ks-head">
-            <h2 id="px-next-h">What happens next</h2>
+        {current === 'What the answers show' ? (
+          <div className="px-res-screen">
+            <p className="px-res-label">15 answers · {PROFILE_WORD[score.profile]} · {score.raw} of {RAW_MAX}</p>
+            <h2 className="px-res-h" tabIndex={-1}>What the answers show</h2>
+            <div className="px-res-box">
+              <p className="px-res-feel">{audience.profile[score.profile]}</p>
+              <p className="px-res-story">{story}</p>
+            </div>
+            {score.pressures.length ? (
+              <div className="px-res-box">
+                <p className="px-res-label">Where work stalls</p>
+                <ul className="px-res-list">
+                  {score.pressures.map((id) => (
+                    <li key={id}>{audience.pressure[id]}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
-          <Ladder />
-          <p className="px-meta px-res-direct px-res-offers"><a href="https://transformby10x.ai/offers/">See all offers</a></p>
-        </section>
+        ) : null}
 
+        {current === 'Payroll hours' ? (
+          <div className="px-res-screen">
+            <Estimate />
+          </div>
+        ) : null}
+
+        {current === 'Context Keystones' && code ? (
+          <div className="px-res-screen px-prod-wrap">
+            <article className="px-prod" aria-labelledby="px-prod-h">
+              <div className="px-prod-bar">
+                <span>The BACK (Business Aligned Context Keystones) offer</span>
+                <span>Built from these 15 answers</span>
+              </div>
+              <div className="px-prod-body">
+                <h2 id="px-prod-h" className="px-prod-name" tabIndex={-1}>Context Keystones</h2>
+                <p className="px-prod-fix">The agency&apos;s own tools keep the context, so nobody rebuilds it by hand. Bridge the Context Gap and get back to the work.</p>
+                <ul className="px-prod-parts" aria-label="What's inside">
+                  <li><span>01 · Folders</span>A structure where the brief, decisions and status live with the work.</li>
+                  <li><span>02 · Markdown files</span>The context written down once, readable by people and agents.</li>
+                  <li><span>03 · Scripts</span>Small helpers that keep the record current without extra steps.</li>
+                  <li><span>04 · Protocols</span>The handoff rules the team follows at the stage where work stalls{stage ? `: ${stage}` : ''}.</li>
+                </ul>
+                <div className="px-prod-buy">
+                  <p className="px-prod-price"><KeystonesPrice offer={offer} /></p>
+                  <a className="px-btn px-btn-light px-prod-btn" href={checkoutHref(code)}>Build Context Keystones from these answers <Arrow /></a>
+                  <p className="px-meta">Built after a short intake. Downloads right after.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        ) : null}
+
+        {current === 'What happens next' ? (
+          <div className="px-res-screen">
+            <h2 className="px-res-h" tabIndex={-1}>What happens next</h2>
+            <div className="px-res-box px-res-next">
+              <Ladder />
+            </div>
+            <BookCta note="45-minute call. No commitment." />
+            <p className="px-meta px-res-direct">
+              <a href="https://calendar.app.google/4mgKAmouyucz7jk79" target="_blank" rel="noopener">Book a FACT call</a> · on-site scope, dates and travel · <a href="https://transformby10x.ai/offers/">See all offers</a>
+            </p>
+          </div>
+        ) : null}
       </div>
+
+      <nav className="px-res-nav" aria-label="Result screens">
+        <button type="button" className="px-res-navbtn" onClick={() => setStep(step - 1)} disabled={step === 0}>← Back</button>
+        <span className="px-res-count">
+          {String(step + 1).padStart(2, '0')} / {String(screens.length).padStart(2, '0')} · {current}
+        </span>
+        <span className="px-res-tools">
+          <button type="button" className="px-link" onClick={() => setHow(true)}>How we scored this</button>
+          <button type="button" className="px-link" onClick={restart}>Retake PROOF</button>
+        </span>
+        {step < last ? (
+          <button type="button" className="px-res-navbtn is-next" onClick={() => setStep(step + 1)}>Next: {screens[step + 1]} →</button>
+        ) : (
+          <button type="button" className="px-res-navbtn is-next" onClick={() => setStep(0)}>Start over →</button>
+        )}
+      </nav>
+
+      {how ? (
+        <div className="px-res-overlay" onClick={() => setHow(false)}>
+          <div className="px-res-how-panel" role="dialog" aria-modal="true" aria-labelledby="px-how-h" onClick={(ev) => ev.stopPropagation()}>
+            <div className="px-prod-bar"><span id="px-how-h">How we scored this</span><button type="button" className="px-close" onClick={() => setHow(false)} aria-label="Close">×</button></div>
+            <div className="px-res-how-body">
+              <p>Each answer is worth 0, 1, or 2 points. The total is {score.raw} of {RAW_MAX}, which reads {PROFILE_WORD[score.profile]} ({band.from} to {band.to}). The bands are 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, and 23 to 30 Compounding.</p>
+              <p>The lowest-scoring answer names the stage where work stalls. {score.allPressures.length ? `${score.allPressures.length} of the answers point to a stage worth a look.` : "None of the answers pointed to one stage."} PROOF doesn't name a department. Finding where work stalls inside the business is Friction Audit work.</p>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -182,10 +228,9 @@ function Estimate() {
   return (
     <section className="px-est" aria-labelledby="px-est-h">
       <div className="px-est-head">
-        <h2 id="px-est-h">Estimated cost of this stall</h2>
+        <h2 id="px-est-h">Payroll hours rebuilding context</h2>
         <p className="px-meta"><a href="https://transformby10x.ai/friction-model" target="_blank" rel="noopener">How it&apos;s calculated</a></p>
-        <p className="px-est-sub">Payroll hours spent rebuilding context.</p>
-        <p>Time cost, not savings or ROI</p>
+        <p>Time cost, not savings or return on investment</p>
       </div>
       <div className="px-est-fields">
         {field('People on the team', team, setTeam, 'e.g. 6', 'people')}
