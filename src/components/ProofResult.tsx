@@ -9,7 +9,7 @@ import type { scoreMap } from '../lib/questionnaire';
 import type { ProfileId } from '../lib/types';
 import { KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPrice';
 
-export const REVIEW_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL || 'https://calendar.app.google/GUyyj5aXpiarDWpg6';
+export const REVIEW_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL || 'https://buy.stripe.com/8x29ASfUzdMW0Px7JUc3m08';
 const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/index.html';
 
 /** One ladder, used on the result page and in the footer sheet. */
@@ -19,6 +19,32 @@ export const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['Remote mini FACT', 'Reads real handoffs from current work, remotely. $1,750. Call first.'],
   ['FACT', 'On site. Ends with the FACT report (Friction Audit Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
 ]
+
+/** FACT spelled out where it first shows on a screen. */
+export const LADDER_FULL: Readonly<Record<string, string>> = {
+  'Remote mini FACT': 'Remote mini FACT (Friction Audit Context Telemetry)',
+};
+
+/** On phones each results screen shows one layer at a time. Next reveals the next layer. */
+const LAYERS: Readonly<Record<string, number>> = {
+  'Where work stalls': 1,
+  'What the answers show': 2,
+  'Payroll hours': 2,
+  'Context Keystones': 2,
+  'What happens next': 3,
+};
+
+function usePhone() {
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    const m = window.matchMedia('(max-width: 900px)');
+    const on = () => setPhone(m.matches);
+    on();
+    m.addEventListener('change', on);
+    return () => m.removeEventListener('change', on);
+  }, []);
+  return phone;
+}
 
 const PATTERN_LINE: Record<ProfileId, string> = {
   FRAGMENTED: 'People hold the work together. No shared record does.',
@@ -37,23 +63,23 @@ export function Arrow() {
   );
 }
 
-function BookCta({ note, first = false }: { note: string; first?: boolean }) {
+function BookCta({ note, first = false, layer }: { note: string; first?: boolean; layer?: number }) {
   return (
-    <div className="px-actions px-res-cta">
-      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a Mini FACT Call <Arrow /></a>
+    <div className="px-actions px-res-cta" data-layer={layer}>
       {first ? <p className="px-meta px-res-expand">FACT (Friction Audit Context Telemetry)</p> : null}
+      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a remote mini FACT review <Arrow /></a>
       <p className="px-meta">{note}</p>
     </div>
   );
 }
 
-export function Ladder({ light = false }: { light?: boolean }) {
+export function Ladder({ light = false, split = false }: { light?: boolean; split?: boolean }) {
   return (
     <ol className={light ? 'px-ks-ladder is-light' : 'px-ks-ladder'} aria-label="What happens next">
       {LADDER.map(([name, line], i) => (
-        <li key={name} className={i === 0 ? 'is-here' : undefined}>
+        <li key={name} className={i === 0 ? 'is-here' : undefined} data-layer={split ? (i < 2 ? 0 : 1) : undefined}>
           <span className="px-no">{String(i + 1).padStart(2, '0')}</span>
-          <strong>{name}</strong>
+          <strong>{LADDER_FULL[name] ?? name}</strong>
           <em>{line}</em>
         </li>
       ))}
@@ -71,13 +97,28 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
   const offer = useKeystonesOffer();
   const screens = code ? ['Where work stalls', 'What the answers show', 'Payroll hours', 'Context Keystones', 'What happens next'] : ['Where work stalls', 'What the answers show', 'Payroll hours', 'What happens next'];
   const [step, setStep] = useState(0);
+  const [layer, setLayer] = useState(0);
   const [how, setHow] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
+  const phone = usePhone();
   const last = screens.length - 1;
   const current = screens[step];
+  const layers = phone ? LAYERS[current] ?? 1 : 1;
+  const shown = Math.min(layer, layers - 1);
+  const goNext = () => {
+    if (shown < layers - 1) setLayer(shown + 1);
+    else { setStep(step < last ? step + 1 : 0); setLayer(0); }
+  };
+  const goBack = () => {
+    if (shown > 0) { setLayer(shown - 1); return; }
+    const prev = step - 1;
+    setStep(prev);
+    setLayer(phone ? (LAYERS[screens[prev]] ?? 1) - 1 : 0);
+  };
   useEffect(() => {
+    panel.current?.querySelector<HTMLElement>('.px-res-screen')?.scrollTo({ top: 0 });
     panel.current?.querySelector<HTMLElement>('h1, h2')?.focus({ preventScroll: true });
-  }, [step]);
+  }, [step, shown]);
   useEffect(() => {
     if (!how) return;
     const onKey = (ev: KeyboardEvent) => { if (ev.key === 'Escape') setHow(false); };
@@ -87,7 +128,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
 
   return (
     <section className="px-result px-res px-res-steps" aria-labelledby="px-done">
-      <div className="px-res-panel" ref={panel} key={current}>
+      <div className="px-res-panel" ref={panel} key={current} data-on={phone ? shown : undefined}>
         {current === 'Where work stalls' ? (
           <div className="px-res-screen">
             <p className="px-res-label">Result · PROOF</p>
@@ -100,7 +141,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'}</p>
               <p className="px-res-sub">{PATTERN_LINE[score.profile]}</p>
             </div>
-            <BookCta first note="45-minute call. We walk through the result and whether a Mini FACT or a FACT fits." />
+            <BookCta first note="A 45-minute remote mini FACT video review of this PROOF result." />
           </div>
         ) : null}
 
@@ -108,12 +149,12 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           <div className="px-res-screen">
             <p className="px-res-label">15 answers · {PROFILE_WORD[score.profile]} · {score.raw} of {RAW_MAX}</p>
             <h2 className="px-res-h" tabIndex={-1}>What the answers show</h2>
-            <div className="px-res-box">
+            <div className="px-res-box" data-layer={0}>
               <p className="px-res-feel">{audience.profile[score.profile]}</p>
               <p className="px-res-story">{story}</p>
             </div>
             {score.pressures.length ? (
-              <div className="px-res-box">
+              <div className="px-res-box" data-layer={1}>
                 <p className="px-res-label">Where work stalls</p>
                 <ul className="px-res-list">
                   {score.pressures.map((id) => (
@@ -140,14 +181,14 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               </div>
               <div className="px-prod-body">
                 <h2 id="px-prod-h" className="px-prod-name" tabIndex={-1}>Context Keystones</h2>
-                <p className="px-prod-fix">The agency&apos;s own tools keep the context, so nobody rebuilds it by hand. Bridge the Context Gap and get back to the work.</p>
-                <ul className="px-prod-parts" aria-label="What's inside">
+                <p className="px-prod-fix" data-layer={0}>The agency&apos;s own tools keep the context, so nobody rebuilds it by hand. Bridge the Context Gap and get back to the work.</p>
+                <ul className="px-prod-parts" aria-label="What's inside" data-layer={1}>
                   <li><span>01 · Folders</span>A structure where the brief, decisions and status live with the work.</li>
                   <li><span>02 · Markdown files</span>The context written down once, readable by people and agents.</li>
                   <li><span>03 · Scripts</span>Small helpers that keep the record current without extra steps.</li>
                   <li><span>04 · Protocols</span>The handoff rules the team follows at the stage where work stalls{stage ? `: ${stage}` : ''}.</li>
                 </ul>
-                <div className="px-prod-buy">
+                <div className="px-prod-buy" data-layer={0}>
                   <p className="px-prod-price"><KeystonesPrice offer={offer} /></p>
                   <a className="px-btn px-btn-light px-prod-btn" href={checkoutHref(code)}>Build Context Keystones from these answers <Arrow /></a>
                   <p className="px-meta">Built after a short intake. Downloads right after.</p>
@@ -160,11 +201,11 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
         {current === 'What happens next' ? (
           <div className="px-res-screen">
             <h2 className="px-res-h" tabIndex={-1}>What happens next</h2>
-            <div className="px-res-box px-res-next">
-              <Ladder />
+            <div className="px-res-box px-res-next" data-layer-box="">
+              <Ladder split />
             </div>
-            <BookCta note="45-minute call. No commitment." />
-            <p className="px-meta px-res-direct">
+            <BookCta note="A 45-minute remote mini FACT video review of this PROOF result. $1,750." layer={2} />
+            <p className="px-meta px-res-direct" data-layer={2}>
               <a href="https://calendar.app.google/4mgKAmouyucz7jk79" target="_blank" rel="noopener">Book a FACT call</a> · on-site scope, dates and travel · <a href="https://transformby10x.ai/offers/">See all offers</a>
             </p>
           </div>
@@ -172,18 +213,20 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
       </div>
 
       <nav className="px-res-nav" aria-label="Result screens">
-        <button type="button" className="px-res-navbtn" onClick={() => setStep(step - 1)} disabled={step === 0}>← Back</button>
+        <button type="button" className="px-res-navbtn" onClick={goBack} disabled={step === 0 && shown === 0}>← Back</button>
         <span className="px-res-count">
-          {String(step + 1).padStart(2, '0')} / {String(screens.length).padStart(2, '0')} · {current}
+          {String(step + 1).padStart(2, '0')} / {String(screens.length).padStart(2, '0')}<span className="px-res-count-name"> · {current}</span>
         </span>
         <span className="px-res-tools">
           <button type="button" className="px-link" onClick={() => setHow(true)}>How we scored this</button>
           <button type="button" className="px-link" onClick={restart}>Retake PROOF</button>
         </span>
-        {step < last ? (
-          <button type="button" className="px-res-navbtn is-next" onClick={() => setStep(step + 1)}>Next: {screens[step + 1]} →</button>
+        {shown < layers - 1 ? (
+          <button type="button" className="px-res-navbtn is-next" onClick={goNext}>Next →</button>
+        ) : step < last ? (
+          <button type="button" className="px-res-navbtn is-next" onClick={goNext}>Next<span className="px-res-next-name">: {screens[step + 1]}</span> →</button>
         ) : (
-          <button type="button" className="px-res-navbtn is-next" onClick={() => setStep(0)}>Start over →</button>
+          <button type="button" className="px-res-navbtn is-next" onClick={goNext}>Start over →</button>
         )}
       </nav>
 
@@ -229,15 +272,15 @@ function Estimate() {
     <section className="px-est" aria-labelledby="px-est-h">
       <div className="px-est-head">
         <h2 id="px-est-h">Payroll hours rebuilding context</h2>
-        <p className="px-meta"><a href="https://transformby10x.ai/friction-model" target="_blank" rel="noopener">How it&apos;s calculated</a></p>
-        <p>Time cost, not savings or return on investment</p>
+        <p className="px-meta" data-layer={0}><a href="https://transformby10x.ai/friction-model" target="_blank" rel="noopener">How the payroll hours are calculated</a></p>
+        <p data-layer={0}>Time cost, not savings or return on investment</p>
       </div>
-      <div className="px-est-fields">
+      <div className="px-est-fields" data-layer={0}>
         {field('People on the team', team, setTeam, 'e.g. 6', 'people')}
         {field('Average salary', salary, setSalary, 'e.g. 90000', '$')}
         {field('Hours a week each person spends finding, checking, or rebuilding work', hours, setHours, 'e.g. 5', 'h')}
       </div>
-      <div aria-live="polite">
+      <div aria-live="polite" data-layer={1}>
         {e ? (
           <>
             <p className="px-est-result">
@@ -268,8 +311,8 @@ function Estimate() {
           <p className="px-est-result is-empty">Enter three numbers to see the figure.</p>
         )}
       </div>
-      <p className="px-est-note">These hours are an estimate. The figure prices that time, not money saved.</p>
-      <p className="px-est-bridge">
+      <p className="px-est-note" data-layer={1}>These hours are an estimate. The figure prices that time, not money saved.</p>
+      <p className="px-est-bridge" data-layer={1}>
         This uses 2 of the 9 Friction Model measures. <a href={FRICTION_MODEL_URL}>FACT measures all 9 on real handoffs.</a>
       </p>
     </section>

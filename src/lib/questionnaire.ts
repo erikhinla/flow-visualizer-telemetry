@@ -125,7 +125,7 @@ export const PRESSURE_LABEL: Record<PressureId, string> = {
   scattered: 'Project files are loosely organized',
   tools: "The team doesn't use AI tools yet",
   learning: 'What a campaign taught the team leaves with the campaign',
-  followup: 'Leads, RFPs, or client asks fall through or wait on memory',
+  followup: 'Leads, RFPs (requests for proposals), or client asks fall through or wait on memory',
   'loose-followup': 'Follow-up has a loose process',
   ownership: 'Ownership is unclear when a deliverable must move',
   'informal-owner': "Ownership depends on who's available",
