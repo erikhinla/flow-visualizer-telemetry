@@ -208,6 +208,10 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <p className="px-meta px-res-direct" data-layer={2}>
               <a href="https://calendar.app.google/Xu3RZNM4nEuATHee7" target="_blank" rel="noopener">Book a FACT call</a> · on-site scope, dates and travel · <a href="https://transformby10x.ai/offers/">See all offers</a>
             </p>
+            <p className="px-stat" data-layer={2}>
+              <b>At 100% busy, the queue never&nbsp;clears.</b>
+              <a href={FRICTION_MODEL_URL}>Queueing math (Kingman)</a>
+            </p>
           </div>
         ) : null}
       </div>
@@ -313,7 +317,7 @@ function Estimate() {
       </div>
       <p className="px-est-note" data-layer={1}>These hours are an estimate. The figure prices that time, not money saved.</p>
       <p className="px-est-bridge" data-layer={1}>
-        PROOF runs 3 of the 9 Friction Model formulas: 01 Map score and 08 + 09 Context repair cost. <a href={FRICTION_MODEL_URL}>FACT runs all 9 on real handoffs.</a>
+        PROOF runs 3 of 9 measurements, where the hours go and what they cost: 01 Map score and 08 + 09 Context repair cost. <a href={FRICTION_MODEL_URL}>FACT runs all 9 on real handoffs.</a>
       </p>
     </section>
   );

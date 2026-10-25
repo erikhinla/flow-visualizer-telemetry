@@ -1733,3 +1733,8 @@ body:has(.app-main) {
 .px .px-intro .px-carnival { --s: clamp(150px, min(22vw, 25vh), 260px); }
 .px .px-intro-copy { min-height: 0; gap: clamp(.4rem, 1.6vh, 1.4rem); }
 @media (max-width: 860px) { .px .px-intro .px-carnival { --s: clamp(150px, 23vh, 210px); } }
+
+/* audit2: queueing stat near FACT price */
+.px .px-stat { margin: 12px 0 0; display: flex; flex-direction: column; gap: 6px; border-left: 6px solid var(--tbtx); padding-left: 14px; }
+.px .px-stat b { font-family: "MuseoModerno", var(--display, sans-serif); font-weight: 800; font-size: clamp(1.75rem, 4.4vw, 3rem); line-height: 1; letter-spacing: -.03em; color: var(--paper); }
+.px .px-stat a { font-family: var(--mono); font-size: .875rem; color: #e8e8e8; text-decoration: none; border-bottom: 1px solid var(--tbtx); align-self: flex-start; text-transform: uppercase; letter-spacing: .06em; }

@@ -181,10 +181,10 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
     if (document.querySelector('script[data-tbx]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = BASE + "/anchors.css?v=2";
+    link.href = BASE + "/anchors.css?v=5";
     document.head.appendChild(link);
     const script = document.createElement('script');
-    script.src = BASE + "/anchors.js?v=2";
+    script.src = BASE + "/anchors.js?v=5";
     script.defer = true;
     script.dataset.tbx = '1';
     document.body.appendChild(script);
