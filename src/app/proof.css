@@ -1612,7 +1612,21 @@ body:has(.app-main) {
   .px .px-res-steps .px-res-screen { justify-content: flex-start; }
 }
 
-/* v17: question screens use the results type scale; phone results show one layer at a time. Nothing under 14px. */
+/* Hide the trace board entirely on mobile */
+@media (max-width: 900px) {
+  .px-flow-trace { display: none !important; }
+  .px-ask { display: flex; flex-direction: column; min-height: 100vh; }
+  .px-ask-side { display: none; }
+  .px-ask-main { flex: 1; display: flex; flex-direction: column; padding: 2rem 1.5rem; justify-content: center; }
+  .px .px-question { font-size: clamp(2rem, 8vw, 3rem); line-height: 1.1; margin-bottom: 2rem; }
+  .px .px-option { padding: 1.25rem 1.5rem; font-size: 1.1rem; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+  .px .px-option[aria-pressed="true"] { background: rgba(208, 30, 152, 0.1); border-color: #d01e98; }
+  .px-options { display: flex; flex-direction: column; gap: 1rem; }
+  .px-mbar { position: fixed; bottom: 0; left: 0; right: 0; top: auto; z-index: 100; border-top: 1px solid #383838; background: #08090a; padding: 1.5rem; display: flex !important; justify-content: space-between; align-items: center; }
+  .px-mbar .px-live-bar { display: none; }
+  .px-mbar-drawer { display: none !important; }
+  .px-ask-main { padding-bottom: 80px; } /* clear fixed bar */
+}
 .px-ask { grid-template-columns: minmax(28rem, 5fr) minmax(0, 7fr); }
 .px .px-ask-side .px-kicker, .px .px-live-label, .px .px-count, .px .px-hint, .px .px-option kbd, .px .px-option-pts,
 .px .px-ask-main .px-link, .px .px-mbar-score, .px .px-mbar-toggle, .px .px-ask-tip-sub, .px .px-foot, .px .px-bar,
