@@ -1557,3 +1557,57 @@ body:has(.app-main) {
   .px-prod { box-shadow: 6px 6px 0 -2px #383838, 6px 6px 0 0 var(--paper), 12px 12px 0 -2px #222, 12px 12px 0 0 var(--tbtx); margin: 0 12px 12px 0; }
   .px-prod-bar span + span { display: none; }
 }
+
+/* v16: one type scale for every results screen. Nothing under 14px. */
+.px {
+  --fs-display: clamp(2.75rem, min(7.5vw, 11.5vh), 7.5rem); /* H1: 92px at 1280x800 */
+  --fs-h2: clamp(2.25rem, min(4.4vw, 7vh), 3.5rem);         /* screen H2: 56px */
+  --fs-card: clamp(2rem, min(3vw, 5vh), 2.75rem);           /* card titles: 38-40px */
+  --fs-body: clamp(1.25rem, 1.7vw, 1.5rem);                 /* lead/body: 20-24px */
+  --fs-support: clamp(1rem, 1.3vw, 1.125rem);               /* supporting lines: 16-18px */
+  --fs-label: clamp(.9375rem, 1.1vw, 1rem);                 /* mono labels/eyebrows: 15-16px */
+  --fs-btn: clamp(1.125rem, 1.45vw, 1.25rem);               /* buttons: 18-20px */
+  --fs-bar: .9375rem;                                       /* bottom bar: 15px */
+  --lh-body: 1.4;
+}
+/* Display + headings */
+.px .px-res-steps .px-done { font-size: var(--fs-display); line-height: .92; }
+.px .px-res-steps .px-res-h, .px .px-res-steps .px-est h2 { font-size: var(--fs-h2); line-height: .95; }
+.px .px-res-steps .px-prod-name { font-size: var(--fs-h2); line-height: .9; }
+.px .px-res-steps .px-res-big, .px .px-res-steps .px-res-value { font-size: var(--fs-card); line-height: 1; }
+/* Labels / eyebrows */
+.px .px-res-steps .px-res-label, .px .px-res-steps .px-prod-bar, .px .px-res-steps .px-prod-parts span,
+.px .px-res-steps .px-est-head p, .px .px-res-steps .px-est-field, .px .px-res-steps .px-ks-ladder .px-no,
+.px .px-res-steps .px-res-how summary { font-size: var(--fs-label); letter-spacing: .1em; }
+/* Body / lead */
+.px .px-res-steps .px-res-sub, .px .px-res-steps .px-res-feel, .px .px-res-steps .px-res-story, .px .px-res-steps .px-res-list,
+.px .px-res-steps .px-prod-fix, .px .px-res-steps .px-est-result, .px .px-res-steps .px-ks-ladder li {
+  font-size: var(--fs-body); line-height: var(--lh-body); max-width: 60ch;
+}
+.px .px-res-steps .px-res-list { gap: .3rem; padding-left: 1.4rem; }
+.px .px-res-steps .px-ks-ladder li { max-width: none; grid-template-columns: 2.6rem 15rem 1fr; padding: .55rem 0; }
+.px .px-res-steps .px-ks-ladder em { font-size: var(--fs-support); line-height: var(--lh-body); }
+/* Supporting lines + footnotes */
+.px .px-res-steps .px-meta, .px .px-res-steps .px-res-expand, .px .px-res-steps .px-prod-parts li,
+.px .px-res-steps .px-prod-price, .px .px-res-steps .px-est-plain, .px .px-res-steps .px-est-note,
+.px .px-res-steps .px-est-bridge, .px .px-res-steps .px-est-result.is-empty, .px .px-res-steps .px-est-steps small,
+.px .px-res-steps .px-res-how, .px .px-res-how-body { font-size: var(--fs-support); line-height: var(--lh-body); }
+.px .px-res-steps .px-meta { letter-spacing: .06em; }
+.px .px-res-steps .px-res-expand { text-transform: none; letter-spacing: .04em; }
+.px .px-res-steps .px-est-input input { font-size: var(--fs-body); }
+.px .px-res-steps .px-est-steps li::before { font-size: .875rem; width: 1.5rem; height: 1.5rem; }
+/* Buttons */
+.px .px-res-steps .px-btn { font-size: var(--fs-btn); min-height: 3.75rem; padding: .9rem 1.8rem; }
+/* Bottom bar */
+.px .px-res-steps .px-res-nav { font-size: var(--fs-bar); letter-spacing: .08em; padding: .7rem 0; }
+.px .px-res-steps .px-res-navbtn { min-height: 48px; padding: 0 1.2rem; }
+/* Tighter spacing so every screen fits 1280x800 without page scroll */
+.px .px-res-steps .px-res-screen { gap: clamp(.6rem, 2vh, 1.2rem); }
+.px .px-res-steps .px-res-box { gap: .45rem; padding: clamp(.8rem, 1.8vh, 1.2rem) clamp(1rem, 2vw, 1.5rem); }
+.px .px-res-steps .px-prod-body { gap: clamp(.5rem, 1.5vh, 1rem); }
+.px .px-res-steps .px-prod-parts li { padding: .6rem .8rem; }
+@media (max-width: 900px) {
+  .px .px-res-steps .px-res-count, .px .px-res-steps .px-res-tools { font-size: var(--fs-bar); }
+  .px .px-res-steps .px-ks-ladder li { grid-template-columns: 2.2rem 1fr; }
+  .px .px-res-steps .px-res-screen { justify-content: flex-start; }
+}

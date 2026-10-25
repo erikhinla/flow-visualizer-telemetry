@@ -41,7 +41,7 @@ function BookCta({ note, first = false }: { note: string; first?: boolean }) {
   return (
     <div className="px-actions px-res-cta">
       <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a Mini FACT Call <Arrow /></a>
-      {first ? <p className="px-meta px-res-expand">FACT: Friction Audit Context Telemetry</p> : null}
+      {first ? <p className="px-meta px-res-expand">FACT (Friction Audit Context Telemetry)</p> : null}
       <p className="px-meta">{note}</p>
     </div>
   );
