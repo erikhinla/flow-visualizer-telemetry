@@ -177,6 +177,19 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
 
   const letterIndex = stage === 'result' ? 5 : Math.floor(cursor / 3);
 
+  useEffect(() => {
+    if (document.querySelector('script[data-tbx]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = BASE + "/anchors.css?v=2";
+    document.head.appendChild(link);
+    const script = document.createElement('script');
+    script.src = BASE + "/anchors.js?v=2";
+    script.defer = true;
+    script.dataset.tbx = '1';
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <div className={`px px--${stage}`} data-stage={stage}>
       <header className="px-bar">
@@ -184,7 +197,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-mark-dot" aria-hidden="true" />
           PROOF
         </Link>
-        <span className="px-bar-sub">15 answers. No email.</span>
+        <span className="px-bar-sub">Process · Response · Output · Operating capacity · Friction</span>
         <Letters filled={stage === 'intro' ? 0 : Math.floor(answered / 3)} current={stage === 'ask' ? letterIndex : -1} />
         <label className="px-select">
           <span>For</span>
@@ -206,6 +219,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <p className="px-loading">Opening PROOF</p>
         ) : stage === 'intro' ? (
           <section className="px-intro" aria-labelledby="px-title">
+            <nav className="tbx-anchors" data-page="proof" />
             <div className="px-intro-copy">
               <p className="px-kicker">
                 <b>01</b> // The condition
@@ -223,7 +237,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                     {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'Start with PROOF'}
                   </span>
                 </button>
-                <p className="px-meta">15 answers · no email</p>
+                <p className="px-meta">15 answers · no email · <button type="button" className="px-nine" onClick={() => (window as unknown as { tbxAnchors?: { open: (k: string) => void } }).tbxAnchors?.open('05')}><i aria-hidden="true" />3 of 9 formulas</button></p>
               </div>
             </div>
           </section>

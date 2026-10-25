@@ -1721,3 +1721,15 @@ body:has(.app-main) {
   .px .px-carnival:hover .px-carnival-label, .px .px-carnival:focus-visible .px-carnival-label,
   .px .px-carnival:active .px-carnival-ball, .px .px-carnival:active .px-carnival-label { transform: none; }
 }
+
+/* Anchors (2026-10-25): named anchor strip above the intro column, 3-of-9 formulas chip */
+.px .px-intro { grid-template-rows: auto minmax(0, 1fr); }
+.px .px-intro > .tbx-anchors { width: 100%; max-width: 72rem; margin: 0 auto; border-width: 0 2px 2px; border-color: var(--ink); }
+.px .px-nine { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; color: #d01e98; text-decoration: underline; text-underline-offset: 3px; }
+.px .px-nine i { display: inline-block; width: 10px; height: 10px; background: #d01e98; }
+@media (max-width: 860px) { .px .px-intro { grid-template-rows: auto minmax(0, 1fr); } .px .px-intro > .tbx-anchors { border-width: 0 0 2px; } }
+.px .px-intro .px-display { font-size: clamp(2.4rem, min(8.6vw, 9vh), 8.25rem); }
+.px .px-intro .px-lede--intro { font-size: clamp(1.25rem, min(2.1vw, 3vh), 1.75rem); }
+.px .px-intro .px-carnival { --s: clamp(150px, min(22vw, 25vh), 260px); }
+.px .px-intro-copy { min-height: 0; gap: clamp(.4rem, 1.6vh, 1.4rem); }
+@media (max-width: 860px) { .px .px-intro .px-carnival { --s: clamp(150px, 23vh, 210px); } }

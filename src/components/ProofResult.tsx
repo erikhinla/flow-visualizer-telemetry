@@ -313,7 +313,7 @@ function Estimate() {
       </div>
       <p className="px-est-note" data-layer={1}>These hours are an estimate. The figure prices that time, not money saved.</p>
       <p className="px-est-bridge" data-layer={1}>
-        This uses 2 of the 9 Friction Model measures. <a href={FRICTION_MODEL_URL}>FACT measures all 9 on real handoffs.</a>
+        PROOF runs 3 of the 9 Friction Model formulas: 01 Map score and 08 + 09 Context repair cost. <a href={FRICTION_MODEL_URL}>FACT runs all 9 on real handoffs.</a>
       </p>
     </section>
   );

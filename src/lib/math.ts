@@ -90,7 +90,8 @@ export function liveMath(answers: MapAnswers): LiveMath {
 }
 
 /**
- * Capacity-cost equivalent. Two of the nine Friction Model equations:
+ * Capacity-cost equivalent. Equations 08 + 09 (Context repair cost) of the nine Friction Model
+ * equations; with 01 Map score above, PROOF runs 3 of the 9:
  * C_hour = salary / 2,080 and annual = hours x team x C_hour x 52.
  * This prices time, it is not cash savings or ROI.
  */
