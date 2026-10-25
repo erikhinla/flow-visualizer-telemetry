@@ -206,7 +206,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             </div>
             <BookCta note="A 45-minute remote mini FACT video review of this PROOF result. $1,750." layer={2} />
             <p className="px-meta px-res-direct" data-layer={2}>
-              <a href="https://calendar.app.google/4mgKAmouyucz7jk79" target="_blank" rel="noopener">Book a FACT call</a> · on-site scope, dates and travel · <a href="https://transformby10x.ai/offers/">See all offers</a>
+              <a href="https://calendar.app.google/Xu3RZNM4nEuATHee7" target="_blank" rel="noopener">Book a FACT call</a> · on-site scope, dates and travel · <a href="https://transformby10x.ai/offers/">See all offers</a>
             </p>
           </div>
         ) : null}
