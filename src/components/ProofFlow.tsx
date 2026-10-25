@@ -215,61 +215,16 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 <span className="px-fog">That's not the problem.</span>
                 {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
               </h1>
-              <p className="px-lede">
-                {audience.lede[0]}
-              </p>
-              <p className="px-lede">
-                <strong>{audience.lede[1]}</strong>
-              </p>
-              <div className="px-actions">
-                <button type="button" className="px-btn" onClick={begin}>
-                  {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'Start with PROOF'}
-                  <Arrow />
+              <p className="px-lede px-lede--intro">{audience.lede[1]}</p>
+              <div className="px-actions px-carnival-wrap">
+                <button type="button" className="px-carnival" onClick={begin}>
+                  <span className="px-carnival-ball" aria-hidden="true" style={{ backgroundImage: `url(${BASE}/brand/proof-sphere.webp)` }} />
+                  <span className="px-carnival-label">
+                    {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'Start with PROOF'}
+                  </span>
                 </button>
                 <p className="px-meta">15 answers · no email</p>
               </div>
-            </div>
-
-            <div className="px-story-wrap">
-            <p className="px-kicker px-story-kicker">// Where Digital Friction builds up. Tap to open.</p>
-            <ol className="px-story" aria-label="Where Digital Friction builds up">
-              {STORY.map((item, index) => {
-                const open = openStory === index;
-                return (
-                  <li key={item.no} className={open ? 'is-open' : undefined}>
-                    <button
-                      type="button"
-                      aria-expanded={open}
-                      onClick={() => {
-                        if (window.matchMedia('(max-width: 860px)').matches) {
-                          setStoryIndex(index);
-                          setSheet('story');
-                          return;
-                        }
-                        setOpenStory(open ? null : index);
-                      }}
-                    >
-                      <span className="px-no">{item.no}</span>
-                      <span className="px-story-head">
-                        <strong>{item.title}</strong>
-                        <em>{item.line}</em>
-                      </span>
-                      <span className="px-plus" aria-hidden="true" />
-                    </button>
-                    <div className="px-story-body" hidden={!open}>
-                      {index === 1 ? (
-                        <>
-                          <p>Capable people chase, check, remember and rebuild what the system should keep track of.</p>
-                          <p className="px-quote">{audience.moment}</p>
-                        </>
-                      ) : (
-                        <p>{item.body}</p>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
             </div>
           </section>
         ) : stage === 'ask' ? (
