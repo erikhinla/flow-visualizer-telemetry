@@ -132,7 +132,7 @@ export function VisualizerExperience() {
       {bannerDesk ? (
         <div className="desk-banner" role="status">
           <p>
-            This link opens the {bannerName} sample. This desk is still {department.name}.
+            This link opens the {bannerName} sample. This session is still {department.name}.
           </p>
           <div className="actions">
             <button
@@ -486,7 +486,7 @@ function EvidenceControl({
             checked={attested}
             onChange={(event) => onAttest(event.target.checked)}
           />
-          I counted these figures on a real desk. PROOF will not check them.
+          I counted these figures on a real project. PROOF will not check them.
         </label>
       ) : null}
     </div>
