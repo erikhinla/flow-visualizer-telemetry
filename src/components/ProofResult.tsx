@@ -16,13 +16,13 @@ const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/inde
 export const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['PROOF', '15 answers. One pattern. The result shows on screen.'],
   ['Context Keystones', 'The BACK (Business Aligned Context Keystones) offer. Built from the 15 answers and a short intake. Downloads right after the intake.'],
-  ['Remote mini FACT', 'Reads real handoffs from current work, remotely. $1,750. Call first.'],
+  ['Remote FACT', 'Reads real handoffs from current work, remotely. $1,750. Call first.'],
   ['FACT', 'On site. Ends with the FACT report (Friction Assessment Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
 ]
 
 /** FACT spelled out where it first shows on a screen. */
 export const LADDER_FULL: Readonly<Record<string, string>> = {
-  'Remote mini FACT': 'Remote mini FACT (Friction Assessment Context Telemetry)',
+  'Remote FACT': 'Remote FACT (Friction Assessment Context Telemetry)',
 };
 
 /** On phones each results screen shows one layer at a time. Next reveals the next layer. */
