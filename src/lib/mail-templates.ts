@@ -55,8 +55,8 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     render: (v) => simpleMail('Action needed: PROOF report without answers', [`Buyer: ${v.BUYER}`, `Stripe session: ${v.SESSION_ID}`, `client_reference_id: ${v.CLIENT_REFERENCE_ID}`]),
   },
   toolkit: {
-    name: 'TBTX order: Context Gap toolkit', subject: 'The Context Gap toolkit', vars: ['DOWNLOAD_URL'], plain: true,
-    render: (v) => simpleMail('The Context Gap toolkit', [
+    name: 'TBTX order: Context Rot toolkit', subject: 'Context Rot toolkit', vars: ['DOWNLOAD_URL'], plain: true,
+    render: (v) => simpleMail('Context Rot toolkit', [
       'The toolkit has three files for producers and account managers, as PDFs with editable HTML copies:',
       '1. Handoff template, for every move of a job between people, teams, or the client.',
       '2. Kickoff checklist, run at the start of every job before work begins.',

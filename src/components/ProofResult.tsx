@@ -9,7 +9,7 @@ import type { scoreMap } from '../lib/questionnaire';
 import type { ProfileId } from '../lib/types';
 import { KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPrice';
 
-export const REVIEW_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL || 'https://buy.stripe.com/8x29ASfUzdMW0Px7JUc3m08';
+export const REVIEW_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL || 'https://calendar.app.google/GUyyj5aXpiarDWpg6';
 const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/index.html';
 
 /** One ladder, used on the result page and in the footer sheet. */
@@ -67,7 +67,7 @@ function BookCta({ note, first = false, layer }: { note: string; first?: boolean
   return (
     <div className="px-actions px-res-cta" data-layer={layer}>
       {first ? <p className="px-meta px-res-expand">FACT (Friction Assessment Context Telemetry)</p> : null}
-      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a remote mini FACT review <Arrow /></a>
+      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book the PROOF Review Call <Arrow /></a>
       <p className="px-meta">{note}</p>
     </div>
   );
@@ -141,7 +141,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'}</p>
               <p className="px-res-sub">{PATTERN_LINE[score.profile]}</p>
             </div>
-            <BookCta first note="A 45-minute remote mini FACT video review of this PROOF result." />
+            <BookCta first note="A 45-minute call with Erik about this PROOF result." />
           </div>
         ) : null}
 
@@ -181,7 +181,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               </div>
               <div className="px-prod-body">
                 <h2 id="px-prod-h" className="px-prod-name" tabIndex={-1}>Context Keystones</h2>
-                <p className="px-prod-fix" data-layer={0}>The agency&apos;s own tools keep the context, so nobody rebuilds it by hand. Bridge the Context Gap and get back to the work.</p>
+                <p className="px-prod-fix" data-layer={0}>The agency&apos;s own tools keep the context, so nobody rebuilds it by hand. Bridge the Context Rot and get back to the work.</p>
                 <ul className="px-prod-parts" aria-label="What's inside" data-layer={1}>
                   <li><span>01 · Folders</span>A structure where the brief, decisions and status live with the work.</li>
                   <li><span>02 · Markdown files</span>The context written down once, readable by people and agents.</li>
@@ -204,10 +204,8 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <div className="px-res-box px-res-next" data-layer-box="">
               <Ladder split />
             </div>
-            <BookCta note="A 45-minute remote mini FACT video review of this PROOF result. $1,750." layer={2} />
-            <p className="px-meta px-res-direct" data-layer={2}>
-              <a href="https://calendar.app.google/Xu3RZNM4nEuATHee7" target="_blank" rel="noopener">Book a FACT call</a> · on-site scope, dates and travel · <a href="https://transformby10x.ai/offers/">See all offers</a>
-            </p>
+            <BookCta note="A 45-minute call with Erik about this PROOF result. The bridge into FACT." layer={2} />
+
             <p className="px-stat" data-layer={2}>
               <b>At 100% busy, the queue never&nbsp;clears.</b>
               <a href={FRICTION_MODEL_URL}>Queueing math (Kingman)</a>
