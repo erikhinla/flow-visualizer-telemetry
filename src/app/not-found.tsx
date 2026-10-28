@@ -11,7 +11,7 @@ export default function NotFound() {
           Start PROOF
         </Link>
         <Link className="button ghost" href="/visualizer">
-          Desk model
+          Process model
         </Link>
       </div>
     </article>
