@@ -135,7 +135,7 @@ export function buildReport(audienceId: AudienceId, answers: MapAnswers, retakeU
     STALLS_TEXT: (byStage.length ? byStage.flatMap((r) => [r.stage, ...r.items.map((i) => `- ${i}`)]) : ['No single stage stood out.']).join('\n'),
     FIXES_HTML: fixes.map((f) => `<li style="margin:0 0 8px">${esc(f)}</li>`).join(''),
     FIXES_TEXT: fixes.map((f, i) => `${i + 1}. ${f}`).join('\n'),
-    SCORING: esc(`Each answer is worth 0, 1, or 2 points. The total is ${score.raw} of ${RAW_MAX}, which reads ${PROFILE_WORD[score.profile]} (${band.from} to ${band.to}). The bands are 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, and 23 to 30 Compounding. The lowest-scoring answer names the stage where work stalls. PROOF doesn't name a department. Finding where work stalls inside the business is Friction Audit work.`),
+    SCORING: esc(`Each answer is worth 0, 1, or 2 points. The total is ${score.raw} of ${RAW_MAX}, which reads ${PROFILE_WORD[score.profile]} (${band.from} to ${band.to}). The bands are 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, and 23 to 30 Compounding. The lowest-scoring answer names the stage where work stalls. PROOF doesn't name a department. Finding where work stalls inside the business is the FACT Process.`),
     ANSWERS_HTML: answered.map((r, i) => `<tr><td style="border-top:1px solid #1F1F1F33;width:24px;vertical-align:top">${i + 1}</td><td style="border-top:1px solid #1F1F1F33">${esc(r.q)}<br><b>${esc(r.a)}</b></td><td style="border-top:1px solid #1F1F1F33;width:40px;text-align:right;vertical-align:top">${r.v} pt</td></tr>`).join(''),
     ANSWERS_TEXT: answered.map((r, i) => `${i + 1}. ${r.q} ${r.a} (${r.v} pt)`).join('\n'),
     REVIEW_URL: esc(reviewUrl),

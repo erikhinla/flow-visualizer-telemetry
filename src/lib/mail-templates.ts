@@ -80,9 +80,9 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     ], { label: 'Retake PROOF', url: v.RETAKE_URL }),
   },
   audit_intake: {
-    name: 'TBTX order: Remote mini audit intake', subject: 'Remote mini audit: intake', vars: [], plain: true,
-    render: () => simpleMail('Remote mini audit: intake', [
-      'The Remote mini audit reviews one delivery workflow and reports where it stalls and what to change first.',
+    name: 'TBTX order: Remote mini FACT intake', subject: 'Remote mini FACT: intake', vars: [], plain: true,
+    render: () => simpleMail('Remote mini FACT: intake', [
+      'The Remote mini FACT reviews one delivery workflow and reports where it stalls and what to change first.',
       'To start, reply to this email with:',
       '1. The workflow to review, in one or two sentences, from first brief to delivery.',
       '2. Three to five real handoffs from current work: briefs, handoff notes, feedback threads or status updates. Remove anything confidential.',
@@ -92,8 +92,8 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     ]),
   },
   audit_erik: {
-    name: 'TBTX notice: new Remote mini audit (Erik)', subject: 'New Remote mini audit purchase', vars: ['BUYER', 'SESSION_ID'], plain: true,
-    render: (v) => simpleMail('New Remote mini audit purchase', [`Buyer: ${v.BUYER}`, `Stripe session: ${v.SESSION_ID}`, 'Intake request sent to the buyer.']),
+    name: 'TBTX notice: new Remote mini FACT (Erik)', subject: 'New Remote mini FACT purchase', vars: ['BUYER', 'SESSION_ID'], plain: true,
+    render: (v) => simpleMail('New Remote mini FACT purchase', [`Buyer: ${v.BUYER}`, `Stripe session: ${v.SESSION_ID}`, 'Intake request sent to the buyer.']),
   },
   order_no_email_erik: {
     name: 'TBTX notice: paid order without email (Erik)', subject: 'Action needed: paid order without email', vars: ['OFFER', 'SESSION_ID'], plain: true,

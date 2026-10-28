@@ -17,12 +17,12 @@ export const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['PROOF', '15 answers. One pattern. The result shows on screen.'],
   ['Context Keystones', 'The BACK (Business Aligned Context Keystones) offer. Built from the 15 answers and a short intake. Downloads right after the intake.'],
   ['Remote mini FACT', 'Reads real handoffs from current work, remotely. $1,750. Call first.'],
-  ['FACT', 'On site. Ends with the FACT report (Friction Audit Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
+  ['FACT', 'On site. Ends with the FACT report (Friction Assessment Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
 ]
 
 /** FACT spelled out where it first shows on a screen. */
 export const LADDER_FULL: Readonly<Record<string, string>> = {
-  'Remote mini FACT': 'Remote mini FACT (Friction Audit Context Telemetry)',
+  'Remote mini FACT': 'Remote mini FACT (Friction Assessment Context Telemetry)',
 };
 
 /** On phones each results screen shows one layer at a time. Next reveals the next layer. */
@@ -66,7 +66,7 @@ export function Arrow() {
 function BookCta({ note, first = false, layer }: { note: string; first?: boolean; layer?: number }) {
   return (
     <div className="px-actions px-res-cta" data-layer={layer}>
-      {first ? <p className="px-meta px-res-expand">FACT (Friction Audit Context Telemetry)</p> : null}
+      {first ? <p className="px-meta px-res-expand">FACT (Friction Assessment Context Telemetry)</p> : null}
       <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book a remote mini FACT review <Arrow /></a>
       <p className="px-meta">{note}</p>
     </div>
@@ -240,7 +240,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <div className="px-prod-bar"><span id="px-how-h">How we scored this</span><button type="button" className="px-close" onClick={() => setHow(false)} aria-label="Close">×</button></div>
             <div className="px-res-how-body">
               <p>Each answer is worth 0, 1, or 2 points. The total is {score.raw} of {RAW_MAX}, which reads {PROFILE_WORD[score.profile]} ({band.from} to {band.to}). The bands are 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, and 23 to 30 Compounding.</p>
-              <p>The lowest-scoring answer names the stage where work stalls. {score.allPressures.length ? `${score.allPressures.length} of the answers point to a stage worth a look.` : "None of the answers pointed to one stage."} PROOF doesn't name a department. Finding where work stalls inside the business is Friction Audit work.</p>
+              <p>The lowest-scoring answer names the stage where work stalls. {score.allPressures.length ? `${score.allPressures.length} of the answers point to a stage worth a look.` : "None of the answers pointed to one stage."} PROOF doesn't name a department. Finding where work stalls inside the business is the FACT Process.</p>
             </div>
           </div>
         </div>
