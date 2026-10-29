@@ -63,13 +63,31 @@ export function Arrow() {
   );
 }
 
-function BookCta({ note, first = false, layer }: { note: string; first?: boolean; layer?: number }) {
+
+export const REMOTE_FACT_URL = 'https://buy.stripe.com/8x29ASfUzdMW0Px7JUc3m08';
+export const ONSITE_FACT_URL = 'https://calendar.app.google/Xu3RZNM4nEuATHee7';
+
+/** Result CTAs in order: BACK first, then Remote FACT, On-Site FACT and the PROOF Review. Value line before any price. */
+function NextCtas({ code, offer, layer }: { code?: string | null; offer: ReturnType<typeof useKeystonesOffer>; layer?: number }) {
   return (
-    <div className="px-actions px-res-cta" data-layer={layer}>
-      {first ? <p className="px-meta px-res-expand">FACT (Friction Assessment Context Telemetry)</p> : null}
-      <a className="px-btn px-btn-light" href={REVIEW_URL} target="_blank" rel="noopener">Book the PROOF Review Call <Arrow /></a>
-      <p className="px-meta">{note}</p>
-    </div>
+    <ol className="px-next-ctas" data-layer={layer} aria-label="Next steps">
+      <li className="is-first">
+        <a className="px-btn px-btn-light" href={checkoutHref(code)}>Get BACK (Business Aligned Context Keystones) <Arrow /></a>
+        <p className="px-meta">The context written down once, built from these 15 answers. <KeystonesPrice offer={offer} /></p>
+      </li>
+      <li>
+        <a className="px-next-link" href={REMOTE_FACT_URL} target="_blank" rel="noopener">Remote FACT (Friction Assessment Context Telemetry) <Arrow /></a>
+        <p className="px-meta">Real handoffs from current work, read remotely. $1,750.</p>
+      </li>
+      <li>
+        <a className="px-next-link" href={ONSITE_FACT_URL} target="_blank" rel="noopener">On-Site FACT <Arrow /></a>
+        <p className="px-meta">On site, ending with the FACT report on where delivery stalls. Call first.</p>
+      </li>
+      <li>
+        <a className="px-next-link" href={REVIEW_URL} target="_blank" rel="noopener">PROOF Review with Erik <Arrow /></a>
+        <p className="px-meta">A 45-minute call about this PROOF result.</p>
+      </li>
+    </ol>
   );
 }
 
@@ -141,7 +159,10 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'}</p>
               <p className="px-res-sub">{PATTERN_LINE[score.profile]}</p>
             </div>
-            <BookCta first note="A 45-minute call with Erik about this PROOF result." />
+            <div className="px-actions px-res-cta">
+              <a className="px-btn px-btn-light" href={checkoutHref(code)}>Get BACK (Business Aligned Context Keystones) <Arrow /></a>
+              <p className="px-meta">Built from these 15 answers. <KeystonesPrice offer={offer} /> <a href={REVIEW_URL} target="_blank" rel="noopener">Or book a PROOF Review with Erik.</a></p>
+            </div>
           </div>
         ) : null}
 
@@ -204,12 +225,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <div className="px-res-box px-res-next" data-layer-box="">
               <Ladder split />
             </div>
-            <BookCta note="A 45-minute call with Erik about this PROOF result. The bridge into FACT." layer={2} />
-
-            <p className="px-stat" data-layer={2}>
-              <b>At 100% busy, the queue never&nbsp;clears.</b>
-              <a href={FRICTION_MODEL_URL}>Queueing math (Kingman)</a>
-            </p>
+            <NextCtas code={code} offer={offer} layer={2} />
           </div>
         ) : null}
       </div>
