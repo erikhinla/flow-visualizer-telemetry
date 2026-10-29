@@ -21,7 +21,7 @@ export function KeystonesPrice({ offer }: { offer: KeystonesOffer | null }) {
   if (!offer.intro) return <span className="ks-price"><b>${offer.listPrice}</b>, one time.</span>;
   return (
     <span className="ks-price">
-      Intro price <s>${offer.listPrice}</s> <b>${offer.price}</b>, one time. For the first {offer.limit} buyers. ${offer.listPrice} after. {offer.left} of {offer.limit} left.
+      Intro price <s>${offer.listPrice}</s> <b>${offer.price}</b>, one time. For the first {offer.limit} buyers. ${offer.listPrice} after.
     </span>
   );
 }

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, isAudienceId, type AudienceId } from '../lib/audiences';
 import { QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
-import { LADDER, LADDER_FULL, Ladder, Result } from './ProofResult';
+import { LADDER, Ladder, Result } from './ProofResult';
 import { encodeProof } from '../lib/proof-code';
 import { RAW_MAX, liveMath } from '../lib/math';
 import type { Choice } from '../lib/types';
@@ -311,7 +311,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-foot-steps" aria-hidden="true">
             {LADDER.map(([name], index) => (
               <span key={name} className={index === 0 ? 'is-here' : index >= 4 ? 'is-bbai' : undefined}>
-                {LADDER_FULL[name] ?? name}
+                {name}
               </span>
             ))}
           </span>

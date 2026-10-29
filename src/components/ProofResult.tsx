@@ -17,7 +17,7 @@ export const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['PROOF', '15 answers. One pattern. The result shows on screen.'],
   ['Context Keystones', 'The BACK (Business Aligned Context Keystones) offer. Built from the 15 answers and a short intake. Downloads right after the intake.'],
   ['Remote FACT', 'Reads real handoffs from current work, remotely. $1,750. Call first.'],
-  ['FACT', 'On site. Ends with the FACT report (Friction Assessment Context Telemetry): where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
+  ['On-Site FACT', 'On site. Ends with the FACT report: where delivery stalls, what it costs, and what to change first. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
 ]
 
 /** FACT spelled out where it first shows on a screen. */
@@ -68,15 +68,15 @@ export const REMOTE_FACT_URL = 'https://buy.stripe.com/8x29ASfUzdMW0Px7JUc3m08';
 export const ONSITE_FACT_URL = 'https://calendar.app.google/Xu3RZNM4nEuATHee7';
 
 /** Result CTAs in order: BACK first, then Remote FACT, On-Site FACT and the PROOF Review. Value line before any price. */
-function NextCtas({ code, offer, layer }: { code?: string | null; offer: ReturnType<typeof useKeystonesOffer>; layer?: number }) {
+function NextCtas({ code, offer, layer, phone }: { code?: string | null; offer: ReturnType<typeof useKeystonesOffer>; layer?: number; phone?: boolean }) {
   return (
     <ol className="px-next-ctas" data-layer={layer} aria-label="Next steps">
       <li className="is-first">
-        <a className="px-btn px-btn-light" href={checkoutHref(code)}>Get BACK (Business Aligned Context Keystones) <Arrow /></a>
+        <a className="px-btn px-btn-light" href={checkoutHref(code)}>{phone ? "Get BACK (Business Aligned Context Keystones)" : "Get BACK"} <Arrow /></a>
         <p className="px-meta">The context written down once, built from these 15 answers. <KeystonesPrice offer={offer} /></p>
       </li>
       <li>
-        <a className="px-next-link" href={REMOTE_FACT_URL} target="_blank" rel="noopener">Remote FACT (Friction Assessment Context Telemetry) <Arrow /></a>
+        <a className="px-next-link" href={REMOTE_FACT_URL} target="_blank" rel="noopener">{phone ? "Remote FACT (Friction Assessment Context Telemetry)" : "Remote FACT"} <Arrow /></a>
         <p className="px-meta">Real handoffs from current work, read remotely. $1,750.</p>
       </li>
       <li>
@@ -225,7 +225,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <div className="px-res-box px-res-next" data-layer-box="">
               <Ladder split />
             </div>
-            <NextCtas code={code} offer={offer} layer={2} />
+            <NextCtas code={code} offer={offer} layer={2} phone={phone} />
           </div>
         ) : null}
       </div>
