@@ -26,7 +26,7 @@ const LETTERS = [
 const STORY = [
   {
     no: '01',
-    title: 'Context Rot',
+    title: 'Context Erosion',
     line: "AI tools increase output, but context doesn't keep up, so humans fill the gap.",
     body: 'More drafts, faster, in more directions. The folders, owners and approvals stayed the same. Context starts getting lost between tools and people.',
   },

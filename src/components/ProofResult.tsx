@@ -202,7 +202,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               </div>
               <div className="px-prod-body">
                 <h2 id="px-prod-h" className="px-prod-name" tabIndex={-1}>Context Keystones</h2>
-                <p className="px-prod-fix" data-layer={0}>The agency&apos;s own tools keep the context, so nobody rebuilds it by hand. Bridge the Context Rot and get back to the work.</p>
+                <p className="px-prod-fix" data-layer={0}>The agency&apos;s own tools keep the context, so nobody rebuilds it by hand. Bridge the Context Erosion and get back to the work.</p>
                 <ul className="px-prod-parts" aria-label="What's inside" data-layer={1}>
                   <li><span>01 · Folders</span>A structure where the brief, decisions and status live with the work.</li>
                   <li><span>02 · Markdown files</span>The context written down once, readable by people and agents.</li>
