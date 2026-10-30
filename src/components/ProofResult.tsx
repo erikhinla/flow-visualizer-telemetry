@@ -158,6 +158,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               <p className="px-res-value px-res-big">{stage ?? 'No single stage'}</p>
               <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'}</p>
               <p className="px-res-sub">{PATTERN_LINE[score.profile]}</p>
+              <p className="px-res-sub"><b>People aren&apos;t the problem. The process is.</b> This score shows where context can&apos;t keep up with AI output.</p>
             </div>
             <div className="px-actions px-res-cta">
               <a className="px-btn px-btn-light" href={checkoutHref(code)}>Get BACK (Business Aligned Context Keystones) <Arrow /></a>
