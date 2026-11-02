@@ -221,23 +221,19 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <section className="px-intro" aria-labelledby="px-title">
             <nav className="tbx-anchors" data-page="proof" />
             <div className="px-intro-copy">
-              <p className="px-kicker">
-                <b>01</b> // The condition
-              </p>
               <h1 id="px-title" className="px-display px-display--long">
-                <span>AI tools work.</span>
-                <span className="px-fog">That's not the problem.</span>
+                <span>AI TOOLS MAKE MORE WORK POSSIBLE</span>
+                <span className="px-fog">for people coordinating context their system can't</span>
                 {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
               </h1>
-              <p className="px-lede px-lede--intro">{audience.lede[1]}</p>
+              <p className="px-lede px-lede--intro"><span>Align the system for AI-velocity.</span> <span>Free people up to do work meant for them.</span></p>
               <div className="px-actions px-carnival-wrap">
                 <button type="button" className="px-carnival" onClick={begin}>
                   <span className="px-carnival-ball" aria-hidden="true" style={{ backgroundImage: `url(${BASE}/brand/proof-sphere.webp)` }} />
                   <span className="px-carnival-label">
-                    {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'Start with PROOF'}
+                    {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'SEE PROOF'}
                   </span>
                 </button>
-                <p className="px-meta">15 answers · no email · <button type="button" className="px-nine" onClick={() => (window as unknown as { tbxAnchors?: { open: (k: string) => void } }).tbxAnchors?.open('05')}><i aria-hidden="true" />3 of 9 formulas</button></p>
               </div>
             </div>
           </section>

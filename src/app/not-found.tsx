@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className="lede">PROOF is 15 answers. Start there, or open the team model.</p>
       <div className="actions">
         <Link className="button" href="/">
-          Start PROOF
+          SEE PROOF
         </Link>
         <Link className="button ghost" href="/visualizer">
           Process model
