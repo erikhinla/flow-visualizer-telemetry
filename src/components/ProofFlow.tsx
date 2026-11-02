@@ -222,8 +222,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             <nav className="tbx-anchors" data-page="proof" />
             <div className="px-intro-copy">
               <h1 id="px-title" className="px-display px-display--long">
-                <span>AI TOOLS MAKE MORE WORK POSSIBLE</span>
-                <span className="px-fog">for people coordinating context their system can't</span>
+                <span>AI TOOLS MADE MORE WORK, NOT LESS</span>
                 {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
               </h1>
               <p className="px-lede px-lede--intro"><span>Align the system for AI-velocity.</span> <span>Free people up to do work meant for them.</span></p>
