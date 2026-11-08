@@ -164,25 +164,37 @@ def sender_path(root):
     return os.path.join(base, "sender-%s.txt" % ident)
 
 
-def sender_allowed(root):
+def sender_allowed(root, claim=False):
+    """A preview does not claim the sender. A real send claims it with an exclusive create."""
     path = sender_path(root)
     me = machine_id()
     if not os.path.exists(path):
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(me + "\n")
+        if not claim:
+            return True, me
+        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
         try:
-            os.chmod(path, 0o600)
-        except OSError:
-            pass
+            os.write(fd, (me + "\n").encode("utf-8"))
+        finally:
+            os.close(fd)
         return True, me
     with open(path, encoding="utf-8") as f:
         designated = f.read().strip()
     return designated == me, designated or me
 
 
+def host_of(value):
+    from urllib.parse import urlparse
+    raw = (value or "").strip()
+    if "://" in raw:
+        return (urlparse(raw).hostname or "").lower()
+    host = raw.split("/")[0]
+    if host.startswith("[") and "]" in host:
+        return host[1:host.index("]")].lower()
+    return host.split(":")[0].lower()
+
+
 def local_target(value):
-    target = (value or "").lower()
-    return any(host in target for host in ("localhost", "127.0.0.1", "::1"))
+    return host_of(value) in {"localhost", "127.0.0.1", "::1"}
 
 
 def refuse_live_provider(target):
@@ -254,7 +266,7 @@ def notify(root, preview=False, force=False):
         return ["Change notices are off. Set them up in the menu (9) to send them on their own."]
     if (s.get("email") or {}).get("password"):
         print("WARNING: a mail password is in the settings file. Move it to KEYSTONES_MAIL_PASSWORD and keep the settings file out of shared Drive.")
-    allowed, who = sender_allowed(root)
+    allowed, who = sender_allowed(root, claim=not preview)
     if not allowed:
         return ["This computer is not the designated sender (%s). Nothing was sent." % who]
     rmap = routing()
@@ -333,7 +345,7 @@ def after_log(root):
 def send_test(root=None):
     s = load_settings()
     if root:
-        allowed, who = sender_allowed(root)
+        allowed, who = sender_allowed(root, claim=True)
         if not allowed:
             return ["This computer is not the designated sender (%s). Test notice was not sent." % who]
     tg = targets(s)

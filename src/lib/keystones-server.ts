@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { CURRENT_FULL, CURRENT_INTRO, LEGACY_FULL, LEGACY_INTRO, SUBTOTAL } from './keystones-catalog';
-import { DATA_DIR, ERIK, findEntry, sendMail } from './fulfil';
+import { DATA_DIR, ERIK, latestEntry, sendMail, withDataLock } from './fulfil';
 import { templated } from './mail-templates';
 
 /** Server-only rules for paid Context Keystones builds. */
@@ -35,50 +35,46 @@ const BUILDS = path.join(DATA_DIR, 'keystones-builds.json');
 export const SESSION_RE = /^cs_(live|test)_[A-Za-z0-9]{10,200}$/;
 export const TOKEN_RE = /^[A-Za-z0-9_-]{32}$/;
 
-/** Paid session check. The entry is only written by the signed Stripe webhook after it saw payment_status paid, this payment link and the list price. */
+/** Paid session check. The latest ledger row for this checkout must be an unlocked Keystones order. */
 export async function paidSession(sessionId: string): Promise<{ email: string | null; code: string | null } | null> {
   if (!SESSION_RE.test(sessionId)) return null;
-  const entry = await findEntry(`cs:${sessionId}`);
+  const entry = await latestEntry(`cs:${sessionId}`);
   if (!entry || entry.kind !== 'keystones' || entry.status !== 'paid') return null;
   const code = /(?:^|\| )code=(p1_[acs]_[1-4]+)/.exec(entry.detail ?? '')?.[1] ?? null;
   return { email: entry.email, code };
 }
 
-// ---- build counter (one small JSON file, writes serialized) ----
-let chain: Promise<unknown> = Promise.resolve();
+// ---- build counter (one small JSON file, writes under the data lock) ----
 async function readBuilds(): Promise<Record<string, number>> {
   try { return JSON.parse(await fs.readFile(BUILDS, 'utf8')) as Record<string, number>; } catch { return {}; }
+}
+async function writeBuilds(b: Record<string, number>): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  const tmp = `${BUILDS}.${process.pid}.${Date.now()}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(b));
+  await fs.rename(tmp, BUILDS);
 }
 export async function buildsUsed(sessionId: string): Promise<number> {
   return (await readBuilds())[sessionId] ?? 0;
 }
 /** Reserve one build. Returns the build number (1-based) or null when all are used. */
 export function reserveBuild(sessionId: string): Promise<number | null> {
-  const run = chain.then(async () => {
+  return withDataLock(async () => {
     const b = await readBuilds();
     const used = b[sessionId] ?? 0;
     if (used >= MAX_BUILDS) return null;
     b[sessionId] = used + 1;
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    const tmp = `${BUILDS}.${process.pid}.tmp`;
-    await fs.writeFile(tmp, JSON.stringify(b));
-    await fs.rename(tmp, BUILDS);
+    await writeBuilds(b);
     return used + 1;
   });
-  chain = run.catch(() => undefined);
-  return run;
 }
 /** Give a build back when the generator failed, so a server error doesn't cost the buyer a build. */
 export function releaseBuild(sessionId: string): Promise<void> {
-  const run = chain.then(async () => {
+  return withDataLock(async () => {
     const b = await readBuilds();
     if (b[sessionId]) b[sessionId] -= 1;
-    const tmp = `${BUILDS}.${process.pid}.tmp`;
-    await fs.writeFile(tmp, JSON.stringify(b));
-    await fs.rename(tmp, BUILDS);
+    await writeBuilds(b);
   });
-  chain = run.catch(() => undefined);
-  return run;
 }
 
 // ---- per-IP rate limit (in memory, per container) ----
@@ -132,23 +128,71 @@ export interface Delivery {
   name: string;
   build: number;
   at: number;
-  emailStatus: 'sent' | 'queued' | 'failed' | 'none';
+  emailStatus: 'building' | 'sent' | 'queued' | 'failed' | 'none';
 }
 const DELIVERIES = path.join(DATA_DIR, 'keystones-deliveries.json');
 async function readDeliveries(): Promise<Delivery[]> {
   try { return JSON.parse(await fs.readFile(DELIVERIES, 'utf8')) as Delivery[]; } catch { return []; }
 }
+async function writeDeliveries(all: Delivery[]): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  const tmp = `${DELIVERIES}.${process.pid}.${Date.now()}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(all));
+  await fs.rename(tmp, DELIVERIES);
+}
 export function rememberDelivery(delivery: Delivery): Promise<void> {
-  const run = chain.then(async () => {
-    const all = (await readDeliveries()).filter((d) => !(d.session === delivery.session && d.hash === delivery.hash));
-    all.push(delivery);
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    const tmp = `${DELIVERIES}.${process.pid}.tmp`;
-    await fs.writeFile(tmp, JSON.stringify(all));
-    await fs.rename(tmp, DELIVERIES);
+  return withDataLock(async () => {
+    const all = (await readDeliveries()).filter((d) => !(d.session === delivery.session && d.hash === delivery.hash && d.emailStatus === delivery.emailStatus && d.build === delivery.build));
+    const withoutSame = all.filter((d) => !(d.session === delivery.session && d.hash === delivery.hash));
+    withoutSame.push(delivery);
+    await writeDeliveries(withoutSame);
   });
-  chain = run.catch(() => undefined);
-  return run;
+}
+/**
+ * Reserve a build unless this intake already has a zip, or a build started in the last two minutes.
+ * A stale "building" row is given back so a crash does not spend the purchase.
+ */
+export function claimBuild(sessionId: string, hash: string): Promise<{ prior: Delivery | null; build: number | null; busy: boolean }> {
+  return withDataLock(async () => {
+    const all = await readDeliveries();
+    for (let i = all.length - 1; i >= 0; i -= 1) {
+      const d = all[i];
+      if (d.session === sessionId && d.hash === hash && d.token && await readZip(d.token)) return { prior: d, build: d.build, busy: false };
+    }
+    const building = all.filter((d) => d.session === sessionId && d.hash === hash && d.emailStatus === 'building');
+    const fresh = building.find((d) => Date.now() - d.at < 120_000);
+    if (fresh) return { prior: null, build: fresh.build, busy: true };
+    let next = all.filter((d) => !(d.session === sessionId && d.hash === hash && d.emailStatus === 'building'));
+    if (building.length) {
+      const b = await readBuilds();
+      const give = Math.min(b[sessionId] ?? 0, building.length);
+      if (b[sessionId]) b[sessionId] = Math.max(0, b[sessionId] - give);
+      await writeBuilds(b);
+      await writeDeliveries(next);
+    }
+    const b = await readBuilds();
+    const used = b[sessionId] ?? 0;
+    if (used >= MAX_BUILDS) return { prior: null, build: null, busy: false };
+    b[sessionId] = used + 1;
+    await writeBuilds(b);
+    const claimed: Delivery = { session: sessionId, hash, token: '', name: '', build: used + 1, at: Date.now(), emailStatus: 'building' };
+    next = (await readDeliveries()).filter((d) => !(d.session === sessionId && d.hash === hash));
+    next.push(claimed);
+    await writeDeliveries(next);
+    return { prior: null, build: claimed.build, busy: false };
+  });
+}
+/** Give back a build that did not finish, including after a crash left a building row. */
+export function abandonBuild(sessionId: string, hash: string): Promise<void> {
+  return withDataLock(async () => {
+    const all = await readDeliveries();
+    const building = all.filter((d) => d.session === sessionId && d.hash === hash && d.emailStatus === 'building');
+    if (!building.length) return;
+    const b = await readBuilds();
+    if (b[sessionId]) b[sessionId] = Math.max(0, b[sessionId] - building.length);
+    await writeBuilds(b);
+    await writeDeliveries(all.filter((d) => !(d.session === sessionId && d.hash === hash && d.emailStatus === 'building')));
+  });
 }
 /** Latest stored pack for this checkout and intake. Expired zips are ignored so a rebuild can replace them. */
 export async function findDelivery(sessionId: string, hash?: string): Promise<Delivery | null> {

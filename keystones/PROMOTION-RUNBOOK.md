@@ -22,7 +22,7 @@ The webhook accepts that completion only when all of these are true:
 - currency is `usd`, quantity is 1
 - `amount_subtotal` is 7400 or 34700 (or a legacy 4900 or 34900)
 - `amount_total` is 0 and `total_details.amount_discount` equals that subtotal
-- the price id is the catalog price for that payment link, and the product is `prod_VUt4BnmzMP8cKV` when line items are present
+- the retrieved session, not the webhook body, has one line: price id for that payment link, product `prod_VUt4BnmzMP8cKV`, USD, quantity 1, and pre-discount subtotal equal to the catalog amount
 
 A zero-dollar price, a setup-mode session, an unpaid session, or a mismatched product stays locked. `payment_status: paid` with a matching subtotal still unlocks a normal charge, including a partial discount, because Stripe has marked the funds paid. A `total` of 0 does not count toward the 50 real purchases.
 

@@ -123,10 +123,11 @@ def export_identity(ids):
 
 def prior_revision(log_text, identity):
     for line in log_text.splitlines():
-        if identity and identity in line and line.strip().startswith("|"):
-            cells = [c.strip() for c in line.strip().strip("|").split("|")]
-            if cells and cells[0].isdigit():
-                return cells[0]
+        if not line.strip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) >= 2 and cells[0].isdigit() and cells[1] == identity:
+            return cells[0]
     return None
 
 
@@ -172,9 +173,15 @@ def main(argv=None):
         write(os.path.join(folder, "changes.txt"), "UPDATE: revision %s\nIDENTITY: %s\nSOURCE RECORDS: _context/project.md, _context/decisions.md, _context/change-log.md\nEXPORT: not sent. Not marked announced.\n\n%s" % (revision, identity, txt))
     if a.format in ("md", "both"):
         write(os.path.join(folder, "changes.md"), "# Change update\n\nRevision %s. Identity `%s`.\n\nNot sent. Not marked announced.\n\n%s" % (revision, identity, md))
+    flags = []
+    try:
+        import rights_check
+        _loaded, flags = rights_check.check(root)
+    except Exception as exc:
+        flags = [("SCHEMA", "rights-and-licenses.md", "unresolved: %s" % exc)]
     nxt = next((r for r in rounds if r.get("round")), None)
     if nxt:
-        agenda_txt, agenda_md = agenda_text(nxt, [c for c in changes if c.get("type", "").upper() != "ROUND"], decisions, [])
+        agenda_txt, agenda_md = agenda_text(nxt, [c for c in changes if c.get("type", "").upper() != "ROUND"], decisions, flags)
         if a.format in ("text", "both"):
             write(os.path.join(folder, "agenda.txt"), agenda_txt)
         if a.format in ("md", "both"):

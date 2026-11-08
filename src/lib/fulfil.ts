@@ -25,27 +25,67 @@ export interface LogEntry { key: string; kind: string; email: string | null; sta
 async function readLog(): Promise<LogEntry[]> {
   try { return JSON.parse(await fs.readFile(LOG, 'utf8')) as LogEntry[]; } catch { return []; }
 }
-let chain: Promise<unknown> = Promise.resolve();
+const LOCK = () => path.join(DATA_DIR, 'data.lock');
+let lockDepth = 0;
+let lockQueue: Promise<void> = Promise.resolve();
+
+async function acquireFileLock(): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  const start = Date.now();
+  for (;;) {
+    try {
+      const fh = await fs.open(LOCK(), 'wx');
+      await fh.close();
+      return;
+    } catch (err) {
+      const code = (err as NodeJS.ErrnoException).code;
+      if (code !== 'EEXIST') throw err;
+      try {
+        const st = await fs.stat(LOCK());
+        if (Date.now() - st.mtimeMs > 30_000) await fs.rm(LOCK(), { force: true });
+      } catch { /* another waiter removed it */ }
+      if (Date.now() - start > 20_000) throw new Error('data lock timed out');
+      await new Promise((r) => setTimeout(r, 15));
+    }
+  }
+}
+
+/** One lock for the ledger, build counter, and stored downloads. It is a file, so a second process waits. Nested calls in the same hold do not take it again. */
+export function withDataLock<T>(fn: () => Promise<T>): Promise<T> {
+  if (lockDepth > 0) return fn();
+  const run = lockQueue.then(async () => {
+    await acquireFileLock();
+    lockDepth = 1;
+    try {
+      return await fn();
+    } finally {
+      lockDepth = 0;
+      await fs.rm(LOCK(), { force: true });
+    }
+  });
+  lockQueue = run.then(() => undefined, () => undefined);
+  return run;
+}
+
 export async function findEntry(key: string): Promise<LogEntry | undefined> {
   return (await readLog()).find((e) => e.key === key);
 }
-/** Last ledger row for a key. Mail retries append a new row; entitlement stays the first row. */
+/** Last ledger row for a key. A later row can replace a mismatch. Mail retries append. */
 export async function latestEntry(key: string): Promise<LogEntry | undefined> {
   const log = await readLog();
   for (let i = log.length - 1; i >= 0; i -= 1) if (log[i].key === key) return log[i];
   return undefined;
 }
+async function appendEntry(entry: LogEntry): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  const log = await readLog();
+  log.push(entry);
+  const tmp = `${LOG}.${process.pid}.${Date.now()}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(log, null, 1));
+  await fs.rename(tmp, LOG);
+}
 export function addEntry(entry: LogEntry): Promise<void> {
-  const run = chain.then(async () => {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    const log = await readLog();
-    log.push(entry);
-    const tmp = `${LOG}.${process.pid}.tmp`;
-    await fs.writeFile(tmp, JSON.stringify(log, null, 1));
-    await fs.rename(tmp, LOG);
-  });
-  chain = run.catch(() => undefined);
-  return run;
+  return withDataLock(() => appendEntry(entry));
 }
 
 export interface Mail {

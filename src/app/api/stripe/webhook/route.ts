@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { REVIEW_URL } from '../../../../lib/links';
 import { decodeProof } from '../../../../lib/proof-code';
 import { buildReport } from '../../../../lib/report';
-import { ERIK, PUBLIC_BASE, addEntry, findEntry, latestEntry, sendMail, verifyStripe, type Mail } from '../../../../lib/fulfil';
+import { ERIK, PUBLIC_BASE, addEntry, findEntry, latestEntry, sendMail, verifyStripe, withDataLock, type Mail } from '../../../../lib/fulfil';
 import { templated, type TemplateKey } from '../../../../lib/mail-templates';
 import { KEYSTONES_PRODUCT, assessKeystonesSession } from '../../../../lib/keystones-catalog';
+import { checkoutRetrieveConfigured, retrieveCheckoutSession } from '../../../../lib/keystones-retrieve';
 import { FULL_LINK, INTRO_LINK, CURRENT_FULL_LINK, CURRENT_INTRO_LINK, closeIntroIfCapped } from '../../../../lib/keystones-server';
 
 export const runtime = 'nodejs';
@@ -56,21 +57,6 @@ function mailsFor(kind: string, session: Obj, email: string, idem: string): { ma
   ] };
 }
 
-type FetchResponse = { ok: boolean; status: number; json: () => Promise<Obj> };
-let checkoutRetriever: ((id: string) => Promise<Obj>) | null = null;
-/** Tests supply a retrieved Checkout Session. Production uses STRIPE_CHECKOUT_READ_KEY or STRIPE_SECRET_KEY when one is set. */
-export function setCheckoutRetriever(fn: ((id: string) => Promise<Obj>) | null) { checkoutRetriever = fn; }
-
-async function retrieveCheckoutSession(id: string): Promise<Obj> {
-  if (checkoutRetriever) return checkoutRetriever(id);
-  const key = process.env.STRIPE_CHECKOUT_READ_KEY || process.env.STRIPE_SECRET_KEY || '';
-  if (!key) return {};
-  const url = `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(id)}?expand[]=line_items.data.price.product`;
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${key}` } }) as unknown as FetchResponse;
-  if (!res.ok) throw new Error(`stripe session retrieve ${res.status}`);
-  return res.json();
-}
-
 /** Intake email is its own ledger row. A failed send stays retryable without a second entitlement. */
 async function ensureIntakeMail(sessionKey: string, email: string | null, sessionId: string): Promise<{ mailed: boolean; retry: boolean }> {
   if (!email) return { mailed: false, retry: false };
@@ -112,34 +98,39 @@ export async function POST(req: Request) {
       const key = `cs:${obj.id}`;
       const email = obj.customer_details?.email || obj.customer_email;
       if (kind === 'keystones') {
-        const existing = await findEntry(key);
-        if (existing) {
-          if (existing.status !== 'paid') return NextResponse.json({ ok: true, duplicate: true, unlocked: false });
-          const mail = await ensureIntakeMail(key, existing.email, String(obj.id));
-          return NextResponse.json({ ok: !mail.retry, duplicate: true, kind, unlocked: true, mailed: mail.mailed }, { status: mail.retry ? 500 : 200 });
+        if (!checkoutRetrieveConfigured()) {
+          return NextResponse.json({ error: 'checkout retrieve is not configured' }, { status: 500 });
         }
-        const readKey = process.env.STRIPE_CHECKOUT_READ_KEY || process.env.STRIPE_SECRET_KEY || '';
-        let full = obj;
-        if (!obj.line_items?.data && (checkoutRetriever || readKey)) {
-          const retrieved = await retrieveCheckoutSession(String(obj.id));
-          full = { ...obj, ...retrieved, line_items: retrieved.line_items ?? obj.line_items };
+        const retrieved = await retrieveCheckoutSession(String(obj.id)) as Obj;
+        if (String(retrieved.id ?? '') !== String(obj.id ?? '')) {
+          return NextResponse.json({ error: 'retrieved session did not match the event' }, { status: 500 });
         }
-        const assessed = assessKeystonesSession(full, { requireLines: Boolean(checkoutRetriever || readKey) && !obj.line_items?.data });
-        const code = /^p1_[acs]_[1-4]+$/.test(String(obj.client_reference_id ?? '')) ? String(obj.client_reference_id) : '';
-        if (!assessed.ok) {
-          if (assessed.reason === 'unpaid' || assessed.reason === 'incomplete') return NextResponse.json({ ok: true, skipped: assessed.reason });
-          await addEntry({ key, kind, email: email ? String(email) : null, status: 'price-mismatch', at: new Date().toISOString(), detail: [`code=${code || 'none'}`, `sub=${obj.amount_subtotal}`, `total=${obj.amount_total}`, `link=${obj.payment_link}`, `reason=${assessed.reason}`].join(' | ') });
-          return NextResponse.json({ ok: true, kind, unlocked: false, mailed: false, reason: assessed.reason });
-        }
-        // This entry unlocks the build. The intake email is recorded separately so a failed send can be retried.
-        await addEntry({
-          key, kind, email: email ? String(email) : null, status: 'paid', at: new Date().toISOString(),
-          detail: [`code=${code || 'none'}`, `sub=${assessed.subtotal}`, `total=${assessed.total}`, `link=${obj.payment_link}`, `price=${assessed.offer.price}`, `product=${KEYSTONES_PRODUCT}`, `qty=${assessed.quantity}`, `lines=${assessed.lines}`, `complimentary=${assessed.complimentary ? 'yes' : 'no'}`].join(' | '),
+        const assessed = assessKeystonesSession(retrieved);
+        const code = /^p1_[acs]_[1-4]+$/.test(String(retrieved.client_reference_id ?? obj.client_reference_id ?? '')) ? String(retrieved.client_reference_id ?? obj.client_reference_id) : '';
+        const buyer = retrieved.customer_details?.email || retrieved.customer_email || email;
+        return withDataLock(async () => {
+          const existing = await latestEntry(key);
+          if (existing?.status === 'paid') {
+            const mail = await ensureIntakeMail(key, existing.email, String(obj.id));
+            return NextResponse.json({ ok: !mail.retry, duplicate: true, kind, unlocked: true, mailed: mail.mailed }, { status: mail.retry ? 500 : 200 });
+          }
+          if (!assessed.ok) {
+            if (assessed.reason === 'unpaid' || assessed.reason === 'incomplete') return NextResponse.json({ ok: true, skipped: assessed.reason });
+            if (assessed.reason === 'lines missing' || assessed.reason === 'not retrieved') {
+              return NextResponse.json({ error: assessed.reason }, { status: 500 });
+            }
+            await addEntry({ key, kind, email: buyer ? String(buyer) : null, status: 'price-mismatch', at: new Date().toISOString(), detail: [`code=${code || 'none'}`, `sub=${retrieved.amount_subtotal}`, `total=${retrieved.amount_total}`, `link=${retrieved.payment_link}`, `reason=${assessed.reason}`].join(' | ') });
+            return NextResponse.json({ ok: true, kind, unlocked: false, mailed: false, reason: assessed.reason });
+          }
+          await addEntry({
+            key, kind, email: buyer ? String(buyer) : null, status: 'paid', at: new Date().toISOString(),
+            detail: [`code=${code || 'none'}`, `sub=${assessed.subtotal}`, `total=${assessed.total}`, `link=${retrieved.payment_link}`, `price=${assessed.offer.price}`, `product=${KEYSTONES_PRODUCT}`, `qty=${assessed.quantity}`, `lines=${assessed.lines}`, `complimentary=${assessed.complimentary ? 'yes' : 'no'}`].join(' | '),
+          });
+          const mail = await ensureIntakeMail(key, buyer ? String(buyer) : null, String(obj.id));
+          let cap = 'open';
+          try { cap = await closeIntroIfCapped(); } catch (e) { console.error('[keystones-cap]', e); }
+          return NextResponse.json({ ok: !mail.retry, kind, unlocked: true, mailed: mail.mailed, cap }, { status: mail.retry ? 500 : 200 });
         });
-        const mail = await ensureIntakeMail(key, email ? String(email) : null, String(obj.id));
-        let cap = 'open';
-        try { cap = await closeIntroIfCapped(); } catch (e) { console.error('[keystones-cap]', e); }
-        return NextResponse.json({ ok: !mail.retry, kind, unlocked: true, mailed: mail.mailed, cap }, { status: mail.retry ? 500 : 200 });
       }
       if (await findEntry(key)) return NextResponse.json({ ok: true, duplicate: true });
       if (!email) {

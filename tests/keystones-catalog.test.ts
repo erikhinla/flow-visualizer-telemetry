@@ -106,13 +106,18 @@ test('unpaid, incomplete, unrelated, and tampered sessions stay locked', () => {
   }
 });
 
-test('without line items a known link and pre-discount subtotal can unlock, and a required retrieve cannot', () => {
-  const event = paid(CURRENT_INTRO);
-  delete (event as { line_items?: unknown }).line_items;
-  const mapped = assessKeystonesSession(event);
-  assert.equal(mapped.ok, true);
-  if (mapped.ok) assert.equal(mapped.lines, 'link-mapped');
-  const required = assessKeystonesSession(event, { requireLines: true });
-  assert.equal(required.ok, false);
-  if (!required.ok) assert.equal(required.reason, 'lines missing');
+test('absent line items, a string price, and a paid zero total do not unlock', () => {
+  const noLines = paid(CURRENT_INTRO);
+  delete (noLines as { line_items?: unknown }).line_items;
+  const missing = assessKeystonesSession(noLines);
+  assert.equal(missing.ok, false);
+  if (!missing.ok) assert.equal(missing.reason, 'lines missing');
+  const barePrice = assessKeystonesSession(paid(CURRENT_INTRO, {
+    line_items: { data: [{ quantity: 1, amount_subtotal: CURRENT_INTRO.unitAmount, currency: 'usd', price: CURRENT_INTRO.price }] },
+  }));
+  assert.equal(barePrice.ok, false);
+  if (!barePrice.ok) assert.equal(barePrice.reason, 'product');
+  const zeroPaid = assessKeystonesSession(paid(CURRENT_INTRO, { amount_total: 0 }));
+  assert.equal(zeroPaid.ok, false);
+  if (!zeroPaid.ok) assert.equal(zeroPaid.reason, 'total');
 });

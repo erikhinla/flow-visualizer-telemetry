@@ -8,7 +8,7 @@ The `context-keystones` repository was not readable with this credential (GitHub
 
 | Item | In this repo | Tested here | Production / OS / provider |
 |---|---|---|---|
-| Current $74 and $347 sessions unlock when currency, quantity, product and pre-discount subtotal match | implemented | node tests | live completion not run |
+| Current $74 and $347 sessions unlock only after an authenticated retrieve shows product, price, USD, quantity 1, and the pre-discount subtotal | implemented | node tests, including a body that claims good lines while the retrieve does not | live completion not run; the server key is required or the webhook returns 500 |
 | Legacy $49 and $349 sessions still unlock | implemented | node tests | historical orders not replayed against production |
 | 100% discount, no PaymentIntent, `no_payment_required`, discount equals the catalog subtotal | implemented | node tests | no live no-cost order; no coupon created |
 | Unpaid, incomplete, wrong link, wrong product, wrong price, quantity other than 1, zero list price | rejected | node tests | not a live attack test |

@@ -98,6 +98,13 @@ class ValuePackTest(unittest.TestCase):
         result = run([os.path.join(self.tmp, "pack", "scripts", "round_agenda.py"), "--project", project])
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("SCHEMA", result.stderr + result.stdout)
+        mand = os.path.join(project, "_context", "mandatories.md")
+        broken = open(mand, encoding="utf-8").read().replace("current value", "wording now")
+        open(mand, "w", encoding="utf-8").write(broken)
+        sync = run([os.path.join(self.tmp, "pack", "scripts", "sync_mandatories.py"), "--project", project])
+        self.assertNotEqual(sync.returncode, 0)
+        self.assertIn("SCHEMA", sync.stdout + sync.stderr)
+        self.assertNotIn("Everything is current", sync.stdout)
 
     def test_archive_conflict_and_approved_safeguard(self):
         self.test_solo_owner_presets_plan_and_proof_carryover()

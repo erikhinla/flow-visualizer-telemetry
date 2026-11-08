@@ -185,9 +185,9 @@ export function KeystonesIntake() {
 
   const carried = useMemo(() => {
     if (!ready) return [];
-    const fromCheckout = session.optionIds.some(Boolean) ? null : decodeProof(code);
+    const fromCheckout = decodeProof(code);
     return QUESTIONS.map((q, i) => {
-      const id = fromCheckout ? fromCheckout.answers.optionIds[i] : session.optionIds[i];
+      const id = fromCheckout?.answers.optionIds[i] || session.optionIds[i];
       const choice = q.choices.find((c) => c.id === id);
       return { q, id, choice };
     });
@@ -224,12 +224,11 @@ export function KeystonesIntake() {
     if (problems[5]) { setError(problems[5]); return; }
     setBusy(true); setError('');
     const proof = { answers: Object.fromEntries(carried.filter((c) => c.id).map((c) => [c.q.id, c.id as string])) };
-    const lead = (n: string) => I.departments.find((d) => d.name === n)?.lead;
     const intake = {
       ...I,
       rounds: I.rounds.map((r, i) => ({ ...r, id: `R${i + 1}` })),
-      record_owner: I.record_owner || lead('Account') || (I.departments.length === 1 ? I.departments[0].lead : ''),
-      rights_owner: I.rights_owner || lead('Business Affairs') || lead('Legal') || (I.departments.length === 1 ? I.departments[0].lead : ''),
+      record_owner: I.record_owner,
+      rights_owner: I.rights_owner,
       handoffs: I.handoffs.map((h) => ({ ...h, items: h.items.map((l) => l.trim()).filter(Boolean) })).filter((h) => h.items.length),
       first_project: I.first_project.client && I.first_project.project ? I.first_project : undefined,
     };

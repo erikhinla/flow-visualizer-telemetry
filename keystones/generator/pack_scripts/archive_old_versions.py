@@ -75,10 +75,11 @@ def main(argv=None):
             continue
         items.sort()
         keep = items[-1]
+        held = [fn for _num, fn in items if fn.lower() in approved]
+        if held:
+            print("SAFEGUARD %s is named in an approved decision. Nothing in that group was moved." % held[0])
+            continue
         for num, fn in items[:-1]:
-            if fn.lower() in approved:
-                print("SAFEGUARD %s is named in an approved decision. It was not moved. Current candidate is %s." % (fn, keep[1]))
-                continue
             src = os.path.join(dirpath, fn)
             rel = os.path.relpath(src, root)
             dest = os.path.join(root, "_archive", rel)

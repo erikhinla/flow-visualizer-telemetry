@@ -66,7 +66,7 @@ export interface AssessOk {
   offer: CatalogOffer;
   quantity: number;
   complimentary: boolean;
-  lines: 'verified' | 'link-mapped';
+  lines: 'verified';
   total: number;
   subtotal: number;
 }
@@ -100,64 +100,52 @@ function lineItems(obj: Obj): Obj[] | null {
 }
 
 /**
- * Decide whether a signed Checkout Session may unlock Context Keystones.
- * A 100% discount is accepted only as a completed payment-mode order for a catalog
- * price whose pre-discount subtotal is fully explained by amount_discount, with no
- * PaymentIntent. Official Checkout docs say a no-cost order is fulfilled from
- * checkout.session.completed and has no PaymentIntent. The payment_status enum text
- * for no_payment_required names setup mode and a billing-cycle anchor, so those are
- * rejected here. A zero list price is not accepted.
+ * Decide whether a Checkout Session retrieved from Stripe may unlock Context Keystones.
+ * The caller must pass the authenticated retrieve, not the webhook body. Line items are
+ * required. A missing list does not unlock.
+ * A charge requires payment_status paid, a PaymentIntent, and a positive total.
+ * A 100% discount requires no_payment_required, no PaymentIntent, a zero total, and
+ * amount_discount equal to the catalog subtotal. Setup mode stays locked.
  */
-export function assessKeystonesSession(obj: Obj, opts: { requireLines?: boolean } = {}): AssessOk | AssessNo {
+export function assessKeystonesSession(obj: Obj): AssessOk | AssessNo {
   if (!obj || typeof obj !== 'object') return { ok: false, reason: 'missing session' };
-  if (obj.status != null && obj.status !== 'complete') return { ok: false, reason: 'incomplete' };
-  if (obj.mode != null && obj.mode !== 'payment') return { ok: false, reason: 'not a payment' };
+  if (obj.status !== 'complete') return { ok: false, reason: 'incomplete' };
+  if (obj.mode !== 'payment') return { ok: false, reason: 'not a payment' };
   const offer = OFFER_BY_LINK[String(obj.payment_link ?? '')];
   if (!offer) return { ok: false, reason: 'other link' };
   if (String(obj.currency ?? '').toLowerCase() !== 'usd') return { ok: false, reason: 'currency' };
 
   const lines = lineItems(obj);
-  let quantity = 1;
-  let linesState: AssessOk['lines'] = 'link-mapped';
-  if (lines) {
-    if (lines.length !== 1) return { ok: false, reason: 'quantity' };
-    const line = lines[0];
-    quantity = Number(line.quantity);
-    if (quantity !== 1) return { ok: false, reason: 'quantity' };
-    if (String(line.currency ?? obj.currency ?? '').toLowerCase() !== 'usd') return { ok: false, reason: 'currency' };
-    if (priceId(line) !== offer.price) return { ok: false, reason: 'price' };
-    const product = productId(line);
-    if (product && product !== KEYSTONES_PRODUCT) return { ok: false, reason: 'product' };
-    if (!product && line.price && typeof line.price === 'object') return { ok: false, reason: 'product' };
-    const unit = line.price && typeof line.price === 'object' && line.price.unit_amount != null ? Number(line.price.unit_amount) : offer.unitAmount;
-    if (unit !== offer.unitAmount) return { ok: false, reason: 'price' };
-    if (line.amount_subtotal != null && Number(line.amount_subtotal) !== offer.unitAmount * quantity) return { ok: false, reason: 'subtotal' };
-    linesState = 'verified';
-  } else if (opts.requireLines) {
-    return { ok: false, reason: 'lines missing' };
-  }
+  if (!lines || lines.length === 0) return { ok: false, reason: 'lines missing' };
+  if (lines.length !== 1) return { ok: false, reason: 'quantity' };
+  const line = lines[0];
+  const quantity = Number(line.quantity);
+  if (quantity !== 1) return { ok: false, reason: 'quantity' };
+  if (String(line.currency ?? '').toLowerCase() !== 'usd') return { ok: false, reason: 'currency' };
+  if (priceId(line) !== offer.price) return { ok: false, reason: 'price' };
+  const product = productId(line);
+  if (product !== KEYSTONES_PRODUCT) return { ok: false, reason: 'product' };
+  if (!line.price || typeof line.price !== 'object' || Number(line.price.unit_amount) !== offer.unitAmount) return { ok: false, reason: 'price' };
+  if (Number(line.amount_subtotal) !== offer.unitAmount) return { ok: false, reason: 'subtotal' };
 
   const subtotal = Number(obj.amount_subtotal);
-  if (subtotal !== offer.unitAmount * quantity) return { ok: false, reason: 'subtotal' };
+  if (subtotal !== offer.unitAmount) return { ok: false, reason: 'subtotal' };
 
   const total = Number(obj.amount_total);
   const status = String(obj.payment_status ?? '');
   if (status === 'unpaid') return { ok: false, reason: 'unpaid' };
   if (status === 'paid') {
-    if (obj.status == null) {
-      // Historical signed events and the existing suite omit status. Production Stripe sends it.
-    }
-    return { ok: true, offer, quantity, complimentary: total === 0, lines: linesState, total, subtotal };
+    if (typeof obj.payment_intent !== 'string' || !obj.payment_intent.startsWith('pi_')) return { ok: false, reason: 'payment intent' };
+    if (!(total > 0)) return { ok: false, reason: 'total' };
+    return { ok: true, offer, quantity, complimentary: false, lines: 'verified', total, subtotal };
   }
   if (status === 'no_payment_required') {
-    if (obj.status !== 'complete') return { ok: false, reason: 'incomplete' };
-    if (obj.mode !== 'payment') return { ok: false, reason: 'not a payment' };
     if (obj.payment_intent) return { ok: false, reason: 'payment intent' };
     if (total !== 0) return { ok: false, reason: 'total' };
     const discount = Number(obj.total_details?.amount_discount);
     const tax = Number(obj.total_details?.amount_tax ?? 0);
-    if (discount !== subtotal || tax !== 0) return { ok: false, reason: 'discount' };
-    return { ok: true, offer, quantity, complimentary: true, lines: linesState, total, subtotal };
+    if (!Number.isFinite(discount) || discount !== subtotal || tax !== 0) return { ok: false, reason: 'discount' };
+    return { ok: true, offer, quantity, complimentary: true, lines: 'verified', total, subtotal };
   }
   return { ok: false, reason: 'payment status' };
 }

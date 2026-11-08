@@ -104,8 +104,8 @@ def key_values(path):
     value_cols = ("current value", "approved wording", "value")
     matched = [h for h in headers if "key" in h and any(c in h for c in value_cols)]
     if headers and not matched:
-        print("SCHEMA: %s has tables but none with columns key and a value. Nothing from this file was read. Found: %s"
-              % (path, "; ".join("[" + ", ".join(h) + "]" for h in headers)))
+        sys.exit("SCHEMA: %s has tables but none with columns key and a value. Nothing from this file was read. Found: %s"
+                 % (path, "; ".join("[" + ", ".join(h) + "]" for h in headers)))
     for table in parse_tables(read(path)):
         if not table or not any(c in table[0] for c in value_cols):
             continue  # skip history tables such as "Previous values"

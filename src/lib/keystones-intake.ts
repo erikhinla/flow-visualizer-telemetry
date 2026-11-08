@@ -54,13 +54,16 @@ export function cleanIntake(raw: Json): Json | string {
   return out;
 }
 
-/** PROOF answers from the browser, or from the code carried through checkout when the browser has none. */
+/** Checkout PROOF wins. The browser fills only questions the checkout code does not already contain. */
 export function proofAnswers(raw: unknown, code: string | null): Record<string, string> {
   const answers: Record<string, string> = {};
-  for (const [k, v] of Object.entries(obj(raw))) if (/^q\d{1,2}$/.test(k) && typeof v === 'string' && /^q\d{1,2}-c\d$/.test(v)) answers[k] = v;
-  if (Object.keys(answers).length === 0 && code) {
+  if (code) {
     const d = decodeProof(code);
     if (d) QUESTIONS.forEach((q, i) => { if (d.answers.optionIds[i]) answers[q.id] = d.answers.optionIds[i]; });
+  }
+  for (const [k, v] of Object.entries(obj(raw))) {
+    if (answers[k]) continue;
+    if (/^q\d{1,2}$/.test(k) && typeof v === 'string' && /^q\d{1,2}-c\d$/.test(v)) answers[k] = v;
   }
   return answers;
 }

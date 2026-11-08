@@ -1,13 +1,14 @@
 """Preset worksheets, the implementation plan, and the walkthrough scaffold. Used by generate.py."""
+import re
 
 
 def kind_of(name):
     n = (name or "").strip().lower()
-    if "radio" in n or "audio spot" in n:
+    if re.search(r"\bradio\b", n) or re.search(r"\baudio spot\b", n):
         return "radio"
-    if "print" in n:
+    if re.search(r"\bprint\b", n):
         return "print"
-    if any(word in n for word in ("experiential", "activation", "event")):
+    if re.search(r"\b(?:experiential|activation|event)\b", n):
         return "experiential"
     return None
 

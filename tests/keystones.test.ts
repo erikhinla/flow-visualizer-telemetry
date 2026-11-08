@@ -4,6 +4,7 @@ import { mkdtempSync, writeFileSync, utimesSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { before, test } from 'node:test';
+import { KEYSTONES_PRODUCT, OFFERS } from '../src/lib/keystones-catalog';
 
 const dir = mkdtempSync(path.join(tmpdir(), 'ks-test-'));
 process.env.DATA_DIR = dir;
@@ -13,9 +14,12 @@ process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test_only';
 let ks: typeof import('../src/lib/keystones-server');
 let intake: typeof import('../src/lib/keystones-intake');
 let webhook: (req: Request) => Promise<Response>;
+const retrieved = new Map<string, Record<string, unknown>>();
 before(async () => {
   ks = await import('../src/lib/keystones-server');
   intake = await import('../src/lib/keystones-intake');
+  const retrieve = await import('../src/lib/keystones-retrieve');
+  retrieve.setCheckoutRetriever(async (id) => retrieved.get(id) ?? {});
   webhook = (await import('../src/app/api/stripe/webhook/route')).POST;
 });
 
@@ -46,6 +50,10 @@ test('PROOF answers come from the checkout code when the browser sends none', ()
   assert.equal(Object.keys(a).length, 15);
   const b = intake.proofAnswers({ q1: 'q1-c1', bad: '../x' }, null);
   assert.deepEqual(b, { q1: 'q1-c1' });
+  const code = 'p1_a_' + '2'.repeat(15);
+  const merged = intake.proofAnswers({ q1: 'q1-c1' }, code);
+  assert.equal(merged.q1, 'q1-c2');
+  assert.equal(Object.keys(merged).length, 15);
 });
 
 test('rate limit trips after the limit', () => {
@@ -54,15 +62,26 @@ test('rate limit trips after the limit', () => {
   assert.equal(ks.rateLimited('t:2', 10, 60_000), false);
 });
 
-function signed(event: object) {
+function signed(event: { data: { object: Record<string, unknown> } }) {
+  const obj = event.data.object;
+  retrieved.set(String(obj.id), obj);
   const raw = JSON.stringify(event);
   const t = Math.floor(Date.now() / 1000);
   const sig = createHmac('sha256', 'whsec_test_only').update(`${t}.${raw}`).digest('hex');
   return new Request('http://x/api/stripe/webhook', { method: 'POST', body: raw, headers: { 'stripe-signature': `t=${t},v1=${sig}` } });
 }
-const session = (id: string, extra: object = {}) => ({ id: `evt_${id}`, type: 'checkout.session.completed', data: { object: {
-  id, payment_status: 'paid', payment_link: ks.INTRO_LINK, currency: 'usd', amount_subtotal: 4900, amount_total: 0,
-  client_reference_id: 'p1_a_' + '1'.repeat(15), customer_details: { email: 'buyer@example.com' }, ...extra } } });
+const session = (id: string, extra: Record<string, unknown> = {}) => {
+  const obj: Record<string, unknown> = {
+    id, status: 'complete', mode: 'payment', payment_status: 'paid', payment_intent: `pi_${id}`,
+    payment_link: ks.INTRO_LINK, currency: 'usd', amount_subtotal: 4900, amount_total: 4900,
+    client_reference_id: 'p1_a_' + '1'.repeat(15), customer_details: { email: 'buyer@example.com' }, ...extra,
+  };
+  const offer = OFFERS.find((item) => item.link === obj.payment_link);
+  if (!obj.line_items && offer) {
+    obj.line_items = { data: [{ quantity: 1, amount_subtotal: offer.unitAmount, currency: 'usd', price: { id: offer.price, product: KEYSTONES_PRODUCT, currency: 'usd', unit_amount: offer.unitAmount } }] };
+  }
+  return { id: `evt_${id}`, type: 'checkout.session.completed', data: { object: obj } };
+};
 
 test('only a signed, paid checkout at the list price unlocks builds', async () => {
   const good = 'cs_test_' + 'a'.repeat(20);
@@ -88,6 +107,25 @@ test('only a signed, paid checkout at the list price unlocks builds', async () =
   await webhook(signed(session(other, { payment_link: 'plink_other' })));
   assert.equal(await ks.paidSession(other), null);
   assert.equal(await ks.paidSession('../../etc'), null);
+  const bare = 'cs_test_' + 'y'.repeat(20);
+  const bareRes = await webhook(signed(session(bare, { line_items: { data: [] } })));
+  assert.equal(bareRes.status, 500);
+  assert.equal(await ks.paidSession(bare), null);
+  const forged = 'cs_test_' + 'k'.repeat(20);
+  const forgedReq = signed(session(forged));
+  retrieved.set(forged, { id: forged, status: 'complete', mode: 'payment', payment_status: 'paid', payment_intent: 'pi_forged', payment_link: ks.INTRO_LINK, currency: 'usd', amount_subtotal: 4900, amount_total: 4900 });
+  const forgedRes = await webhook(forgedReq);
+  assert.equal(forgedRes.status, 500);
+  assert.equal(await ks.paidSession(forged), null);
+});
+
+test('concurrent reservations stop at five', async () => {
+  const s = 'cs_test_' + 'z'.repeat(20);
+  const results = await Promise.all(Array.from({ length: 8 }, () => ks.reserveBuild(s)));
+  const granted = results.filter((n): n is number => n !== null);
+  assert.equal(granted.length, 5);
+  assert.equal(new Set(granted).size, 5);
+  assert.equal(await ks.buildsUsed(s), 5);
 });
 
 test('five builds per session, and a failed build is given back', async () => {
@@ -112,15 +150,20 @@ test('stored zips download by token and are removed after 24 hours', async () =>
   assert.equal(existsSync(path.join(dir, 'keystones', `${token}.zip`)), false);
 });
 
-test('intro: $49 for the first 50 real purchases, test-code orders not counted, then $349', async () => {
+test('intro: $74 for the first 50 real purchases, a zero-discount order is not counted, then $347', async () => {
   const start = await ks.offerState();
-  assert.equal(start.sold, 0); // the earlier test orders all had total 0
   assert.equal(start.url, ks.CURRENT_INTRO_URL);
   assert.equal(start.price, 74);
-  for (let i = 0; i < 49; i += 1) await webhook(signed(session(`cs_test_real${String(i).padStart(12, '0')}`, { amount_total: 4900 })));
+  const add = 49 - start.sold;
+  for (let i = 0; i < add; i += 1) await webhook(signed(session(`cs_test_real${String(i).padStart(12, '0')}`, { amount_total: 4900 })));
   let o = await ks.offerState();
   assert.deepEqual([o.intro, o.left, o.price], [true, 1, 74]);
-  await webhook(signed(session('cs_test_zero00000000000001', { amount_total: 0 })));
+  const zero = 'cs_test_zero00000000000001';
+  await webhook(signed(session(zero, {
+    payment_status: 'no_payment_required', payment_intent: null, amount_total: 0,
+    total_details: { amount_discount: 4900, amount_tax: 0 },
+  })));
+  assert.ok(await ks.paidSession(zero));
   assert.equal((await ks.offerState()).left, 1);
   await webhook(signed(session('cs_test_real00000000000050', { amount_total: 4900 })));
   o = await ks.offerState();
