@@ -1,20 +1,31 @@
 import { randomBytes } from 'node:crypto';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { CURRENT_FULL, CURRENT_INTRO, LEGACY_FULL, LEGACY_INTRO, SUBTOTAL } from './keystones-catalog';
 import { DATA_DIR, ERIK, findEntry, sendMail } from './fulfil';
 import { templated } from './mail-templates';
 
 /** Server-only rules for paid Context Keystones builds. */
-/** Intro: $49 for the first 50 real purchases. After that the checkout switches to the $349 link on its own. */
-export const INTRO_LINK = 'plink_1UTtQmCMxQwcbhDnaucAfhpI';
-export const INTRO_URL = 'https://buy.stripe.com/dRm4gy9wb38i41Jd4ec3m05';
-export const INTRO_PRICE = 'price_1UTtQbCMxQwcbhDnwRozaDDm';
-export const FULL_LINK = 'plink_1UTtbECMxQwcbhDnHyV8ZqQv';
-export const FULL_URL = 'https://buy.stripe.com/dRm4gyfUz8sC2XFd4ec3m06';
-export const FULL_PRICE = 'price_1UTtb7CMxQwcbhDnQIvS6O51';
+/**
+ * Public checkout offers the current $74 link for the first 50 real purchases, then the $347 link.
+ * Legacy $49 and $349 links stay in SUBTOTAL so a genuine earlier order still unlocks.
+ * Stripe itself is not asked to deactivate the current $74 link: the Guide defers that cap.
+ */
+export const INTRO_LINK = LEGACY_INTRO.link;
+export const INTRO_URL = LEGACY_INTRO.url;
+export const INTRO_PRICE = LEGACY_INTRO.price;
+export const FULL_LINK = LEGACY_FULL.link;
+export const FULL_URL = LEGACY_FULL.url;
+export const FULL_PRICE = LEGACY_FULL.price;
+export const CURRENT_INTRO_LINK = CURRENT_INTRO.link;
+export const CURRENT_INTRO_URL = CURRENT_INTRO.url;
+export const CURRENT_INTRO_PRICE = CURRENT_INTRO.price;
+export const CURRENT_FULL_LINK = CURRENT_FULL.link;
+export const CURRENT_FULL_URL = CURRENT_FULL.url;
+export const CURRENT_FULL_PRICE = CURRENT_FULL.price;
 export const INTRO_LIMIT = 50;
-/** Subtotal in cents (before any code) each link must show in USD. */
-export const SUBTOTAL: Record<string, number> = { [INTRO_LINK]: 4900, [FULL_LINK]: 34900 };
+/** Subtotal in cents (before any code) each recognized link must show in USD. */
+export { SUBTOTAL };
 export const MAX_BUILDS = 5;
 export const ZIP_TTL_MS = 24 * 60 * 60 * 1000;
 export const MAX_BODY = 100_000;
@@ -114,6 +125,43 @@ export async function storeZip(file: string, name: string, sessionId: string): P
   await fs.writeFile(path.join(ZIP_DIR, `${token}.json`), JSON.stringify({ name, session: sessionId, at: Date.now() }));
   return token;
 }
+export interface Delivery {
+  session: string;
+  hash: string;
+  token: string;
+  name: string;
+  build: number;
+  at: number;
+  emailStatus: 'sent' | 'queued' | 'failed' | 'none';
+}
+const DELIVERIES = path.join(DATA_DIR, 'keystones-deliveries.json');
+async function readDeliveries(): Promise<Delivery[]> {
+  try { return JSON.parse(await fs.readFile(DELIVERIES, 'utf8')) as Delivery[]; } catch { return []; }
+}
+export function rememberDelivery(delivery: Delivery): Promise<void> {
+  const run = chain.then(async () => {
+    const all = (await readDeliveries()).filter((d) => !(d.session === delivery.session && d.hash === delivery.hash));
+    all.push(delivery);
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    const tmp = `${DELIVERIES}.${process.pid}.tmp`;
+    await fs.writeFile(tmp, JSON.stringify(all));
+    await fs.rename(tmp, DELIVERIES);
+  });
+  chain = run.catch(() => undefined);
+  return run;
+}
+/** Latest stored pack for this checkout and intake. Expired zips are ignored so a rebuild can replace them. */
+export async function findDelivery(sessionId: string, hash?: string): Promise<Delivery | null> {
+  const all = await readDeliveries();
+  for (let i = all.length - 1; i >= 0; i -= 1) {
+    const d = all[i];
+    if (d.session !== sessionId) continue;
+    if (hash && d.hash !== hash) continue;
+    if (await readZip(d.token)) return d;
+  }
+  return null;
+}
+
 export async function readZip(token: string): Promise<{ name: string; data: Buffer } | null> {
   if (!TOKEN_RE.test(token)) return null;
   try {
@@ -152,7 +200,11 @@ export async function purchasesSold(): Promise<number> {
 export async function offerState() {
   const sold = await purchasesSold();
   const intro = sold < INTRO_LIMIT;
-  return { intro, sold, left: Math.max(0, INTRO_LIMIT - sold), limit: INTRO_LIMIT, price: intro ? 49 : 349, listPrice: 349, url: intro ? INTRO_URL : FULL_URL };
+  const offer = intro ? CURRENT_INTRO : CURRENT_FULL;
+  return {
+    intro, sold, left: Math.max(0, INTRO_LIMIT - sold), limit: INTRO_LIMIT,
+    price: offer.unitAmount / 100, listPrice: CURRENT_FULL.unitAmount / 100, url: offer.url,
+  };
 }
 
 // ---- close the $49 link when the cap is hit ----

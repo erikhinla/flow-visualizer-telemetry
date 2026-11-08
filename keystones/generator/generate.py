@@ -93,8 +93,16 @@ def load(args):
     I.setdefault("legal_line_types", [])
     I.setdefault("rights_types", [])
     I.setdefault("handoffs", [])
-    I.setdefault("record_owner", "Account lead")
-    I.setdefault("rights_owner", "Business Affairs")
+    departments = I.get("departments") or []
+    leads = [d.get("lead", "").strip() for d in departments if d.get("lead", "").strip()]
+    solo = len(departments) <= 1
+    if not (I.get("record_owner") or "").strip():
+        I["record_owner"] = leads[0] if solo and leads else "unresolved: name the owner"
+    if not (I.get("rights_owner") or "").strip():
+        if solo and not str(I["record_owner"]).startswith("unresolved"):
+            I["rights_owner"] = I["record_owner"]
+        else:
+            I["rights_owner"] = "unresolved: name who can approve rights"
     notes = []
     for q, opts in PROOF_NOTES.items():
         a = P.get("answers", {}).get(q)
@@ -502,7 +510,8 @@ the same facts. Every stage folder reads from there. `START HERE.md` in each pro
 `Start Keystones (Windows).bat` or `start-keystones-linux.sh`. A numbered menu opens. Type a number and press Enter:
 1 Start a new project, 2 Move old versions to the archive, 3 Update mandatories and legal lines,
 4 Build the next round's agenda, 5 Check rights and licenses, 6 Write the pending changes summary,
-7 Turn on watch mode, 8 Switch to a different project, 9 Change notices.
+7 Turn on watch mode, 8 Switch to a different project, 9 Change notices, 10 Export a paste-ready update.
+Exporting writes text and Markdown. It does not send anything and it does not mark a change announced.
 Anything that moves or rewrites files shows a preview first and waits for a yes.
 Python 3.8 or newer has to be installed once (python.org). On a Mac, the first open may need right-click, then Open.
 
@@ -534,8 +543,10 @@ password, stay in `local-settings/` on that computer and are left out of shared 
 | `round_agenda.py --write` | before a review round | builds the agenda from changes and decisions since the last round |
 | `rights_check.py` | the plan or a license changes, and before Business Affairs rounds | flags gaps in media, territory or term |
 | `pending_changes.py` | before the team update | writes PENDING-CHANGES.md from unannounced change-log rows |
+| `export_update.py` | when the update is ready to paste | writes plain text and Markdown. Does not send or mark announced |
 | `watch.py --apply` | all the time, if wanted | the watch mode above |
-| `notify.py --test` / `--preview` | after setting up notices | sends a test notice, or shows who'd get what |
+| `notify.py --test` / `--preview` | after setting up notices | sends a test notice, or shows who'd get what. Off until set up. One designated computer sends |
+| `check_runtime.py` | when a pack is opened | reports Python and says whether this run is a Mac or Windows acceptance |
 Project scripts run from inside a project folder, or with `--project PATH`. Without `--apply` they preview only.
 
 **Protocols.** In `protocols/`: who gets which changes, who reviews which round, and what travels at each handoff.
@@ -557,6 +568,7 @@ MAC_LAUNCH = """#!/bin/bash
 # right-click this file, choose Open, then Open again.
 cd "$(dirname "$0")" || exit 1
 if command -v python3 >/dev/null 2>&1; then
+  python3 scripts/check_runtime.py || exit 1
   python3 scripts/keystones_menu.py
 else
   echo "Python 3 isn't installed on this Mac yet. It's available from python.org (version 3.8 or newer)."
@@ -569,6 +581,7 @@ LINUX_LAUNCH = """#!/bin/sh
 # Opens the Context Keystones menu. Double-click (choose Run in Terminal) or run: sh start-keystones-linux.sh
 cd "$(dirname "$0")" || exit 1
 if command -v python3 >/dev/null 2>&1; then
+  python3 scripts/check_runtime.py || exit 1
   python3 scripts/keystones_menu.py
 else
   echo "Python 3 isn't installed yet. Install python3 (3.8 or newer) from the system's software manager."
@@ -582,11 +595,15 @@ rem Double-click to open the Context Keystones menu.
 cd /d "%~dp0"
 where py >nul 2>nul
 if %errorlevel%==0 (
+  py -3 scripts\\check_runtime.py
+  if errorlevel 1 goto done
   py -3 scripts\\keystones_menu.py
   goto done
 )
 where python >nul 2>nul
 if %errorlevel%==0 (
+  python scripts\\check_runtime.py
+  if errorlevel 1 goto done
   python scripts\\keystones_menu.py
   goto done
 )
@@ -637,8 +654,22 @@ def build(I, out):
     if os.path.exists(out):
         shutil.rmtree(out)
     tpl = os.path.join(out, "project-template")
+    sys.path.insert(0, os.path.join(HERE, "pack_scripts"))
+    import pack_extras
     for rel, what, owner in folder_plan(I):
         w(os.path.join(tpl, rel, "README.md"), "# %s\n\n%s\n\nOwning role: %s.\n" % (os.path.basename(rel), what, owner))
+        leaf = os.path.basename(rel).replace("-", " ")
+        for name, text in pack_extras.worksheets(I, leaf).items():
+            w(os.path.join(tpl, rel, name), text)
+        # Also match the deliverable name before it was turned into a folder slug.
+    for d in I.get("deliverables") or []:
+        files = pack_extras.worksheets(I, d)
+        if not files:
+            continue
+        for rel, _what, _owner in folder_plan(I):
+            if os.path.basename(rel) == slug(d):
+                for name, text in files.items():
+                    w(os.path.join(tpl, rel, name), text)
     for name, fn in [("project.md", project_md), ("mandatories.md", mandatories_md), ("legal-lines.md", legal_md),
                      ("rights-and-licenses.md", rights_md), ("decisions.md", decisions_md),
                      ("change-log.md", change_log_md), ("AI-CONTEXT.md", ai_context_md)]:
@@ -666,6 +697,8 @@ def build(I, out):
     w(os.path.join(out, "protocols", "review-rounds-protocol.md"), rounds_protocol(I))
     w(os.path.join(out, "protocols", "handoff-protocol.md"), handoff_protocol(I))
     w(os.path.join(out, "HOW-IT-WORKS.md"), how_it_works(I))
+    w(os.path.join(out, "IMPLEMENTATION-PLAN.md"), pack_extras.implementation_plan(I))
+    w(os.path.join(out, "WALKTHROUGH.md"), pack_extras.walkthrough(I))
     w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with HOW-IT-WORKS.md. Generated %s.\n\n"
       "Get BACK to work. (Business Aligned Context Keystones)\n" % (I["agency_name"], TODAY))
     os.makedirs(os.path.join(out, "scripts"))

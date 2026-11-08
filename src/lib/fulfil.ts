@@ -29,6 +29,12 @@ let chain: Promise<unknown> = Promise.resolve();
 export async function findEntry(key: string): Promise<LogEntry | undefined> {
   return (await readLog()).find((e) => e.key === key);
 }
+/** Last ledger row for a key. Mail retries append a new row; entitlement stays the first row. */
+export async function latestEntry(key: string): Promise<LogEntry | undefined> {
+  const log = await readLog();
+  for (let i = log.length - 1; i >= 0; i -= 1) if (log[i].key === key) return log[i];
+  return undefined;
+}
 export function addEntry(entry: LogEntry): Promise<void> {
   const run = chain.then(async () => {
     await fs.mkdir(DATA_DIR, { recursive: true });
@@ -50,8 +56,19 @@ export interface Mail {
   idempotencyKey?: string;
 }
 
+export type MailResult = { ok: boolean; via: string; id?: string; error?: string };
+type MailSender = (mail: Mail) => Promise<MailResult>;
+let mailSender: MailSender | null = null;
+/** Tests substitute a sender. Production leaves this unset. Never points at a live provider by itself. */
+export function setMailSender(fn: MailSender | null) { mailSender = fn; }
+
 /** Sends through Resend (by template id when given, with an idempotency key and retries on network errors, 429 and 5xx) when RESEND_API_KEY is set, else SMTP when SMTP_* is set. Any failure, or no sender, writes to data/outbox. Every send is logged. */
-export async function sendMail(mail: Mail): Promise<{ ok: boolean; via: string; id?: string; error?: string }> {
+export async function sendMail(mail: Mail): Promise<MailResult> {
+  if (mailSender) {
+    const result = await mailSender(mail);
+    console.log('[mail]', JSON.stringify({ via: result.via, ok: result.ok, to: mail.to, subject: mail.subject, template: mail.template?.id, idem: mail.idempotencyKey, id: result.id, error: result.error }));
+    return result;
+  }
   const result = await sendMailInner(mail);
   console.log('[mail]', JSON.stringify({ via: result.via, ok: result.ok, to: mail.to, subject: mail.subject, template: mail.template?.id, idem: mail.idempotencyKey, id: result.id, error: result.error }));
   return result;

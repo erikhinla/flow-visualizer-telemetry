@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { mkdtemp, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -8,7 +9,7 @@ import { cleanIntake, obj, proofAnswers, type Json } from '../../../lib/keystone
 import { ERIK, PUBLIC_BASE, sendMail } from '../../../lib/fulfil';
 import { templated } from '../../../lib/mail-templates';
 import {
-  MAX_BODY, MAX_BUILDS, buildsUsed, clientIp, paidSession, rateLimited, releaseBuild, reserveBuild, storeZip, sweepZips,
+  MAX_BODY, MAX_BUILDS, buildsUsed, clientIp, findDelivery, paidSession, rateLimited, readZip, releaseBuild, rememberDelivery, reserveBuild, storeZip, sweepZips,
 } from '../../../lib/keystones-server';
 
 export const runtime = 'nodejs';
@@ -29,7 +30,9 @@ export async function GET(req: Request) {
   const s = new URL(req.url).searchParams.get('session_id') || '';
   const paid = await paidSession(s);
   if (!paid) return Response.json({ paid: false });
-  return Response.json({ paid: true, buildsLeft: MAX_BUILDS - (await buildsUsed(s)), code: paid.code });
+  const delivery = await findDelivery(s);
+  const download = delivery ? { url: `${PUBLIC_BASE}/api/keystones/download?t=${delivery.token}`, name: delivery.name } : null;
+  return Response.json({ paid: true, buildsLeft: MAX_BUILDS - (await buildsUsed(s)), code: paid.code, download });
 }
 
 export async function POST(req: Request) {
@@ -54,30 +57,56 @@ export async function POST(req: Request) {
   const dateIssue = Object.values(firstProjectProblems(intake.first_project as Record<string, string> | undefined))[0];
   if (dateIssue) return Response.json({ error: `First project: ${dateIssue}` }, { status: 400 });
 
+  const answers = proofAnswers(obj(body.proof).answers, paid.code);
+  const intakeHash = createHash('sha256').update(JSON.stringify({ intake, answers })).digest('hex');
+  const prior = await findDelivery(sessionId, intakeHash);
+  if (prior) {
+    const zip = await readZip(prior.token);
+    if (zip) {
+      const url = `${PUBLIC_BASE}/api/keystones/download?t=${prior.token}`;
+      let emailed = prior.emailStatus === 'sent';
+      if (paid.email && prior.emailStatus === 'failed') {
+        const t = templated('keystones', {
+          AGENCY: String(intake.agency_name), DOWNLOAD_URL: url, REBUILD_URL: `${PUBLIC_BASE}/keystones?session_id=${encodeURIComponent(sessionId)}`,
+        });
+        const r = await sendMail({ to: paid.email, subject: t.subject, html: t.html, text: t.text, template: t.template, replyTo: ERIK, idempotencyKey: `cs:${sessionId}:build${prior.build}:keystones` });
+        const failed = !r.ok || r.via.includes('failed');
+        emailed = !failed && !r.via.includes('outbox');
+        await rememberDelivery({ ...prior, at: Date.now(), emailStatus: failed ? 'failed' : (r.via === 'outbox' ? 'queued' : 'sent') });
+      }
+      return Response.json({ url, name: prior.name, size: zip.data.length, buildsLeft: MAX_BUILDS - prior.build, emailed, recovered: true }, { headers: { 'Cache-Control': 'no-store' } });
+    }
+  }
+
   const build = await reserveBuild(sessionId);
   if (build === null) return Response.json({ error: `All ${MAX_BUILDS} builds for this purchase are used. Reply to the delivery email for help.` }, { status: 429 });
 
-  const answers = proofAnswers(obj(body.proof).answers, paid.code);
   const dir = await mkdtemp(path.join(tmpdir(), 'keystones-'));
   try {
     const name = `context-keystones-${slug(String(intake.agency_name))}`;
     const out = path.join(dir, name);
     await writeFile(path.join(dir, 'intake.json'), JSON.stringify(intake));
     await writeFile(path.join(dir, 'proof.json'), JSON.stringify({ agency_name: intake.agency_name, answers }));
+    const runtime = await run(PYTHON, ['-c', 'import sys; raise SystemExit(0 if sys.version_info >= (3, 8) else 1)'], { timeout: 15_000 }).then(() => '', () => 'Python 3.8 or newer is required to build the pack.');
+    if (runtime) {
+      await releaseBuild(sessionId);
+      return Response.json({ error: runtime }, { status: 500 });
+    }
     await run(PYTHON, [GENERATOR, '--intake', path.join(dir, 'intake.json'), '--proof', path.join(dir, 'proof.json'), '--out', out, '--zip'], { timeout: 60_000, maxBuffer: 4 * 1024 * 1024 });
     const zipFile = `${out}.zip`;
     const size = (await stat(zipFile)).size;
     const token = await storeZip(zipFile, `${name}.zip`, sessionId);
     const url = `${PUBLIC_BASE}/api/keystones/download?t=${token}`;
-    let emailed = false;
+    let emailStatus: 'sent' | 'queued' | 'failed' | 'none' = 'none';
     if (paid.email) {
       const t = templated('keystones', {
         AGENCY: String(intake.agency_name), DOWNLOAD_URL: url, REBUILD_URL: `${PUBLIC_BASE}/keystones?session_id=${encodeURIComponent(sessionId)}`,
       });
       const r = await sendMail({ to: paid.email, subject: t.subject, html: t.html, text: t.text, template: t.template, replyTo: ERIK, idempotencyKey: `cs:${sessionId}:build${build}:keystones` });
-      emailed = r.ok && !r.via.includes('outbox');
+      emailStatus = !r.ok || r.via.includes('failed') ? 'failed' : (r.via === 'outbox' ? 'queued' : 'sent');
     }
-    return Response.json({ url, name: `${name}.zip`, size, buildsLeft: MAX_BUILDS - build, emailed }, { headers: { 'Cache-Control': 'no-store' } });
+    await rememberDelivery({ session: sessionId, hash: intakeHash, token, name: `${name}.zip`, build, at: Date.now(), emailStatus });
+    return Response.json({ url, name: `${name}.zip`, size, buildsLeft: MAX_BUILDS - build, emailed: emailStatus === 'sent' }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (err) {
     console.error('[keystones] build failed', err instanceof Error ? err.message : err);
     await releaseBuild(sessionId);

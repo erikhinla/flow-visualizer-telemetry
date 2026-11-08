@@ -45,7 +45,7 @@ const MANDATORIES = ['Logo lockup', 'Tagline', 'Website URL', 'Hashtag', 'Brand 
 const LEGAL = ['Offer terms', 'Disclaimer', 'Trademark notice', 'Regulatory copy', 'Contest rules'];
 const RIGHTS = ['music', 'talent', 'stock footage', 'stock photos', 'fonts', 'voiceover', 'locations'];
 const MEDIA = ['TV', 'Radio', 'Social', 'Online video', 'CTV', 'OOH', 'Digital OOH', 'Print', 'Display', 'Cinema'];
-const STORAGE = ['cloud file storage', 'a shared server', "people's own computers", 'a mix of these'];
+const STORAGE = ['a shared Drive', 'cloud file storage', 'a shared server', "people's own computers", 'a mix of these'];
 const CHANNELS = ['email', 'a team chat channel', 'a status meeting', 'a project tracker', 'a word in passing'];
 const VERSIONS = ['v1, v2, v3 at the end of the file name', 'R1, R2, R3 for rounds', 'dates in the file name', "it varies"];
 
@@ -55,8 +55,8 @@ const blank = (): Intake => ({
   agency_name: '',
   departments: [],
   stages: [...STAGES],
-  rounds: [
-    { id: 'R1', name: 'Internal review', reviewers: [], business_affairs: true, client_sees: false, purpose: '' },
+    rounds: [
+    { id: 'R1', name: 'Internal review', reviewers: [], business_affairs: false, client_sees: false, purpose: '' },
     { id: 'R2', name: 'Client review', reviewers: [], business_affairs: false, client_sees: true, purpose: '' },
   ],
   deliverables: [], mandatory_types: [], mandatory_values: {}, legal_line_types: [], legal_values: {},
@@ -93,12 +93,13 @@ function Chips({ label, options, value, onChange, hint }: { label: string; optio
 }
 
 function Text({ label, value, onChange, placeholder, hint, type = 'text', problem, note, inputMode }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; hint?: string; type?: string; problem?: string; note?: string; inputMode?: 'numeric' | 'text' }) {
+  const described = problem ? `ks-err-${label.replace(/[^a-z0-9]+/gi, '-')}` : undefined;
   return (
     <label className="ks-field">
       <span className="ks-label">{label}</span>
       {hint ? <span className="ks-hint">{hint}</span> : null}
-      <input type={type} value={value} placeholder={placeholder} inputMode={inputMode} aria-invalid={problem ? true : undefined} onChange={(e) => onChange(e.target.value)} />
-      {problem ? <span className="ks-field-error" role="alert">{problem}</span> : note ? <span className="ks-field-note">{note}</span> : null}
+      <input type={type} value={value} placeholder={placeholder} inputMode={inputMode} aria-invalid={problem ? true : undefined} aria-describedby={described} onChange={(e) => onChange(e.target.value)} />
+      {problem ? <span id={described} className="ks-field-error" role="alert">{problem}</span> : note ? <span className="ks-field-note">{note}</span> : null}
     </label>
   );
 }
@@ -165,7 +166,13 @@ export function KeystonesIntake() {
   // Answers typed here stay on this device, so a rebuild doesn't start from scratch.
   useEffect(() => { try { const saved = localStorage.getItem('ks.intake.v1'); if (saved) setI({ ...blank(), ...(JSON.parse(saved) as Intake) }); } catch { /* none saved */ } }, []);
   useEffect(() => { try { if (I.agency_name) localStorage.setItem('ks.intake.v1', JSON.stringify(I)); } catch { /* storage full */ } }, [I]);
-  useEffect(() => { if (error) errorRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, [error]);
+  useEffect(() => {
+    const el = errorRef.current;
+    if (!error || !el) return;
+    el.tabIndex = -1;
+    el.focus();
+    el.scrollIntoView({ block: 'center' });
+  }, [error]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('prefill') === 'sample') {
@@ -201,7 +208,7 @@ export function KeystonesIntake() {
   };
 
   function setDepts(names: string[]) {
-    const next = names.map((n) => I.departments.find((d) => d.name === n) ?? { name: n, lead: DEPTS.find(([x]) => x === n)?.[1] ?? `${n} lead`, roles: [] });
+    const next = names.map((n) => I.departments.find((d) => d.name === n) ?? { name: n, lead: '', roles: [] });
     setI((p) => {
       const keep = p.handoffs.filter((h) => names.includes(h.from) && names.includes(h.to));
       const add = defaultHandoffs(names).filter((h) => !keep.some((k) => k.from === h.from && k.to === h.to));
@@ -221,8 +228,8 @@ export function KeystonesIntake() {
     const intake = {
       ...I,
       rounds: I.rounds.map((r, i) => ({ ...r, id: `R${i + 1}` })),
-      record_owner: I.record_owner || lead('Account') || I.departments[0]?.lead || 'Account lead',
-      rights_owner: I.rights_owner || lead('Business Affairs') || lead('Legal') || 'Business Affairs',
+      record_owner: I.record_owner || lead('Account') || (I.departments.length === 1 ? I.departments[0].lead : ''),
+      rights_owner: I.rights_owner || lead('Business Affairs') || lead('Legal') || (I.departments.length === 1 ? I.departments[0].lead : ''),
       handoffs: I.handoffs.map((h) => ({ ...h, items: h.items.map((l) => l.trim()).filter(Boolean) })).filter((h) => h.items.length),
       first_project: I.first_project.client && I.first_project.project ? I.first_project : undefined,
     };
@@ -240,7 +247,15 @@ export function KeystonesIntake() {
     } finally { setBusy(false); }
   }
 
-  const next = () => (problems[step] ? setError(problems[step]) : (setError(''), setStep(step + 1)));
+  const next = () => {
+    if (problems[step]) {
+      setError(problems[step]);
+      errorRef.current?.focus();
+      return;
+    }
+    setError('');
+    setStep(step + 1);
+  };
 
   return (
     <article className="ks">
@@ -292,12 +307,14 @@ export function KeystonesIntake() {
       {gate === 'paid' && step === 1 && (
         <section className="ks-step">
           <Chips label="Which departments work on a typical project?" options={DEPTS.map(([d]) => d)} value={deptNames} onChange={setDepts} />
+          <Text label="Who approves the finished work?" value={I.record_owner} placeholder="Leave blank until someone is named" onChange={(v) => set('record_owner', v)} />
+          <Text label="Who can approve rights and legal lines?" value={I.rights_owner} placeholder="Leave blank until someone is named" onChange={(v) => set('rights_owner', v)} />
           {I.departments.length > 0 && (
             <fieldset className="ks-field">
               <legend>What&apos;s the lead role in each one?</legend>
               {I.departments.map((d, i) => (
                 <label key={d.name} className="ks-inline"><span>{d.name}</span>
-                  <input value={d.lead} onChange={(e) => set('departments', I.departments.map((x, j) => (j === i ? { ...x, lead: e.target.value } : x)))} />
+                  <input value={d.lead} placeholder={DEPTS.find(([x]) => x === d.name)?.[1] || 'Lead role, if there is one'} aria-label={`${d.name} lead role`} onChange={(e) => set('departments', I.departments.map((x, j) => (j === i ? { ...x, lead: e.target.value } : x)))} />
                 </label>
               ))}
             </fieldset>

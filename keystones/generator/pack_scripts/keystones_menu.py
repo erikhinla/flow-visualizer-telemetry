@@ -13,7 +13,7 @@ import json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 PACK = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
-import notify, ks_common, new_project, archive_old_versions, sync_mandatories, round_agenda, rights_check, watch, pending_changes
+import notify, ks_common, new_project, archive_old_versions, sync_mandatories, round_agenda, rights_check, watch, pending_changes, export_update, check_runtime
 
 PREFS = os.path.join(PACK, ".keystones-menu.json")
 
@@ -189,11 +189,13 @@ MENU = """
   7. Turn on watch mode (checks every few minutes)
   8. Switch to a different project
   9. Change notices (set up, test, on or off)
+  10. Export a paste-ready update (does not send)
   0. Close
 """
 
 
 def main():
+    print("\n".join(check_runtime.report()))
     prefs = load_prefs()
     while True:
         proj = prefs.get("project") if prefs.get("project") in projects() else None
@@ -229,6 +231,14 @@ def main():
             continue
         if c == "9":
             notices_menu()
+            continue
+        if c == "10":
+            proj = pick_project(prefs)
+            if not proj:
+                continue
+            root = os.path.join(PACK, "projects", proj)
+            run(export_update.main, ["--project", root, "--format", "both"])
+            print("The files are in _context/exports. Nothing was sent and no row was marked announced.")
             continue
         if c not in "234567" or len(c) != 1:
             print("Type one of the numbers on the list.")

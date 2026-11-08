@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { REVIEW_URL } from '../../../../lib/links';
 import { decodeProof } from '../../../../lib/proof-code';
 import { buildReport } from '../../../../lib/report';
-import { ERIK, PUBLIC_BASE, addEntry, findEntry, sendMail, verifyStripe, type Mail } from '../../../../lib/fulfil';
+import { ERIK, PUBLIC_BASE, addEntry, findEntry, latestEntry, sendMail, verifyStripe, type Mail } from '../../../../lib/fulfil';
 import { templated, type TemplateKey } from '../../../../lib/mail-templates';
-import { FULL_LINK, INTRO_LINK, SUBTOTAL, closeIntroIfCapped } from '../../../../lib/keystones-server';
+import { KEYSTONES_PRODUCT, assessKeystonesSession } from '../../../../lib/keystones-catalog';
+import { FULL_LINK, INTRO_LINK, CURRENT_FULL_LINK, CURRENT_INTRO_LINK, closeIntroIfCapped } from '../../../../lib/keystones-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -17,6 +18,8 @@ const LINKS: Record<string, 'report' | 'toolkit' | 'refresh' | 'audit' | 'keysto
   plink_1UThXjCMxQwcbhDnMwgfeKkR: 'audit',
   [INTRO_LINK]: 'keystones',
   [FULL_LINK]: 'keystones',
+  [CURRENT_INTRO_LINK]: 'keystones',
+  [CURRENT_FULL_LINK]: 'keystones',
 };
 const REFRESH_PRICE = 'price_1UThXWCMxQwcbhDnF4MLaeOL';
 const RETAKE = `${PUBLIC_BASE}/`;
@@ -53,6 +56,33 @@ function mailsFor(kind: string, session: Obj, email: string, idem: string): { ma
   ] };
 }
 
+type FetchResponse = { ok: boolean; status: number; json: () => Promise<Obj> };
+let checkoutRetriever: ((id: string) => Promise<Obj>) | null = null;
+/** Tests supply a retrieved Checkout Session. Production uses STRIPE_CHECKOUT_READ_KEY or STRIPE_SECRET_KEY when one is set. */
+export function setCheckoutRetriever(fn: ((id: string) => Promise<Obj>) | null) { checkoutRetriever = fn; }
+
+async function retrieveCheckoutSession(id: string): Promise<Obj> {
+  if (checkoutRetriever) return checkoutRetriever(id);
+  const key = process.env.STRIPE_CHECKOUT_READ_KEY || process.env.STRIPE_SECRET_KEY || '';
+  if (!key) return {};
+  const url = `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(id)}?expand[]=line_items.data.price.product`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${key}` } }) as unknown as FetchResponse;
+  if (!res.ok) throw new Error(`stripe session retrieve ${res.status}`);
+  return res.json();
+}
+
+/** Intake email is its own ledger row. A failed send stays retryable without a second entitlement. */
+async function ensureIntakeMail(sessionKey: string, email: string | null, sessionId: string): Promise<{ mailed: boolean; retry: boolean }> {
+  if (!email) return { mailed: false, retry: false };
+  const mailKey = `mail:${sessionKey}:intake`;
+  const prev = await latestEntry(mailKey);
+  if (prev && prev.status !== 'failed') return { mailed: prev.status === 'sent' || prev.status === 'queued', retry: false };
+  const r = await sendMail(tm(email, `${sessionKey}:paid`, 'keystones_paid', { INTAKE_URL: `${PUBLIC_BASE}/keystones?session_id=${encodeURIComponent(sessionId)}` }));
+  const failed = !r.ok || r.via.includes('failed');
+  await addEntry({ key: mailKey, kind: 'keystones-mail', email, status: failed ? 'failed' : (r.via === 'outbox' ? 'queued' : 'sent'), at: new Date().toISOString(), detail: [r.via, r.error].filter(Boolean).join(' | ') });
+  return { mailed: !failed, retry: failed };
+}
+
 async function deliver(key: string, kind: string, email: string, mails: Mail[], note?: string) {
   const results = [];
   for (const mail of mails) {
@@ -76,26 +106,42 @@ export async function POST(req: Request) {
   const obj = event.data?.object as Obj;
   try {
     if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
-      if (obj.payment_status !== 'paid') return NextResponse.json({ ok: true, skipped: 'not paid yet' });
       const kind = LINKS[String(obj.payment_link)];
       if (!kind) return NextResponse.json({ ok: true, skipped: 'other link' });
+      if (kind !== 'keystones' && obj.payment_status !== 'paid') return NextResponse.json({ ok: true, skipped: 'not paid yet' });
       const key = `cs:${obj.id}`;
-      if (await findEntry(key)) return NextResponse.json({ ok: true, duplicate: true });
       const email = obj.customer_details?.email || obj.customer_email;
       if (kind === 'keystones') {
-        // This entry unlocks the build. A short email carries the intake link so a closed tab doesn't lose the purchase; the pack itself is emailed when it's built.
-        const priceOk = obj.currency === 'usd' && Number(obj.amount_subtotal) === SUBTOTAL[String(obj.payment_link)];
-        const code = /^p1_[acs]_[1-4]+$/.test(String(obj.client_reference_id ?? '')) ? String(obj.client_reference_id) : '';
-        await addEntry({ key, kind, email: email ? String(email) : null, status: priceOk ? 'paid' : 'price-mismatch', at: new Date().toISOString(), detail: [`code=${code || 'none'}`, `sub=${obj.amount_subtotal}`, `total=${obj.amount_total}`, `link=${obj.payment_link}`].join(' | ') });
-        let mailed = false;
-        if (priceOk && email) {
-          const r = await sendMail(tm(String(email), `${key}:paid`, 'keystones_paid', { INTAKE_URL: `${PUBLIC_BASE}/keystones?session_id=${encodeURIComponent(String(obj.id))}` }));
-          mailed = r.ok;
+        const existing = await findEntry(key);
+        if (existing) {
+          if (existing.status !== 'paid') return NextResponse.json({ ok: true, duplicate: true, unlocked: false });
+          const mail = await ensureIntakeMail(key, existing.email, String(obj.id));
+          return NextResponse.json({ ok: !mail.retry, duplicate: true, kind, unlocked: true, mailed: mail.mailed }, { status: mail.retry ? 500 : 200 });
         }
+        const readKey = process.env.STRIPE_CHECKOUT_READ_KEY || process.env.STRIPE_SECRET_KEY || '';
+        let full = obj;
+        if (!obj.line_items?.data && (checkoutRetriever || readKey)) {
+          const retrieved = await retrieveCheckoutSession(String(obj.id));
+          full = { ...obj, ...retrieved, line_items: retrieved.line_items ?? obj.line_items };
+        }
+        const assessed = assessKeystonesSession(full, { requireLines: Boolean(checkoutRetriever || readKey) && !obj.line_items?.data });
+        const code = /^p1_[acs]_[1-4]+$/.test(String(obj.client_reference_id ?? '')) ? String(obj.client_reference_id) : '';
+        if (!assessed.ok) {
+          if (assessed.reason === 'unpaid' || assessed.reason === 'incomplete') return NextResponse.json({ ok: true, skipped: assessed.reason });
+          await addEntry({ key, kind, email: email ? String(email) : null, status: 'price-mismatch', at: new Date().toISOString(), detail: [`code=${code || 'none'}`, `sub=${obj.amount_subtotal}`, `total=${obj.amount_total}`, `link=${obj.payment_link}`, `reason=${assessed.reason}`].join(' | ') });
+          return NextResponse.json({ ok: true, kind, unlocked: false, mailed: false, reason: assessed.reason });
+        }
+        // This entry unlocks the build. The intake email is recorded separately so a failed send can be retried.
+        await addEntry({
+          key, kind, email: email ? String(email) : null, status: 'paid', at: new Date().toISOString(),
+          detail: [`code=${code || 'none'}`, `sub=${assessed.subtotal}`, `total=${assessed.total}`, `link=${obj.payment_link}`, `price=${assessed.offer.price}`, `product=${KEYSTONES_PRODUCT}`, `qty=${assessed.quantity}`, `lines=${assessed.lines}`, `complimentary=${assessed.complimentary ? 'yes' : 'no'}`].join(' | '),
+        });
+        const mail = await ensureIntakeMail(key, email ? String(email) : null, String(obj.id));
         let cap = 'open';
         try { cap = await closeIntroIfCapped(); } catch (e) { console.error('[keystones-cap]', e); }
-        return NextResponse.json({ ok: true, kind, unlocked: priceOk, mailed, cap });
+        return NextResponse.json({ ok: !mail.retry, kind, unlocked: true, mailed: mail.mailed, cap }, { status: mail.retry ? 500 : 200 });
       }
+      if (await findEntry(key)) return NextResponse.json({ ok: true, duplicate: true });
       if (!email) {
         await deliver(key, kind, ERIK, [tm(ERIK, key, 'order_no_email_erik', { OFFER: kind, SESSION_ID: String(obj.id) })], 'no-email');
         return NextResponse.json({ ok: true, note: 'no email' });

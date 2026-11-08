@@ -107,6 +107,15 @@ Each entry includes:
 
 _To be filled as the project evolves_
 
+### Decision #008 - Current Keystones prices and no-cost fulfillment
+
+**Date**: 2026-11-08
+**Category**: Product
+**Decision**: Public checkout offers the current $74 link for the first 50 real purchases and the $347 link after. Legacy $49 and $349 links remain valid for a genuine earlier order. A completed payment-mode session with no PaymentIntent unlocks only when a catalog pre-discount subtotal is fully covered by `amount_discount`. The product default $49 price is not a charge amount. Stripe is not asked to deactivate the current $74 link.
+**Rationale**: The Guide prices are $74 then $347. The candidate source still listed $49 and $349. Official no-cost checkout is fulfilled from `checkout.session.completed` and has no PaymentIntent. The `no_payment_required` enum text also covers setup mode, which stays locked.
+**Impact**: Entitlement, intake email, and the built zip are separate ledger rows. A failed email can be retried without a second entitlement or a second build of the same intake.
+**Status**: Active. Not deployed by this decision. The deployed revision was not the candidate commit; see keystones/DEPLOYMENT-CHECKLIST.md.
+
 
 ### 2026-10-05 - PR #4 audit corrections
 

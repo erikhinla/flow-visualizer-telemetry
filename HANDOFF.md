@@ -23,10 +23,12 @@ DATA_DIR KEYSTONES_GENERATOR KEYSTONES_PYTHON MAIL_FROM NEXT_PUBLIC_PROOF_BASE_P
 - Backups on the VPS: /root/backups/ (tgz per deploy) plus docker image tags `proof-app:pre-*`.
 
 ## Offers and pricing
-- Context Keystones: intro $49 for the first 50 buyers, then $349.
-  - $349 price price_1UTtb7CMxQwcbhDnQIvS6O51, payment link plink_1UTtbECMxQwcbhDnHyV8ZqQv.
-  - Other ids in the code: price_1UThXWCMxQwcbhDnF4MLaeOL, price_1UTtQbCMxQwcbhDnwRozaDDm, plink_1UThXd…, plink_1UThXf…, plink_1UThXh…, plink_1UThXj…, plink_1UTtQm… (see src/lib/keystones-server.ts).
-  - At 50 sales, closeIntroIfCapped() deactivates the intro link via STRIPE_LINK_KEY, or emails Erik if that key isn't set.
+- Context Keystones public checkout: $74 for the first 50 real purchases, then $347. Guide copy does not show a spots-left countdown. The product's default Stripe price is still the legacy $49 price and is not what checkout charges.
+  - Current $74: price_1UWneDCMxQwcbhDno0WDq2OP, plink_1UWneMCMxQwcbhDnAVR5sHw4, https://buy.stripe.com/cNi3cu37N7oy2XFggqc3m09
+  - Current $347: price_1UWneGCMxQwcbhDnCZ2ByTQO, plink_1UWnePCMxQwcbhDny8Kk00jy, https://buy.stripe.com/5kQ00ifUz7oy0Px6FQc3m0a
+  - Legacy $49 and $349 links stay recognized for a genuine earlier order. See src/lib/keystones-catalog.ts.
+  - closeIntroIfCapped() can deactivate only the legacy $49 link. It does not deactivate the current $74 link. Stripe cap enforcement stays deferred.
+  - A 100% discount is fulfilled only when the signed session is a completed payment for one of those catalog prices. See keystones/PROMOTION-RUNBOOK.md. This repo does not create coupons.
 - Remote mini FACT: $1,750, remote, call first.
 - Friction Audit FACT: $4,500 plus travel ($2,250 plus travel up front, $1,125 on arrival, $1,125 on completion).
 - Booking link for both calls: https://calendar.app.google/4mgKAmouyucz7jk79

@@ -25,7 +25,7 @@ WHAT IT FLAGS
 """
 import argparse, datetime, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ks_common import ctx, find_project_root, parse_tables, parse_date, check_date, read, append_change
+from ks_common import ctx, find_project_root, parse_tables, parse_date, check_date, read, append_change, table_headers
 
 GROUPS = {
     "all media": {"*"}, "all": {"*"}, "any": {"*"},
@@ -42,6 +42,8 @@ GROUPS = {
     "internal": {"internal"}, "pitch": {"internal"},
 }
 WORLD = {"worldwide", "world", "global", "all territories", "universe"}
+# Wording a word list must not treat as clearance. A person with rights authority has to read it.
+AMBIGUOUS = re.compile(r"\b(all linear|non-linear|nonlinear|similar|customary|as discussed|per agreement|see contract|to be confirmed|tbd|tba|etc)\b", re.I)
 
 
 def split(s):
@@ -74,18 +76,28 @@ def load(root):
         fs = parse_date(parts[0]) if parts else None
         fe = parse_date(parts[1]) if len(parts) > 1 else None
     assets = []
+    headers = table_headers(text)
+    schema_problem = None
+    if not any("asset" in h and "expiry" in h for h in headers):
+        shown = "; ".join("[" + ", ".join(h) + "]" for h in headers) or "(no tables)"
+        schema_problem = "needs an assets table with columns asset and expiry. Found: %s. Nothing was treated as cleared." % shown
     for t in parse_tables(text):
         if t and "asset" in t[0] and "expiry" in t[0]:
             assets += [r for r in t if r.get("asset") and not r["asset"].startswith("(")]
-    return media, terr, fs, fe, assets
+    return media, terr, fs, fe, assets, schema_problem
 
 
 def check(root, warn_days=30, today=None):
     today = today or datetime.date.today()
-    media, terr, fs, fe, assets = load(root)
+    media, terr, fs, fe, assets, schema_problem = load(root)
     flags = []
+    if schema_problem:
+        flags.append(("SCHEMA", "rights-and-licenses.md", schema_problem))
     for a in assets:
         name = a["asset"]
+        notes = " ".join(a.get(k, "") for k in ("media", "territory", "usage notes"))
+        if AMBIGUOUS.search(notes):
+            flags.append(("REVIEW", name, "this wording needs authorized review. The check does not clear it: %s" % " ".join(notes.split())))
         lm, lt, exp, st = split(a.get("media")), split(a.get("territory")), parse_date(a.get("expiry")), parse_date(a.get("start"))
         for col in ("start", "expiry"):
             raw = a.get(col, "")
@@ -128,7 +140,7 @@ def main(argv=None):
             continue
         if a.log:
             append_change(root, "RIGHTS", "%s flag on %s: %s" % (kind, name, why), "rights_check.py",
-                          "Business Affairs; Account; Media", "pending")
+                          "rights owner; account; media", "pending")
     if not flags:
         print("All clear. Every asset covers the planned media, territories and flight.")
     return 1 if flags else 0
