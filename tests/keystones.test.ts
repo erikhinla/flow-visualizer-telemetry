@@ -115,15 +115,16 @@ test('stored zips download by token and are removed after 24 hours', async () =>
 test('intro: $49 for the first 50 real purchases, test-code orders not counted, then $349', async () => {
   const start = await ks.offerState();
   assert.equal(start.sold, 0); // the earlier test orders all had total 0
-  assert.equal(start.url, ks.INTRO_URL);
+  assert.equal(start.url, ks.CURRENT_INTRO_URL);
+  assert.equal(start.price, 74);
   for (let i = 0; i < 49; i += 1) await webhook(signed(session(`cs_test_real${String(i).padStart(12, '0')}`, { amount_total: 4900 })));
   let o = await ks.offerState();
-  assert.deepEqual([o.intro, o.left, o.price], [true, 1, 49]);
+  assert.deepEqual([o.intro, o.left, o.price], [true, 1, 74]);
   await webhook(signed(session('cs_test_zero00000000000001', { amount_total: 0 })));
   assert.equal((await ks.offerState()).left, 1);
   await webhook(signed(session('cs_test_real00000000000050', { amount_total: 4900 })));
   o = await ks.offerState();
-  assert.deepEqual([o.intro, o.left, o.price, o.url], [false, 0, 349, ks.FULL_URL]);
+  assert.deepEqual([o.intro, o.left, o.price, o.url], [false, 0, 347, ks.CURRENT_FULL_URL]);
   await webhook(signed(session('cs_test_full00000000000001', { payment_link: ks.FULL_LINK, amount_subtotal: 34900, amount_total: 34900 })));
   assert.ok(await ks.paidSession('cs_test_full00000000000001'));
 });
@@ -149,6 +150,90 @@ test('at the 50th real purchase the $49 link is switched off once, and Erik is t
   assert.match(out, /50 intro sales reached/);
   assert.match(out, /deactivated automatically/);
   delete process.env.STRIPE_LINK_KEY;
+});
+
+test('current $74 checkout unlocks through the webhook, a no-cost completion does too, and a bad signature still does not', async () => {
+  const id = 'cs_test_' + 'p'.repeat(20);
+  const res = await webhook(signed(session(id, {
+    status: 'complete', mode: 'payment', payment_link: 'plink_1UWneMCMxQwcbhDnAVR5sHw4',
+    amount_subtotal: 7400, amount_total: 7400, payment_intent: 'pi_test_74',
+    line_items: { data: [{ quantity: 1, amount_subtotal: 7400, currency: 'usd', price: { id: 'price_1UWneDCMxQwcbhDno0WDq2OP', product: 'prod_VUt4BnmzMP8cKV', currency: 'usd', unit_amount: 7400 } }] },
+  })));
+  assert.equal(res.status, 200);
+  assert.equal((await ks.paidSession(id))?.email, 'buyer@example.com');
+  const soldBeforeFree = (await ks.offerState()).sold;
+  const free = 'cs_test_' + 'q'.repeat(20);
+  const freeRes = await webhook(signed(session(free, {
+    status: 'complete', mode: 'payment', payment_status: 'no_payment_required', payment_intent: null,
+    payment_link: ks.CURRENT_FULL_LINK, currency: 'usd', amount_subtotal: 34700, amount_total: 0,
+    total_details: { amount_discount: 34700, amount_tax: 0 },
+    line_items: { data: [{ quantity: 1, amount_subtotal: 34700, currency: 'usd', price: { id: 'price_1UWneGCMxQwcbhDnCZ2ByTQO', product: 'prod_VUt4BnmzMP8cKV', currency: 'usd', unit_amount: 34700 } }] },
+  })));
+  assert.equal(freeRes.status, 200);
+  assert.equal((await freeRes.json()).unlocked, true);
+  assert.ok(await ks.paidSession(free));
+  assert.equal((await ks.offerState()).sold, soldBeforeFree);
+});
+
+test('a failed intake email keeps the entitlement and a redelivery sends once', async () => {
+  const { setMailSender } = await import('../src/lib/fulfil');
+  const id = 'cs_test_' + 'r'.repeat(20);
+  let calls = 0;
+  setMailSender(async () => {
+    calls += 1;
+    if (calls === 1) return { ok: false, via: 'outbox-resend-failed', error: 'down' };
+    return { ok: true, via: 'resend', id: 're_test' };
+  });
+  try {
+    const first = await webhook(signed(session(id)));
+    assert.equal(first.status, 500);
+    assert.equal((await ks.paidSession(id))?.email, 'buyer@example.com');
+    const second = await webhook(signed(session(id)));
+    assert.equal(second.status, 200);
+    assert.equal((await second.json()).mailed, true);
+    const third = await webhook(signed(session(id)));
+    assert.equal(third.status, 200);
+    assert.equal(calls, 2);
+  } finally {
+    setMailSender(null);
+  }
+});
+
+test('a failed delivery email keeps the download and a repeat intake does not spend another build', async () => {
+  const { setMailSender } = await import('../src/lib/fulfil');
+  const post = (await import('../src/app/api/keystones/route')).POST;
+  const id = 'cs_test_' + 's'.repeat(20);
+  await webhook(signed(session(id, {
+    payment_link: ks.CURRENT_INTRO_LINK, amount_subtotal: 7400, amount_total: 7400, payment_status: 'paid', status: 'complete', mode: 'payment',
+  })));
+  const body = {
+    session_id: id,
+    intake: {
+      agency_name: 'TransformBy10X',
+      departments: [{ name: 'Owner', lead: 'Erik' }],
+      rounds: [{ name: 'Review', reviewers: ['Erik'], business_affairs: false, client_sees: false, purpose: 'Erik approves' }],
+      deliverables: ['Radio', 'Print', 'Experiential'],
+      stages: ['Kickoff', 'Production', 'Review', 'Delivery'],
+      storage: 'a shared Drive',
+    },
+    proof: { answers: { q3: 'q3-c2' } },
+  };
+  setMailSender(async () => ({ ok: false, via: 'outbox-resend-failed', error: 'down' }));
+  try {
+    const firstRes = await post(new Request('http://x/api/keystones', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }));
+    const first = await firstRes.json() as { url?: string; error?: string };
+    assert.equal(firstRes.status, 200, JSON.stringify(first));
+    assert.ok(first.url);
+    assert.equal(await ks.buildsUsed(id), 1);
+    const secondRes = await post(new Request('http://x/api/keystones', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }));
+    const second = await secondRes.json() as { url?: string; recovered?: boolean };
+    assert.equal(secondRes.status, 200);
+    assert.equal(second.url, first.url);
+    assert.equal(second.recovered, true);
+    assert.equal(await ks.buildsUsed(id), 1);
+  } finally {
+    setMailSender(null);
+  }
 });
 
 test('a paid checkout emails the buyer the intake link, once', async () => {

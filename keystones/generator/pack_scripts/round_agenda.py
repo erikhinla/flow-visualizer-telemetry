@@ -19,7 +19,7 @@ WHAT IT WRITES
 """
 import argparse, glob, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ks_common import ctx, TODAY, find_project_root, parse_tables, parse_date, date_arg, read, write, append_change
+from ks_common import ctx, TODAY, find_project_root, parse_tables, parse_date, date_arg, read, write, append_change, require_columns
 import rights_check
 
 
@@ -34,8 +34,12 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="Build the next review round agenda.")
     ap.add_argument("--project"); ap.add_argument("--round"); ap.add_argument("--since", type=date_arg)
     ap.add_argument("--write", action="store_true"); ap.add_argument("--close", action="store_true")
+    ap.add_argument("--export", action="store_true", help="Also write a paste-ready agenda. Does not send or mark anything announced.")
     a = ap.parse_args(argv)
     root = find_project_root(a.project)
+    require_columns(ctx(root, "project.md"), ["round", "reviewers"], "project.md review rounds")
+    require_columns(ctx(root, "change-log.md"), ["date", "type", "what changed", "announced to"], "change-log.md")
+    require_columns(ctx(root, "decisions.md"), ["date", "decision", "decided by", "status"], "decisions.md")
 
     rounds = table_with(ctx(root, "project.md"), "round")
     changes = table_with(ctx(root, "change-log.md"), "type")
@@ -98,6 +102,9 @@ def main(argv=None):
         dp = ctx(root, "decisions.md")
         write(dp, read(dp).rstrip("\n") + "\n| %s | %s run | round_agenda.py | %s | marker | round |\n" % (TODAY, rnd["round"], rnd["round"]))
         print("Marked %s as run in change-log.md and decisions.md." % rnd["round"])
+    if a.export:
+        import export_update
+        export_update.export_agenda(root, rnd, new_changes, new_dec, open_q, flags if ba else [])
 
 
 if __name__ == "__main__":

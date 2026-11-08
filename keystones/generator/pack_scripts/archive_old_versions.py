@@ -21,9 +21,10 @@ WHAT IT DOES
 """
 import argparse, datetime, os, re, shutil, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ks_common import TODAY, find_project_root, append_change
+from ks_common import TODAY, ctx, find_project_root, append_change, parse_tables, read
 
 VERSION_RE = re.compile(r"^(?P<base>.*?)[\s_\-\.\(\[]*(?P<tag>v|ver|version|r|rev|round)[\s_\-\.]?(?P<num>\d{1,3})[\)\]]?$", re.I)
+CONFIRM_RE = re.compile(r"(final(_final)?|20\d{2}[-_.]\d{2}[-_.]\d{2})", re.I)
 SKIP_DIRS = {"_archive", "_context", ".git", "__pycache__"}
 
 
@@ -43,6 +44,17 @@ def main(argv=None):
     a = ap.parse_args(argv)
     root = find_project_root(a.project)
 
+    approved = set()
+    decisions = ctx(root, "decisions.md")
+    if os.path.isfile(decisions):
+        for table in parse_tables(read(decisions)):
+            for row in table:
+                if row.get("status", "").lower() not in {"done", "approved", "locked"}:
+                    continue
+                for word in re.findall(r"[\w.\-()]+", row.get("decision", "")):
+                    if "." in word:
+                        approved.add(word.lower())
+
     groups = {}
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
@@ -50,14 +62,23 @@ def main(argv=None):
             sv = split_version(fn)
             if sv:
                 groups.setdefault((dirpath,) + sv[:2], []).append((sv[2], fn))
+            elif CONFIRM_RE.search(fn):
+                print("CONFIRM %s is not treated as a version. Name the current file before archiving it." % os.path.relpath(os.path.join(dirpath, fn), root))
 
     moves = []
     for (dirpath, base, ext), items in sorted(groups.items()):
         if len(items) < 2:
             continue
+        nums = [n for n, _fn in items]
+        if len(nums) != len(set(nums)):
+            print("CONFLICT %s has two files with the same version number. Nothing in that group was moved." % os.path.relpath(dirpath, root))
+            continue
         items.sort()
         keep = items[-1]
         for num, fn in items[:-1]:
+            if fn.lower() in approved:
+                print("SAFEGUARD %s is named in an approved decision. It was not moved. Current candidate is %s." % (fn, keep[1]))
+                continue
             src = os.path.join(dirpath, fn)
             rel = os.path.relpath(src, root)
             dest = os.path.join(root, "_archive", rel)

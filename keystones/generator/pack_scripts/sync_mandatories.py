@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ks_common import ctx, CONTEXT_DIR, find_project_root, key_values, read, write, append_change
 
 EXTS = {".md", ".txt", ".html", ".csv", ".json", ".srt", ".vtt"}
+NATIVE_EXT = {".mp4", ".mov", ".wav", ".aif", ".aiff", ".mp3", ".psd", ".ai", ".indd", ".prproj", ".aep", ".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
 SOURCE_FILES = {"mandatories.md", "legal-lines.md", "change-log.md", "decisions.md"}
 BLOCK = re.compile(r"\[\[KS:(?P<key>[\w.\-]+)\]\](?P<val>.*?)\[\[/KS\]\]", re.S)
 BARE = re.compile(r"\{\{KS:(?P<key>[\w.\-]+)\}\}")
@@ -51,7 +52,11 @@ def main(argv=None):
         for dirpath, dirnames, filenames in os.walk(top):
             dirnames[:] = [d for d in dirnames if d not in {"_archive", ".git"}]
             for fn in filenames:
-                if os.path.splitext(fn)[1].lower() not in EXTS:
+                ext = os.path.splitext(fn)[1].lower()
+                if ext in NATIVE_EXT:
+                    print("NOT EDITED %s. Sync changes text files only. A person still has to update the native file and review the export."
+                          % os.path.relpath(os.path.join(dirpath, fn), root))
+                if ext not in EXTS:
                     continue
                 if dirpath == os.path.join(root, CONTEXT_DIR) and fn in SOURCE_FILES:
                     continue

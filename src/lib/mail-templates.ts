@@ -124,7 +124,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
   keystones_cap_erik: {
     name: 'TBTX notice: Keystones intro cap reached (Erik)', subject: 'Keystones: 50 intro sales reached', vars: ['SOLD', 'RESULT'], plain: true,
     render: (v) => simpleMail('Keystones intro cap reached', [
-      `Real intro purchases: ${v.SOLD}. Checkout now sends buyers to the $349 link.`,
+      `Real intro purchases: ${v.SOLD}. Checkout now sends buyers to the $347 link. The legacy $49 link is the one this notice can deactivate. The current $74 link is left unchanged.`,
       `Intro link status: ${v.RESULT}`,
     ]),
   },

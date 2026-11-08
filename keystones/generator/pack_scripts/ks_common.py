@@ -72,11 +72,42 @@ def parse_tables(text):
     return tables
 
 
+def table_headers(text):
+    """Header rows for every markdown table, including a table that has no data rows yet."""
+    headers, lines, i = [], text.splitlines(), 0
+    while i < len(lines):
+        line = lines[i].strip()
+        if line.startswith("|") and i + 1 < len(lines) and re.match(r"^\|\s*:?-{2,}", lines[i + 1].strip()):
+            headers.append([h.strip().lower() for h in line.strip("|").split("|")])
+            i += 2
+        else:
+            i += 1
+    return headers
+
+
+def require_columns(path, required, label):
+    """Exit with a visible schema error when a required table was renamed or is missing. Never skip quietly."""
+    headers = table_headers(read(path))
+    req = [c.lower() for c in required]
+    for h in headers:
+        if all(c in h for c in req):
+            return h
+    shown = "; ".join("[" + ", ".join(h) + "]" for h in headers) or "(no tables)"
+    sys.exit("SCHEMA: %s needs columns %s. Found: %s. Nothing was skipped quietly. Put those headers back, or fix the table before running this again."
+             % (label, ", ".join(req), shown))
+
+
 def key_values(path):
     """Read a Keystone file's | key | value | table(s) into a dict. Rows with an empty key are skipped."""
     out = {}
+    headers = table_headers(read(path))
+    value_cols = ("current value", "approved wording", "value")
+    matched = [h for h in headers if "key" in h and any(c in h for c in value_cols)]
+    if headers and not matched:
+        print("SCHEMA: %s has tables but none with columns key and a value. Nothing from this file was read. Found: %s"
+              % (path, "; ".join("[" + ", ".join(h) + "]" for h in headers)))
     for table in parse_tables(read(path)):
-        if not table or not any(c in table[0] for c in ("current value", "approved wording", "value")):
+        if not table or not any(c in table[0] for c in value_cols):
             continue  # skip history tables such as "Previous values"
         for row in table:
             k = row.get("key", "")

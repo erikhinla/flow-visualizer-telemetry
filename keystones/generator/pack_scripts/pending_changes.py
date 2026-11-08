@@ -14,10 +14,11 @@ WHAT IT DOES
 """
 import argparse, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ks_common import ctx, TODAY, find_project_root, parse_tables, read, write
+from ks_common import ctx, TODAY, find_project_root, parse_tables, read, write, require_columns
 
 
 def pending_rows(root):
+    require_columns(ctx(root, "change-log.md"), ["date", "type", "what changed", "affects", "announced to"], "change-log.md")
     for t in parse_tables(read(ctx(root, "change-log.md"))):
         if t and "announced to" in t[0]:
             return [r for r in t if r.get("announced to", "").strip().lower() == "pending"]

@@ -146,9 +146,54 @@ def summary(project, rows, rmap, roles=None):
     return "\n".join(L)
 
 
+def machine_id():
+    import getpass
+    node = os.uname().nodename if hasattr(os, "uname") else "computer"
+    return os.environ.get("KEYSTONES_SENDER_ID") or "%s:%s" % (node, getpass.getuser())
+
+
+def sender_path(root):
+    """Machine-local sender record, outside the pack, so a synced folder does not make two computers the sender."""
+    base = os.environ.get("KEYSTONES_HOME") or os.path.join(os.path.expanduser("~"), ".config", "keystones")
+    os.makedirs(base, exist_ok=True)
+    try:
+        os.chmod(base, 0o700)
+    except OSError:
+        pass
+    ident = hashlib.sha1(os.path.abspath(root).encode("utf-8")).hexdigest()[:16]
+    return os.path.join(base, "sender-%s.txt" % ident)
+
+
+def sender_allowed(root):
+    path = sender_path(root)
+    me = machine_id()
+    if not os.path.exists(path):
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(me + "\n")
+        try:
+            os.chmod(path, 0o600)
+        except OSError:
+            pass
+        return True, me
+    with open(path, encoding="utf-8") as f:
+        designated = f.read().strip()
+    return designated == me, designated or me
+
+
+def local_target(value):
+    target = (value or "").lower()
+    return any(host in target for host in ("localhost", "127.0.0.1", "::1"))
+
+
+def refuse_live_provider(target):
+    if os.environ.get("KEYSTONES_NOTICES_MODE") == "test" and not local_target(target):
+        raise RuntimeError("test mode refuses a provider outside this computer")
+
+
 def send_email(s, messages):
     """messages: [(to, subject, body)]. One connection for the whole check."""
     e = s["email"]
+    refuse_live_provider(e.get("host", ""))
     port = int(e.get("port") or (465 if e.get("security") == "ssl" else 587))
     pw = os.environ.get("KEYSTONES_MAIL_PASSWORD") or e.get("password", "")
     ctxs = ssl.create_default_context()
@@ -172,6 +217,7 @@ def send_email(s, messages):
 
 def send_chat(s, text, rows):
     w = s["webhook"]
+    refuse_live_provider(w.get("url", ""))
     if w.get("format", "json") == "text":
         data, ctype = text.encode("utf-8"), "text/plain; charset=utf-8"
     else:
@@ -206,6 +252,11 @@ def notify(root, preview=False, force=False):
     s = load_settings()
     if not is_on(s):
         return ["Change notices are off. Set them up in the menu (9) to send them on their own."]
+    if (s.get("email") or {}).get("password"):
+        print("WARNING: a mail password is in the settings file. Move it to KEYSTONES_MAIL_PASSWORD and keep the settings file out of shared Drive.")
+    allowed, who = sender_allowed(root)
+    if not allowed:
+        return ["This computer is not the designated sender (%s). Nothing was sent." % who]
     rmap = routing()
     rows = [r for r in pending(root) if roles_for(r.get("type", ""), rmap)]
     ledger_path = os.path.join(root, ".keystones-notices.json")
@@ -279,8 +330,12 @@ def after_log(root):
     return rep
 
 
-def send_test():
+def send_test(root=None):
     s = load_settings()
+    if root:
+        allowed, who = sender_allowed(root)
+        if not allowed:
+            return ["This computer is not the designated sender (%s). Test notice was not sent." % who]
     tg = targets(s)
     if not tg:
         return ["Nothing to test yet. Set up email (with at least one address) or a chat link first."]
