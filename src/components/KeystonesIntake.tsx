@@ -14,6 +14,7 @@ type Round = { id: string; name: string; reviewers: string[]; business_affairs: 
 type Handoff = { from: string; to: string; items: string[] };
 type Intake = {
   agency_name: string;
+  team_size: string;
   departments: Dept[];
   stages: string[];
   rounds: Round[];
@@ -53,6 +54,7 @@ const STEPS = ['From PROOF', 'The team', 'Stages and rounds', 'The work', 'How c
 
 const blank = (): Intake => ({
   agency_name: '',
+  team_size: '',
   departments: [],
   stages: [...STAGES],
   rounds: [
@@ -220,6 +222,7 @@ export function KeystonesIntake() {
     const lead = (n: string) => I.departments.find((d) => d.name === n)?.lead;
     const intake = {
       ...I,
+      team_size: Number(I.team_size) > 0 ? Number(I.team_size) : undefined,
       rounds: I.rounds.map((r, i) => ({ ...r, id: `R${i + 1}` })),
       record_owner: I.record_owner || lead('Account') || I.departments[0]?.lead || 'Account lead',
       rights_owner: I.rights_owner || lead('Business Affairs') || lead('Legal') || 'Business Affairs',
@@ -291,6 +294,7 @@ export function KeystonesIntake() {
 
       {gate === 'paid' && step === 1 && (
         <section className="ks-step">
+          <Text label="About how many people work at the agency?" hint="Optional. One total is enough." inputMode="numeric" placeholder="For example, 24" value={I.team_size} onChange={(v) => set('team_size', v.replace(/[^\d]/g, '').slice(0, 6))} />
           <Chips label="Which departments work on a typical project?" options={DEPTS.map(([d]) => d)} value={deptNames} onChange={setDepts} />
           {I.departments.length > 0 && (
             <fieldset className="ks-field">

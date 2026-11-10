@@ -82,13 +82,13 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
   audit_intake: {
     name: 'TBTX order: Remote FACT intake', subject: 'Remote FACT: intake', vars: [], plain: true,
     render: () => simpleMail('Remote FACT: intake', [
-      'The Remote FACT reviews one delivery workflow and reports where it stalls and what to change first.',
+      'The Remote FACT measures all nine in one delivery workflow, reports where it stalls, what it costs and what to change first, and writes your Context Keystones from those measurements.',
       'To start, reply to this email with:',
       '1. The workflow to review, in one or two sentences, from first brief to delivery.',
       '2. Three to five real handoffs from current work: briefs, handoff notes, feedback threads or status updates. Remove anything confidential.',
       '3. The roles involved, and who owns each step.',
       '4. The one place the team notices work stalling most.',
-      'Erik will confirm receipt within one business day and send the written findings after the review.',
+      'Erik will confirm receipt within one business day and send the written findings and your Context Keystones after the review.',
     ]),
   },
   audit_erik: {
@@ -124,7 +124,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
   keystones_cap_erik: {
     name: 'TBTX notice: Keystones intro cap reached (Erik)', subject: 'Keystones: 50 intro sales reached', vars: ['SOLD', 'RESULT'], plain: true,
     render: (v) => simpleMail('Keystones intro cap reached', [
-      `Real intro purchases: ${v.SOLD}. Checkout now sends buyers to the $349 link.`,
+      `Real intro purchases: ${v.SOLD}. Checkout now sends buyers to the $347 link.`,
       `Intro link status: ${v.RESULT}`,
     ]),
   },

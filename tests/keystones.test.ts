@@ -41,6 +41,14 @@ test('intake: only known fields, capped sizes, reserved agency name refused', ()
   assert.equal(typeof intake.cleanIntake({ ...big, departments: [] }), 'string');
 });
 
+test('intake: team size is one optional total, never per department', () => {
+  const base = { agency_name: 'Acme', departments: [{ name: 'Creative', lead: 'L' }], rounds: [{ name: 'R' }] };
+  assert.equal((intake.cleanIntake({ ...base, team_size: 24 }) as Record<string, unknown>).team_size, 24);
+  assert.equal((intake.cleanIntake({ ...base, team_size: '40' }) as Record<string, unknown>).team_size, 40);
+  for (const bad of [0, -3, 2.5, 'lots', '1e3', 200000, null]) assert.equal('team_size' in (intake.cleanIntake({ ...base, team_size: bad }) as Record<string, unknown>), false);
+  assert.equal('team_size' in (intake.cleanIntake(base) as Record<string, unknown>), false);
+});
+
 test('PROOF answers come from the checkout code when the browser sends none', () => {
   const a = intake.proofAnswers({}, 'p1_a_' + '2'.repeat(15));
   assert.equal(Object.keys(a).length, 15);
@@ -61,7 +69,7 @@ function signed(event: object) {
   return new Request('http://x/api/stripe/webhook', { method: 'POST', body: raw, headers: { 'stripe-signature': `t=${t},v1=${sig}` } });
 }
 const session = (id: string, extra: object = {}) => ({ id: `evt_${id}`, type: 'checkout.session.completed', data: { object: {
-  id, payment_status: 'paid', payment_link: ks.INTRO_LINK, currency: 'usd', amount_subtotal: 4900, amount_total: 0,
+  id, payment_status: 'paid', payment_link: ks.INTRO_LINK, currency: 'usd', amount_subtotal: 7400, amount_total: 0,
   client_reference_id: 'p1_a_' + '1'.repeat(15), customer_details: { email: 'buyer@example.com' }, ...extra } } });
 
 test('only a signed, paid checkout at the list price unlocks builds', async () => {
@@ -78,7 +86,7 @@ test('only a signed, paid checkout at the list price unlocks builds', async () =
   const cheap = 'cs_test_' + 'b'.repeat(20);
   await webhook(signed(session(cheap, { amount_subtotal: 100 })));
   const wrongLink = 'cs_test_' + 'f'.repeat(20);
-  await webhook(signed(session(wrongLink, { payment_link: ks.FULL_LINK, amount_subtotal: 4900 })));
+  await webhook(signed(session(wrongLink, { payment_link: ks.FULL_LINK, amount_subtotal: 7400 })));
   assert.equal(await ks.paidSession(wrongLink), null);
   assert.equal(await ks.paidSession(cheap), null);
   const unpaid = 'cs_test_' + 'c'.repeat(20);
@@ -112,23 +120,28 @@ test('stored zips download by token and are removed after 24 hours', async () =>
   assert.equal(existsSync(path.join(dir, 'keystones', `${token}.zip`)), false);
 });
 
-test('intro: $49 for the first 50 real purchases, test-code orders not counted, then $349', async () => {
+test('intro: $74 for the first 50 real purchases (legacy $49 sales count too), test-code orders not counted, then $347', async () => {
   const start = await ks.offerState();
   assert.equal(start.sold, 0); // the earlier test orders all had total 0
   assert.equal(start.url, ks.INTRO_URL);
-  for (let i = 0; i < 49; i += 1) await webhook(signed(session(`cs_test_real${String(i).padStart(12, '0')}`, { amount_total: 4900 })));
+  // Legacy $49 link: still fulfils, and counts toward the same 50.
+  await webhook(signed(session('cs_test_legacy000000000001', { payment_link: ks.LEGACY_INTRO_LINK, amount_subtotal: 4900, amount_total: 4900 })));
+  assert.ok(await ks.paidSession('cs_test_legacy000000000001'));
+  await webhook(signed(session('cs_test_legacybad000000001', { payment_link: ks.LEGACY_INTRO_LINK, amount_subtotal: 7400, amount_total: 7400 })));
+  assert.equal(await ks.paidSession('cs_test_legacybad000000001'), null);
+  for (let i = 1; i < 49; i += 1) await webhook(signed(session(`cs_test_real${String(i).padStart(12, '0')}`, { amount_total: 7400 })));
   let o = await ks.offerState();
-  assert.deepEqual([o.intro, o.left, o.price], [true, 1, 49]);
+  assert.deepEqual([o.intro, o.left, o.price, o.listPrice], [true, 1, 74, 347]);
   await webhook(signed(session('cs_test_zero00000000000001', { amount_total: 0 })));
   assert.equal((await ks.offerState()).left, 1);
-  await webhook(signed(session('cs_test_real00000000000050', { amount_total: 4900 })));
+  await webhook(signed(session('cs_test_real00000000000050', { amount_total: 7400 })));
   o = await ks.offerState();
-  assert.deepEqual([o.intro, o.left, o.price, o.url], [false, 0, 349, ks.FULL_URL]);
-  await webhook(signed(session('cs_test_full00000000000001', { payment_link: ks.FULL_LINK, amount_subtotal: 34900, amount_total: 34900 })));
+  assert.deepEqual([o.intro, o.left, o.price, o.url], [false, 0, 347, ks.FULL_URL]);
+  await webhook(signed(session('cs_test_full00000000000001', { payment_link: ks.FULL_LINK, amount_subtotal: 34700, amount_total: 34700 })));
   assert.ok(await ks.paidSession('cs_test_full00000000000001'));
 });
 
-test('at the 50th real purchase the $49 link is switched off once, and Erik is told', async () => {
+test('at the 50th real purchase the $74 intro link is switched off once, and Erik is told', async () => {
   const { readFileSync, readdirSync } = await import('node:fs');
   // The earlier test already passed 50. Reset the marker and run the close with a stub Stripe.
   const calls: Array<{ url: string; body: string; auth: string }> = [];

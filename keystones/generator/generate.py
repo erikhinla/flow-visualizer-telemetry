@@ -305,13 +305,20 @@ Types: CHANGE, MANDATORY, LEGAL, RIGHTS, SYNC, ARCHIVE, HANDOFF, ROUND.
 """
 
 
+def team_line(I):
+    n = I.get("team_size")
+    if isinstance(n, int) and not isinstance(n, bool) and n > 0:
+        return f"\n{I['agency_name']} has about {n:,} {'person' if n == 1 else 'people'}. Departments and owning roles are in the folder READMEs."
+    return ""
+
+
 def ai_context_md(I):
     notes = "\n".join("- %s" % n for n in I["_proof_notes"]) or "- (no PROOF answers supplied)"
     return f"""
 # AI-CONTEXT: read this first
 
 Any AI assistant working on {{{{CLIENT}}}} : {{{{PROJECT}}}} for {I['agency_name']} reads these files before it writes,
-edits or checks anything, and treats them as the facts of the project.
+edits or checks anything, and treats them as the facts of the project.{team_line(I)}
 
 All of these sit beside this file in the project's `_context/` folder.
 

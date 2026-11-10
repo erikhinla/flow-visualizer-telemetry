@@ -23,8 +23,9 @@ DATA_DIR KEYSTONES_GENERATOR KEYSTONES_PYTHON MAIL_FROM NEXT_PUBLIC_PROOF_BASE_P
 - Backups on the VPS: /root/backups/ (tgz per deploy) plus docker image tags `proof-app:pre-*`.
 
 ## Offers and pricing
-- Context Keystones: intro $49 for the first 50 buyers, then $349.
-  - $349 price price_1UTtb7CMxQwcbhDnQIvS6O51, payment link plink_1UTtbECMxQwcbhDnHyV8ZqQv.
+- Context Keystones (BACK): intro $74 for the first 50 buyers, then $347 (since 2026-10-31).
+  - $74 intro: price price_1UWneDCMxQwcbhDno0WDq2OP, link plink_1UWneMCMxQwcbhDnAVR5sHw4. $347: price price_1UWneGCMxQwcbhDnCZ2ByTQO, link plink_1UWnePCMxQwcbhDny8Kk00jy.
+  - Legacy, still accepted by the webhook: $49 plink_1UTtQm… and $349 plink_1UTtbECMxQwcbhDnHyV8ZqQv (price_1UTtb7CMxQwcbhDnQIvS6O51). Legacy intro sales count toward the 50.
   - Other ids in the code: price_1UThXWCMxQwcbhDnF4MLaeOL, price_1UTtQbCMxQwcbhDnwRozaDDm, plink_1UThXd…, plink_1UThXf…, plink_1UThXh…, plink_1UThXj…, plink_1UTtQm… (see src/lib/keystones-server.ts).
   - At 50 sales, closeIntroIfCapped() deactivates the intro link via STRIPE_LINK_KEY, or emails Erik if that key isn't set.
 - Remote mini FACT: $1,750, remote, call first.

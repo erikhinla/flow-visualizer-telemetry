@@ -1,0 +1,16 @@
+services:
+  proof-orb-preview:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROOF_BASE_PATH: /proof/screen-preview
+    container_name: proof-orb-preview
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3003:3000"
+    volumes:
+      - ./data-preview:/app/data
+    environment:
+      - PROOF_BASE_PATH=/proof/screen-preview
+      - NODE_ENV=production

@@ -3,18 +3,27 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { DATA_DIR, ERIK, findEntry, sendMail } from './fulfil';
 import { templated } from './mail-templates';
+import { BACK_INTRO_LIMIT, BACK_INTRO_PRICE, BACK_LIST_PRICE } from './keystones-prices';
 
 /** Server-only rules for paid Context Keystones builds. */
-/** Intro: $49 for the first 50 real purchases. After that the checkout switches to the $349 link on its own. */
-export const INTRO_LINK = 'plink_1UTtQmCMxQwcbhDnaucAfhpI';
-export const INTRO_URL = 'https://buy.stripe.com/dRm4gy9wb38i41Jd4ec3m05';
-export const INTRO_PRICE = 'price_1UTtQbCMxQwcbhDnwRozaDDm';
-export const FULL_LINK = 'plink_1UTtbECMxQwcbhDnHyV8ZqQv';
-export const FULL_URL = 'https://buy.stripe.com/dRm4gyfUz8sC2XFd4ec3m06';
-export const FULL_PRICE = 'price_1UTtb7CMxQwcbhDnQIvS6O51';
-export const INTRO_LIMIT = 50;
+/** Intro: $74 for the first 50 real purchases. After that the checkout switches to the $347 link on its own. */
+export const INTRO_LINK = 'plink_1UWneMCMxQwcbhDnAVR5sHw4';
+export const INTRO_URL = 'https://buy.stripe.com/cNi3cu37N7oy2XFggqc3m09';
+export const INTRO_PRICE = 'price_1UWneDCMxQwcbhDno0WDq2OP';
+export const FULL_LINK = 'plink_1UWnePCMxQwcbhDny8Kk00jy';
+export const FULL_URL = 'https://buy.stripe.com/5kQ00ifUz7oy0Px6FQc3m0a';
+export const FULL_PRICE = 'price_1UWneGCMxQwcbhDnCZ2ByTQO';
+/** Legacy $49 / $349 links (before 2026-10-31). Still accepted by the webhook so an in-flight purchase fulfils. */
+export const LEGACY_INTRO_LINK = 'plink_1UTtQmCMxQwcbhDnaucAfhpI';
+export const LEGACY_FULL_LINK = 'plink_1UTtbECMxQwcbhDnHyV8ZqQv';
+export const INTRO_LIMIT = BACK_INTRO_LIMIT;
 /** Subtotal in cents (before any code) each link must show in USD. */
-export const SUBTOTAL: Record<string, number> = { [INTRO_LINK]: 4900, [FULL_LINK]: 34900 };
+export const SUBTOTAL: Record<string, number> = {
+  [INTRO_LINK]: BACK_INTRO_PRICE * 100,
+  [FULL_LINK]: BACK_LIST_PRICE * 100,
+  [LEGACY_INTRO_LINK]: 4900,
+  [LEGACY_FULL_LINK]: 34900,
+};
 export const MAX_BUILDS = 5;
 export const ZIP_TTL_MS = 24 * 60 * 60 * 1000;
 export const MAX_BODY = 100_000;
@@ -143,7 +152,8 @@ if (!g.__ksSweep && process.env.NODE_ENV !== 'test') {
 }
 
 // ---- intro counter, from the signed webhook ledger ----
-/** Real paid Keystones purchases: unlocked and with money collected (a 100%-off test order has total=0 and doesn't count). */
+/** Real paid Keystones purchases: unlocked and with money collected (a 100%-off test order has total=0 and doesn't count).
+ * Counts every paid Keystones entry regardless of link, so the legacy $49 and the new $74 intro links share one 50-buyer count. */
 export async function purchasesSold(): Promise<number> {
   let log: Array<{ kind?: string; status?: string; detail?: string }> = [];
   try { log = JSON.parse(await fs.readFile(path.join(DATA_DIR, 'fulfilment-log.json'), 'utf8')); } catch { return 0; }
@@ -152,14 +162,14 @@ export async function purchasesSold(): Promise<number> {
 export async function offerState() {
   const sold = await purchasesSold();
   const intro = sold < INTRO_LIMIT;
-  return { intro, sold, left: Math.max(0, INTRO_LIMIT - sold), limit: INTRO_LIMIT, price: intro ? 49 : 349, listPrice: 349, url: intro ? INTRO_URL : FULL_URL };
+  return { intro, sold, left: Math.max(0, INTRO_LIMIT - sold), limit: INTRO_LIMIT, price: intro ? BACK_INTRO_PRICE : BACK_LIST_PRICE, listPrice: BACK_LIST_PRICE, url: intro ? INTRO_URL : FULL_URL };
 }
 
-// ---- close the $49 link when the cap is hit ----
+// ---- close the $74 intro link when the cap is hit ----
 const CAP_MARK = () => path.join(DATA_DIR, 'keystones-intro-closed.json');
 type Fetch = (url: string, init: { method: string; headers: Record<string, string>; body: string }) => Promise<{ ok: boolean; status: number }>;
 /**
- * Called after each paid Keystones entry. At 50 real purchases it deactivates the $49 payment link through the
+ * Called after each paid Keystones entry. At 50 real purchases it deactivates the $74 intro payment link through the
  * Stripe API (STRIPE_LINK_KEY: a restricted key with Payment Links write only) and tells Erik once.
  * Without a key, or if Stripe fails, Erik gets the notice to switch it off by hand; it retries on the next sale.
  */
@@ -168,15 +178,15 @@ export async function closeIntroIfCapped(fetchImpl: Fetch = fetch as unknown as 
   if (sold < INTRO_LIMIT) return 'open';
   try { const m = JSON.parse(await fs.readFile(CAP_MARK(), 'utf8')); if (m.closed) return 'already-closed'; } catch { /* not closed yet */ }
   const key = process.env.STRIPE_LINK_KEY || '';
-  let result = 'no key on the server: deactivate the $49 link by hand';
+  let result = 'no key on the server: deactivate the $74 intro link by hand';
   let closed = false;
   if (key) {
     try {
       const r = await fetchImpl(`https://api.stripe.com/v1/payment_links/${INTRO_LINK}`, {
         method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/x-www-form-urlencoded', 'Idempotency-Key': `ks-intro-close-${INTRO_LINK}` }, body: 'active=false' });
       closed = r.ok;
-      result = r.ok ? 'deactivated automatically' : `Stripe answered ${r.status}: deactivate the $49 link by hand`;
-    } catch (e) { result = `Stripe call failed (${e instanceof Error ? e.message : 'error'}): deactivate the $49 link by hand`; }
+      result = r.ok ? 'deactivated automatically' : `Stripe answered ${r.status}: deactivate the $74 intro link by hand`;
+    } catch (e) { result = `Stripe call failed (${e instanceof Error ? e.message : 'error'}): deactivate the $74 intro link by hand`; }
   }
   let prev: { notified?: string } = {};
   try { prev = JSON.parse(await fs.readFile(CAP_MARK(), 'utf8')); } catch { /* none */ }

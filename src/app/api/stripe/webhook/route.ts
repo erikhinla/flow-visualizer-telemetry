@@ -4,7 +4,7 @@ import { decodeProof } from '../../../../lib/proof-code';
 import { buildReport } from '../../../../lib/report';
 import { ERIK, PUBLIC_BASE, addEntry, findEntry, sendMail, verifyStripe, type Mail } from '../../../../lib/fulfil';
 import { templated, type TemplateKey } from '../../../../lib/mail-templates';
-import { FULL_LINK, INTRO_LINK, SUBTOTAL, closeIntroIfCapped } from '../../../../lib/keystones-server';
+import { FULL_LINK, INTRO_LINK, LEGACY_FULL_LINK, LEGACY_INTRO_LINK, SUBTOTAL, closeIntroIfCapped } from '../../../../lib/keystones-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -17,6 +17,8 @@ const LINKS: Record<string, 'report' | 'toolkit' | 'refresh' | 'audit' | 'keysto
   plink_1UThXjCMxQwcbhDnMwgfeKkR: 'audit',
   [INTRO_LINK]: 'keystones',
   [FULL_LINK]: 'keystones',
+  [LEGACY_INTRO_LINK]: 'keystones',
+  [LEGACY_FULL_LINK]: 'keystones',
 };
 const REFRESH_PRICE = 'price_1UThXWCMxQwcbhDnF4MLaeOL';
 const RETAKE = `${PUBLIC_BASE}/`;

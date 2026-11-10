@@ -25,24 +25,15 @@ export default function OfferPage() {
   return (
     <article className="offer">
       <p className="kicker">Erik H Bush · TransformBy10X</p>
-      <h1>The client asked where the approval stands.</h1>
-      <p className="benefit">
-        Someone is rebuilding that answer from chat threads, email, and memory. The purchase to refuse is
-        another project tool, or a coordinator hired to own status.
-      </p>
-      <p className="lede">
-        Twenty years in marketing operations and project management. The last three, building with
-        AI on the crew. No client result is published yet. This page won’t
-        invent one.{' '}
-        <a href="https://erikhbush.com/story">Operating history.</a>{' '}
-        <a href="https://www.linkedin.com/in/erik-h-bush/">LinkedIn.</a>
-      </p>
+      <h1>Align the system for AI-velocity.</h1>
+      <p className="benefit">Free people up to do work meant for them.</p>
+      <p className="lede">Choose how we help you get there:</p>
       <div className="actions">
         <a className="button" href={BOOKING_MAILTO}>
           Talk through the pattern
         </a>
         <Link className="button ghost" href="/map">
-          Start PROOF
+          SEE PROOF
         </Link>
       </div>
 

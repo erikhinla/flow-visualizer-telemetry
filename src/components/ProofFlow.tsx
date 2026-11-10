@@ -6,6 +6,7 @@ import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, isAudienceId, type AudienceId } from '../lib/audiences';
 import { QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
 import { LADDER, Ladder, Result } from './ProofResult';
+import { tidyAll } from '../lib/tidy';
 import { encodeProof } from '../lib/proof-code';
 import { RAW_MAX, liveMath } from '../lib/math';
 import type { Choice } from '../lib/types';
@@ -52,7 +53,12 @@ function tie(text: string): string {
   return i > 0 && text.length - i < 16 ? text.slice(0, i) + '\u00a0' + text.slice(i + 1) : text;
 }
 
-type Stage = 'intro' | 'ask' | 'result';
+type Stage = 'intro' | 'ask' | 'processing' | 'result';
+
+/** Phones only: the short beat between the last answer and the result. */
+const PROCESS_MS = 1500;
+const PICK_MS = 180;
+const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   const { ready, session, setSession, resetMap } = useSession();
@@ -64,10 +70,24 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   const [sheet, setSheet] = useState<null | 'path' | 'privacy' | 'story'>(null);
   const [storyIndex, setStoryIndex] = useState(0);
   const [last, setLast] = useState<number | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
+  const timers = useRef<number[]>([]);
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const audience = AUDIENCES[audienceId];
 
   // Audience: ?for= wins, then the last choice on this device.
+  // Keep line breaks clean where text-wrap: pretty is unsupported. Runs after React renders.
+  useEffect(() => {
+    const root = document.querySelector('.px');
+    if (!root) return;
+    let raf = 0;
+    const run = () => { raf = 0; obs.disconnect(); tidyAll(root); obs.observe(root, { subtree: true, childList: true, characterData: true }); };
+    const obs = new MutationObserver(() => { if (!raf) raf = requestAnimationFrame(run); });
+    run();
+    return () => { obs.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+
   useEffect(() => {
     if (window.matchMedia('(max-width: 860px)').matches) setOpenStory(null);
     try {
@@ -114,8 +134,8 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready]);
 
-  const choose = useCallback(
-    (choice: Choice) => {
+  const commit = useCallback(
+    (choice: Choice, phone: boolean) => {
       const values = [...session.values];
       const optionIds = [...session.optionIds];
       setLast(cursor);
@@ -127,10 +147,29 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       if (cursor < QUESTIONS.length - 1) setCursor(cursor + 1);
       else {
         setTab(0);
-        setStage('result');
+        if (done) {
+          // Phones: lock input and show the processing beat before the result.
+          setStage('processing');
+          timers.current.push(window.setTimeout(() => setStage('result'), reducedMotion() ? 600 : PROCESS_MS));
+        } else setStage('result');
       }
     },
     [cursor, session.optionIds, session.values, setSession]
+  );
+
+  const choose = useCallback(
+    (choice: Choice) => {
+      if (picked) return;
+      // Both viewports (round 17): hold the tapped answer for a beat so the selection reads before the next question.
+      setPicked(choice.id);
+      timers.current.push(
+        window.setTimeout(() => {
+          setPicked(null);
+          commit(choice, true);
+        }, reducedMotion() ? 0 : PICK_MS)
+      );
+    },
+    [commit, picked]
   );
 
   useEffect(() => {
@@ -181,10 +220,10 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
     if (document.querySelector('script[data-tbx]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = BASE + "/anchors.css?v=5";
+    link.href = BASE + "/anchors.css?v=11";
     document.head.appendChild(link);
     const script = document.createElement('script');
-    script.src = BASE + "/anchors.js?v=5";
+    script.src = BASE + "/anchors.js?v=12";
     script.defer = true;
     script.dataset.tbx = '1';
     document.body.appendChild(script);
@@ -197,8 +236,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-mark-dot" aria-hidden="true" />
           PROOF
         </Link>
-        <span className="px-bar-sub">Process · Response · Output · Operating capacity · Friction</span>
-        <Letters filled={stage === 'intro' ? 0 : Math.floor(answered / 3)} current={stage === 'ask' ? letterIndex : -1} />
+        <Sections stage={stage} current={letterIndex} />
         <label className="px-select">
           <span>For</span>
           <select value={audienceId} onChange={(event) => chooseAudience(event.target.value as AudienceId)} aria-label="Business type">
@@ -221,23 +259,21 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <section className="px-intro" aria-labelledby="px-title">
             <nav className="tbx-anchors" data-page="proof" />
             <div className="px-intro-copy">
-              <p className="px-kicker">
-                <b>01</b> // The condition
-              </p>
-              <h1 id="px-title" className="px-display px-display--long">
-                <span>AI tools work.</span>
-                <span className="px-fog">That's not the problem.</span>
-                {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
-              </h1>
-              <p className="px-lede px-lede--intro">{audience.lede[1]}</p>
+              <div className="px-intro-head">
+                <h1 id="px-title" className="px-display px-display--long">
+                  <span>AI tools make more work.</span>
+                  <span className="px-fog">Not less.</span>
+                  {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
+                </h1>
+                <p className="px-lede px-lede--intro"><span><span>Your people carry the context</span> <span>the system can't.</span></span> <span>See where the work stalls.</span></p>
+              </div>
               <div className="px-actions px-carnival-wrap">
                 <button type="button" className="px-carnival" onClick={begin}>
                   <span className="px-carnival-ball" aria-hidden="true" style={{ backgroundImage: `url(${BASE}/brand/proof-sphere.webp)` }} />
                   <span className="px-carnival-label">
-                    {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'Start with PROOF'}
+                    {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'SEE PROOF'}
                   </span>
                 </button>
-                <p className="px-meta">15 answers · no email · <button type="button" className="px-nine" onClick={() => (window as unknown as { tbxAnchors?: { open: (k: string) => void } }).tbxAnchors?.open('05')}><i aria-hidden="true" />3 of 9 formulas</button></p>
               </div>
             </div>
           </section>
@@ -265,11 +301,13 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               <div className="px-options" role="group" aria-labelledby="px-q">
                 {QUESTIONS[cursor].choices.map((choice, index) => {
                   const selected = session.optionIds[cursor] === choice.id;
+                  const cls = 'px-option' + (selected ? ' is-selected' : '') + (picked === choice.id ? ' is-picked' : '');
                   return (
                     <button
                       key={choice.id}
                       type="button"
-                      className={selected ? 'px-option is-selected' : 'px-option'}
+                      className={cls}
+                      aria-disabled={picked ? true : undefined}
                       aria-pressed={selected}
                       onClick={() => choose(choice)}
                     >
@@ -293,6 +331,8 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               </div>
             </div>
           </section>
+        ) : stage === 'processing' ? (
+          <Processing />
         ) : score ? (
           <Result audienceId={audienceId} score={score} restart={restart} code={encodeProof(audienceId, answers)} />
         ) : (
@@ -358,7 +398,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                       begin();
                     }}
                   >
-                    Start with PROOF <Arrow />
+                    Start PROOF <Arrow />
                   </button>
                 )}
               </div>
@@ -377,27 +417,59 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   );
 }
 
+const PROCESS_LINES = ['15 answers locked', 'Scoring the Map', 'Locating where work stalls', 'Building the PROOF result'] as const;
+
+/** Both viewports. A short status beat while the result opens. Input is locked because no answers render. */
+function Processing() {
+  const [shown, setShown] = useState(1);
+  useEffect(() => {
+    if (reducedMotion()) {
+      setShown(PROCESS_LINES.length);
+      return;
+    }
+    const step = PROCESS_MS / PROCESS_LINES.length;
+    const ids = PROCESS_LINES.slice(1).map((_, i) => window.setTimeout(() => setShown(i + 2), step * (i + 1)));
+    return () => ids.forEach((t) => window.clearTimeout(t));
+  }, []);
+  return (
+    <section className="px-proc" role="status" aria-live="polite" aria-label="Building the PROOF result">
+      <span className="px-proc-orb" aria-hidden="true" />
+      <ol className="px-proc-log">
+        {PROCESS_LINES.slice(0, shown).map((line, i) => (
+          <li key={line} className={i === shown - 1 ? 'is-now' : undefined}>
+            <span aria-hidden="true">&gt;</span> {line}
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
 function PathPanel() {
   return (
     <div className="px-sheet-body">
       <p className="px-kicker">What happens after PROOF</p>
       <Ladder light />
       <p className="px-path-note">
-        <span>Book a call on the results screen: a mini FACT call or a FACT call. FACT runs on site and ends with the FACT report.</span>
+        <span>Book on the results screen: Remote FACT or On-Site FACT. Both write your Context Keystones from all nine measurements. On-Site FACT also ends with the FACT report.</span>
       </p>
     </div>
   );
 }
 
-function Letters({ filled, current }: { filled: number; current: number }) {
+/** Section words in the bar. Status only, not links: current magenta, done white, upcoming muted, all lit on results. */
+function Sections({ stage, current }: { stage: string; current: number }) {
+  const state = (i: number) =>
+    stage === 'result' || stage === 'processing' ? 'is-lit' : stage === 'ask' ? (i < current ? 'is-done' : i === current ? 'is-now' : 'is-next') : undefined;
   return (
-    <span className="px-letters" aria-hidden="true">
-      {LETTERS.map(([letter, word], index) => (
-        <span key={word} className={index < filled ? 'on' : index === current ? 'now' : undefined} title={word}>
-          {letter}
+    <p className="px-bar-sub" data-stage={stage}>
+      {LETTERS.map(([, word], i) => (
+        <span key={word} className={state(i)} aria-current={state(i) === 'is-now' ? 'step' : undefined}>
+          {i ? <i aria-hidden="true"> · </i> : null}
+          {word}
         </span>
       ))}
-    </span>
+    </p>
   );
 }
 
@@ -453,7 +525,15 @@ function liveView({ values, optionIds, label }: LiveProps) {
     if (value === 1 && !ones.includes(text) && !zeros.includes(text)) ones.push(text);
   });
   const friction = [...zeros, ...ones].slice(0, 4);
-  return { live, friction };
+  // Phone terminal: one line per answered question that scored under 2, newest last. Real answers only.
+  const log: Array<{ q: number; text: string; pts: number }> = [];
+  QUESTIONS.forEach((question, index) => {
+    const value = values[index];
+    if (value === null || value === undefined || value >= 2) return;
+    const pressure = question.choices.find((item) => item.id === optionIds[index])?.pressure;
+    if (pressure) log.push({ q: index + 1, text: label(pressure), pts: value });
+  });
+  return { live, friction, log };
 }
 
 function LivePanel(props: LiveProps) {
@@ -494,10 +574,26 @@ function LivePanel(props: LiveProps) {
 
 function LiveBar(props: LiveProps) {
   const { cursor } = props;
-  const { live, friction } = liveView(props);
+  const { live, friction, log } = liveView(props);
   const [open, setOpen] = useState(false);
   return (
     <div className="px-mbar">
+      <ol className="px-term" aria-label="Friction found so far">
+        {log.length ? (
+          log.slice(-3).map((line) => (
+            <li key={line.q}>
+              <span aria-hidden="true">&gt;</span> Q{String(line.q).padStart(2, '0')} · {line.text} · {line.pts} of 2
+            </li>
+          ))
+        ) : (
+          <li className="is-idle">
+            <span aria-hidden="true">&gt;</span> {live.answered ? 'No friction flagged yet' : 'Waiting for the first answer'}
+          </li>
+        )}
+      </ol>
+      <p className="px-term-range">
+        Map score range <b>{live.floor}</b> to <b>{live.ceiling}</b> of {RAW_MAX}
+      </p>
       <div className="px-mbar-row">
         <p className="px-mbar-score">
           Running Map score <b>{live.raw}</b> of {RAW_MAX}

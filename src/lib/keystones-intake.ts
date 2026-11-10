@@ -13,6 +13,12 @@ function values(v: unknown, keys: string[]): Record<string, string> {
   return out;
 }
 
+/** Optional total headcount: a whole number from 1 to 100,000, or nothing. */
+export function teamSize(v: unknown): number | undefined {
+  const n = typeof v === 'number' ? v : typeof v === 'string' && /^\s*\d{1,6}\s*$/.test(v) ? Number(v) : NaN;
+  return Number.isInteger(n) && n >= 1 && n <= 100000 ? n : undefined;
+}
+
 /** Keep only the fields the generator reads, each cleaned and size-capped, so nothing else reaches the file system. */
 export function cleanIntake(raw: Json): Json | string {
   const agency = safeText(raw.agency_name, 80);
@@ -35,7 +41,7 @@ export function cleanIntake(raw: Json): Json | string {
   const mandatory_types = safeList(raw.mandatory_types) ?? [];
   const legal_line_types = safeList(raw.legal_line_types) ?? [];
   const out: Json = {
-    agency_name: agency, departments, rounds, handoffs,
+    agency_name: agency, team_size: teamSize(raw.team_size), departments, rounds, handoffs,
     stages: safeList(raw.stages, 20, 60), deliverables: safeList(raw.deliverables), mandatory_types, legal_line_types,
     rights_types: safeList(raw.rights_types), usual_media: safeList(raw.usual_media), usual_territories: safeList(raw.usual_territories),
     change_channels: safeList(raw.change_channels),
