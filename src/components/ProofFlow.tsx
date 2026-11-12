@@ -17,9 +17,9 @@ const BASE = process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? '';
 const AUDIENCE_KEY = 'proof.audience.v1';
 const LETTERS = [
   ['P', 'Process'],
-  ['R', 'Response'],
-  ['O', 'Output'],
-  ['O', 'Operating capacity'],
+  ['R', 'Review'],
+  ['O', 'Observing'],
+  ['O', 'Operating'],
   ['F', 'Friction'],
 ] as const;
 
@@ -197,7 +197,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-mark-dot" aria-hidden="true" />
           PROOF
         </Link>
-        <span className="px-bar-sub">Process · Response · Output · Operating capacity · Friction</span>
+        <span className="px-bar-sub">Process · Review · Observing · Operating · Friction</span>
         <Letters filled={stage === 'intro' ? 0 : Math.floor(answered / 3)} current={stage === 'ask' ? letterIndex : -1} />
         <label className="px-select">
           <span>For</span>
