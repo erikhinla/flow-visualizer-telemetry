@@ -221,11 +221,13 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <section className="px-intro" aria-labelledby="px-title">
             <nav className="tbx-anchors" data-page="proof" />
             <div className="px-intro-copy">
+              <img src={`${BASE}/brand/proof-title-tile.jpg`} alt="PROOF workflow diagnostic" className="px-tile-img" />
               <h1 id="px-title" className="px-display px-display--long">
-                <span>AI TOOLS MADE MORE WORK, NOT LESS</span>
+                <span>Is your workflow built for AI speed?</span>
                 {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
               </h1>
-              <p className="px-lede px-lede--intro"><span>Align the system for AI-velocity.</span> <span>Free people up to do work meant for them.</span></p>
+              <p className="px-lede px-lede--intro"><span>People aren't the problem.</span> <span>The process is.</span> <span>See where the work stalls.</span></p>
+              <a href="/review" className="px-calc-link">How PROOF is calculated</a>
               <div className="px-actions px-carnival-wrap">
                 <button type="button" className="px-carnival" onClick={begin}>
                   <span className="px-carnival-ball" aria-hidden="true" style={{ backgroundImage: `url(${BASE}/brand/proof-sphere.webp)` }} />

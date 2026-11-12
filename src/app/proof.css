@@ -1818,3 +1818,7 @@ body:has(.app-main) {
   .px .px-next-ctas .px-btn { min-height: 3rem; padding: .55rem 1rem; }
 }
 
+
+/* Erik Canva design, 2026-11-12: PROOF opener title tile + calculated link */
+.px-tile-img{width:min(100%,620px);height:auto;border-radius:10px;margin:0 auto 1rem;display:block}
+.px-calc-link{display:block;width:max-content;color:#d01e98;font-family:var(--mono);font-size:.9375rem;letter-spacing:.08em;text-decoration:underline;text-underline-offset:3px;margin:.4rem auto 1rem}
