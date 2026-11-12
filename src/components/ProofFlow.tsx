@@ -221,7 +221,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <section className="px-intro" aria-labelledby="px-title">
             <nav className="tbx-anchors" data-page="proof" />
             <div className="px-intro-copy">
-              <img src={`${BASE}/brand/proof-title-tile.jpg`} alt="PROOF workflow diagnostic" className="px-tile-img" />
+              <img src={`${BASE}/brand/proof-title-tile.png`} alt="PROOF workflow diagnostic" className="px-tile-img" />
               <h1 id="px-title" className="px-display px-display--long">
                 <span>Is your workflow built for AI speed?</span>
                 {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
