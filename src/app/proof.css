@@ -1822,3 +1822,8 @@ body:has(.app-main) {
 /* Erik Canva design, 2026-11-12: PROOF opener title tile + calculated link */
 .px-tile-img{width:min(100%,620px);height:auto;border-radius:10px;margin:0 auto 1rem;display:block}
 .px-calc-link{display:block;width:max-content;color:#d01e98;font-family:var(--mono);font-size:.9375rem;letter-spacing:.08em;text-decoration:underline;text-underline-offset:3px;margin:.4rem auto 1rem}
+
+/* Erik 2026-11-12b/c: opener = tile is the title */
+.px .px-intro .px-intro-copy{border-left:0;border-right:0}
+.px-tile-img{width:100vw;max-width:100vw;margin:0 0 1rem calc(50% - 50vw);border-radius:0}
+.px--intro .px-mark,.px--intro .px-bar-sub{display:none}
