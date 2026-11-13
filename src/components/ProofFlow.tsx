@@ -121,6 +121,8 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
     if (!keep) {
       if (session.values.some((value) => value !== null) || session.mapCompleted) resetMap();
       setCursor(0);
+      // ?start=1 (the homepage orb): skip the door and open on Answer 1.
+      if (q.get('start') === '1') setStage('ask');
       return;
     }
     const open = session.values.findIndex((value) => value === null);
@@ -258,7 +260,6 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 <img src={`${BASE}/brand/orb-see-proof.png`} alt="" width={483} height={482} />
               </button>
               {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : null}
-              <a className="px-door-how" href="https://transformby10x.ai/friction-model">How PROOF is calculated</a>
             </div>
           </section>
         ) : stage === 'ask' ? (
@@ -330,15 +331,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       </div>
 
       <footer className="px-foot">
-        <nav className="px-foot-path" aria-label="What happens after PROOF">
-          <span className="px-foot-label">What happens after</span>
-          <span className="px-foot-steps">
-            <span className="is-here">PROOF</span>
-            <a href="https://transformby10x.ai/review/">Review</a>
-            <a href="https://transformby10x.ai/fact/">FACT</a>
-          </span>
-          <a className="px-foot-or" href="https://transformby10x.ai/back/">or BACK</a>
-        </nav>
+        <p className="px-foot-line">15 answers. No charge. No email.</p>
         <button type="button" className="px-foot-link" onClick={() => setSheet(sheet === 'privacy' ? null : 'privacy')} aria-expanded={sheet === 'privacy'}>
           Privacy
         </button>

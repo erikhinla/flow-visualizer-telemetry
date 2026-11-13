@@ -1,7 +1,7 @@
 /** Approved (i) tooltip copy. Source: tooltip-copy.md (Erik, round 7). 02 is "Stage score". */
 import type { ProfileId } from './types';
 
-export const TIP_MAP_SCORE = 'The sum of the 15 answers, from 0 to 30. It places the business in one of the 4 AI Readiness phases and is the first of the 9 measurements.';
+export const TIP_MAP_SCORE = 'The sum of the 15 answers, from 0 to 30. It places the business in one of 4 patterns (Fragmented, Stalled, Scaling, Compounding) and is the first of the 9 measurements.';
 
 export const TIP_LEVEL: Record<ProfileId, string> = {
   FRAGMENTED: 'People hold the work together and little of the context lives in a shared record. AI adds output, but each handoff still depends on someone remembering.',
@@ -29,7 +29,7 @@ export const TIP_STAGE = 'Where work stalls first, based on your lowest answers.
 
 /** The 9 measurements, one line each, for the FACT card back. */
 export const NINE: ReadonlyArray<readonly [string, string, string]> = [
-  ['01', 'Map score', 'Where the business sits on the 4 AI Readiness phases.'],
+  ['01', 'Map score', 'Which of the 4 patterns the business runs on.'],
   ['02', 'Stage score', 'Each stage of work scored. Shows where work waits longest.'],
   ['03', 'Context-gap rate', 'Share of handoffs that arrive missing something required.'],
   ['04', 'Repair hours', 'Hours spent repairing handoffs, timed on real work.'],

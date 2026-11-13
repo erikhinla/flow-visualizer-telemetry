@@ -8,7 +8,7 @@ import { REPORT_VAR_KEYS, renderReport, type ReportVars } from './report';
  */
 export type TemplateKey =
   | 'report' | 'report_no_answers' | 'report_no_answers_erik' | 'toolkit' | 'refresh_active'
-  | 'refresh_monthly' | 'audit_intake' | 'audit_erik' | 'order_no_email_erik' | 'keystones' | 'keystones_paid' | 'keystones_cap_erik';
+  | 'refresh_monthly' | 'retired_link_buyer' | 'retired_link_erik' | 'order_no_email_erik' | 'keystones' | 'keystones_paid' | 'keystones_cap_erik';
 
 interface Def {
   name: string;
@@ -79,21 +79,18 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
       'Answer for the work as it runs today. Compare where work stalls and the pattern with last month to see what moved.',
     ], { label: 'Retake PROOF', url: v.RETAKE_URL }),
   },
-  audit_intake: {
-    name: 'TBTX order: Remote FACT intake', subject: 'Remote FACT: intake', vars: [], plain: true,
-    render: () => simpleMail('Remote FACT: intake', [
-      'The Remote FACT measures all nine in one delivery workflow, reports where it stalls, what it costs and what to change first, and writes your Context Keystones from those measurements.',
-      'To start, reply to this email with:',
-      '1. The workflow to review, in one or two sentences, from first brief to delivery.',
-      '2. Three to five real handoffs from current work: briefs, handoff notes, feedback threads or status updates. Remove anything confidential.',
-      '3. The roles involved, and who owns each step.',
-      '4. The one place the team notices work stalling most.',
-      'Erik will confirm receipt within one business day and send the written findings and your Context Keystones after the review.',
+  // The fixed-price purchase that used these two is retired. FACT is scoped on the PROOF Review, not bought from a link.
+  // If a payment still arrives on the old Stripe link, the buyer gets a plain receipt and Erik gets a notice.
+  retired_link_buyer: {
+    name: 'TBTX order: payment received', subject: 'Payment received', vars: [], plain: true,
+    render: () => simpleMail('Payment received', [
+      'Thank you. Your payment came through.',
+      'Erik will reply to this email within one business day with the next step.',
     ]),
   },
-  audit_erik: {
-    name: 'TBTX notice: new Remote FACT (Erik)', subject: 'New Remote FACT purchase', vars: ['BUYER', 'SESSION_ID'], plain: true,
-    render: (v) => simpleMail('New Remote FACT purchase', [`Buyer: ${v.BUYER}`, `Stripe session: ${v.SESSION_ID}`, 'Intake request sent to the buyer.']),
+  retired_link_erik: {
+    name: 'TBTX notice: payment on a retired link (Erik)', subject: 'Action needed: payment on a retired link', vars: ['BUYER', 'SESSION_ID'], plain: true,
+    render: (v) => simpleMail('Action needed: payment on a retired link', [`Buyer: ${v.BUYER}`, `Stripe session: ${v.SESSION_ID}`, 'This Stripe link is retired. The buyer got a plain receipt. Reply to them directly.']),
   },
   order_no_email_erik: {
     name: 'TBTX notice: paid order without email (Erik)', subject: 'Action needed: paid order without email', vars: ['OFFER', 'SESSION_ID'], plain: true,
@@ -138,8 +135,9 @@ export const TEMPLATE_IDS: Record<TemplateKey, string> = {
   toolkit: '7d704253-0f63-4b5f-b15a-c321f028a7a4',
   refresh_active: '1cf7651f-fc33-49fa-9902-7751913d858f',
   refresh_monthly: 'bead4f11-073e-45e7-b799-49512a0efb71',
-  audit_intake: '5a37052d-a160-4aca-90eb-75d21c831993',
-  audit_erik: '59faf04e-15a1-43f7-a8a1-c3949f92edff',
+  // No Resend template on purpose: these send the local copy, so the old published wording is never used.
+  retired_link_buyer: '',
+  retired_link_erik: '',
   order_no_email_erik: '1ccdce02-b3c4-4547-9423-d95ffe9b7295',
   keystones: '',
   keystones_paid: '',
