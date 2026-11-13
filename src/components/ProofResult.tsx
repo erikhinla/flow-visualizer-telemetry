@@ -668,7 +668,7 @@ function tidyText(t: string): string {
   return t
     .replace(/([A-Za-z])-(?=[A-Za-z])/g, '$1\u2011')
     .replace(/(\d[\d,.]*%?) (?=[A-Za-z$\d(])/g, '$1' + NB)
-    .replace(/\b(Phase|of|to|at|adds|Q|from) (?=[$]?\d)/g, '$1' + NB)
+    .replace(/\b(Phase|of|to|at|adds|Q|from|all) (?=[$]?\d)/g, '$1' + NB)
     .replace(/\b(an?|per) (hour|year|week|month|person)\b/g, '$1' + NB + '$2')
     .replace(/\b(Remote|On\u2011Site|Context|Repair|plus) (FACT|Repair|Cost|travel)\b/g, '$1' + NB + '$2');
 }
