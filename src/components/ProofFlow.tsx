@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, isAudienceId, type AudienceId } from '../lib/audiences';
 import { QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
-import { LADDER, Ladder, Result } from './ProofResult';
+import { Ladder, Result } from './ProofResult';
 import { tidyAll } from '../lib/tidy';
 import { encodeProof } from '../lib/proof-code';
 import { RAW_MAX, liveMath } from '../lib/math';
@@ -216,18 +216,6 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
 
   const letterIndex = stage === 'result' ? 5 : Math.floor(cursor / 3);
 
-  useEffect(() => {
-    if (document.querySelector('script[data-tbx]')) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = BASE + "/anchors.css?v=11";
-    document.head.appendChild(link);
-    const script = document.createElement('script');
-    script.src = BASE + "/anchors.js?v=12";
-    script.defer = true;
-    script.dataset.tbx = '1';
-    document.body.appendChild(script);
-  }, []);
 
   return (
     <div className={`px px--${stage}`} data-stage={stage}>
@@ -256,25 +244,21 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
         {!ready ? (
           <p className="px-loading">Opening PROOF</p>
         ) : stage === 'intro' ? (
-          <section className="px-intro" aria-labelledby="px-title">
-            <nav className="tbx-anchors" data-page="proof" />
-            <div className="px-intro-copy">
-              <div className="px-intro-head">
-                <h1 id="px-title" className="px-display px-display--long">
-                  <span>AI tools make more work.</span>
-                  <span className="px-fog">Not less.</span>
-                  {audience.headQuestion ? <span className="px-red px-display-q">{audience.headQuestion}</span> : null}
-                </h1>
-                <p className="px-lede px-lede--intro"><span><span>Your people carry the context</span> <span>the system can't.</span></span> <span>See where the work stalls.</span></p>
-              </div>
-              <div className="px-actions px-carnival-wrap">
-                <button type="button" className="px-carnival" onClick={begin}>
-                  <span className="px-carnival-ball" aria-hidden="true" style={{ backgroundImage: `url(${BASE}/brand/proof-sphere.webp)` }} />
-                  <span className="px-carnival-label">
-                    {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See the pattern' : 'SEE PROOF'}
-                  </span>
-                </button>
-              </div>
+          <section className="px-intro px-door" aria-labelledby="px-title">
+            <video className="px-door-film" autoPlay muted loop playsInline preload="auto" poster={`${BASE}/brand/door-hall-poster.jpg`} aria-hidden="true">
+              <source src={`${BASE}/brand/door-hall.mp4`} type="video/mp4" />
+            </video>
+            <div className="px-door-scrim" aria-hidden="true" />
+            <div className="px-door-hero">
+              <h1 id="px-title" className="px-door-title">
+                <img className="px-door-lockup" src={`${BASE}/brand/proof-lockup-word.png`} alt="PROOF: Process, Review, Observing, Operating, Friction" width={817} height={181} />
+              </h1>
+              <p className="px-door-desc">AI Workflow Diagnostic</p>
+              <button type="button" className="px-door-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'SEE PROOF'}>
+                <img src={`${BASE}/brand/orb-see-proof.png`} alt="" width={483} height={482} />
+              </button>
+              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : null}
+              <a className="px-door-how" href="https://transformby10x.ai/friction-model">How PROOF is calculated</a>
             </div>
           </section>
         ) : stage === 'ask' ? (
@@ -346,16 +330,15 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       </div>
 
       <footer className="px-foot">
-        <button type="button" className="px-foot-path" onClick={() => setSheet(sheet === 'path' ? null : 'path')} aria-expanded={sheet === 'path'}>
+        <nav className="px-foot-path" aria-label="What happens after PROOF">
           <span className="px-foot-label">What happens after</span>
-          <span className="px-foot-steps" aria-hidden="true">
-            {LADDER.map(([name], index) => (
-              <span key={name} className={index === 0 ? 'is-here' : index >= 4 ? 'is-bbai' : undefined}>
-                {name}
-              </span>
-            ))}
+          <span className="px-foot-steps">
+            <span className="is-here">PROOF</span>
+            <a href="https://transformby10x.ai/review/">Review</a>
+            <a href="https://transformby10x.ai/fact/">FACT</a>
           </span>
-        </button>
+          <a className="px-foot-or" href="https://transformby10x.ai/back/">or BACK</a>
+        </nav>
         <button type="button" className="px-foot-link" onClick={() => setSheet(sheet === 'privacy' ? null : 'privacy')} aria-expanded={sheet === 'privacy'}>
           Privacy
         </button>
@@ -451,7 +434,7 @@ function PathPanel() {
       <p className="px-kicker">What happens after PROOF</p>
       <Ladder light />
       <p className="px-path-note">
-        <span>Book on the results screen: Remote FACT or On-Site FACT. Both write your Context Keystones from all nine measurements. On-Site FACT also ends with the FACT report.</span>
+        <span>The Review reads your answers back against the score and the cost. FACT measures all nine in real handoffs. BACK is the other option: Context Keystones your team puts in place itself.</span>
       </p>
     </div>
   );

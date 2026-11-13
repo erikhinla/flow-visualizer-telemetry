@@ -2363,3 +2363,72 @@ body:has(.app-main) {
 
 /* round19: keep each FACT link whole */
 .px-rx-fact a { white-space: nowrap; }
+
+/* t791 2026-11-13: PROOF door = approved comp (lockup-word, AI Workflow Diagnostic, glass orb). No title tile, no pipes, no headline overlap. */
+.px .px-intro.px-door { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: #090A0C; color: #fff; min-height: 100%; }
+.px-door-film { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; pointer-events: none; }
+.px-door-scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none; background:
+  radial-gradient(ellipse 72% 78% at 50% 48%, rgba(6,7,10,.86) 0%, rgba(6,7,10,.72) 42%, rgba(6,7,10,.48) 72%, rgba(6,7,10,.32) 100%),
+  linear-gradient(180deg, rgba(6,7,10,.55) 0%, transparent 18%, transparent 82%, rgba(6,7,10,.5) 100%); }
+.px-door-hero { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; padding: clamp(12px, 3vh, 40px) 24px; }
+.px .px-door-title { margin: 0; line-height: 0; }
+.px-door-lockup { display: block; width: min(54vw, 72vh, 1040px); max-width: 100%; height: auto; }
+.px .px-door-desc { margin: min(1.6vw, 2.6vh) 0 0; font-family: var(--font-tight), "Inter Tight", Geist, sans-serif; font-weight: 500; text-transform: uppercase; color: #fff; line-height: 1;
+  font-size: min(2.2vw, 3.4vh); letter-spacing: .18em; background: none; -webkit-text-fill-color: #fff; }
+.px .px-door-orb { position: relative; display: block; width: min(20vw, 30vh, 400px); margin: min(2.6vw, 4.2vh) 0 0; padding: 0; border: 0; background: none; border-radius: 50%; cursor: pointer; transition: transform .18s ease; -webkit-tap-highlight-color: transparent; }
+.px .px-door-orb::before { content: ""; position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle, rgba(232,50,140,.32), transparent 68%); filter: blur(28px); z-index: 0; }
+.px .px-door-orb img { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
+.px .px-door-orb:hover { transform: scale(1.03); }
+.px .px-door-orb:active { transform: scale(.98); }
+.px .px-door-orb:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.px .px-door-status { margin: .8rem 0 0; font-family: var(--mono); font-size: .875rem; letter-spacing: .1em; text-transform: uppercase; color: #fff; }
+.px .px-door-how { margin-top: min(1.6vw, 2.4vh); font-family: var(--mono); font-size: .8125rem; letter-spacing: .08em; color: rgba(243,243,240,.62); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.28); padding-bottom: 2px; }
+.px .px-door-how:hover { color: #fff; }
+.px .px-door .tbx-anchors { position: absolute; z-index: 3; }
+@media (max-width: 900px) {
+  .px-door-film { object-position: 18% 38%; }
+  .px-door-scrim { background:
+    radial-gradient(ellipse 88% 70% at 50% 46%, rgba(6,7,10,.90) 0%, rgba(6,7,10,.80) 48%, rgba(6,7,10,.58) 100%),
+    linear-gradient(180deg, rgba(6,7,10,.6) 0%, transparent 16%, transparent 84%, rgba(6,7,10,.55) 100%); }
+  .px-door-lockup { width: min(88vw, 540px); }
+  .px .px-door-desc { font-size: clamp(14px, 3.8vw, 22px); margin-top: 14px; letter-spacing: .16em; }
+  .px .px-door-orb { width: min(52vw, 32vh, 260px); margin-top: 28px; }
+}
+@media (prefers-reduced-motion: reduce) { .px-door-film { display: none; } .px .px-intro.px-door { background: #090A0C center / cover no-repeat; } }
+
+/* t791: footer path = PROOF > Review > FACT, quiet "or BACK". */
+.px .px-foot-steps a { color: var(--mute); text-decoration: none; }
+.px .px-foot-steps a:hover { color: var(--ink); text-decoration: underline; }
+.px .px-foot-steps > * + *::before { content: '>'; margin-right: 0.6rem; color: var(--red); }
+.px .px-foot-or { color: var(--mute); text-decoration: none; text-transform: none; letter-spacing: .02em; font-size: .8125rem; }
+.px .px-foot-or:hover { color: var(--ink); text-decoration: underline; }
+@media (max-width: 900px) { .px .px-foot-or { display: none; } }
+
+/* t791: 07 Review card and 08 hierarchy. Headlines solid white. */
+.px .px-res-h em, .px .px-res-h span, .px .px-ns-h { color: inherit; -webkit-text-fill-color: currentColor; background: none; }
+.px .px-rv-card .px-rx-lead { font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.15; }
+.px .px-rv-free { margin: .45rem 0 0; font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(243,242,238,.62); }
+.px .px-rv-or, .px .px-ns-link { display: inline-block; margin-top: .9rem; font-family: var(--mono); font-size: .8125rem; letter-spacing: .06em; color: rgba(243,242,238,.72); text-decoration: none; border-bottom: 1px solid rgba(243,242,238,.3); padding-bottom: 1px; align-self: flex-start; }
+.px .px-rv-or:hover, .px .px-ns-link:hover { color: #fff; border-color: #fff; }
+.px .px-ns { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); grid-template-areas: "head head" "review fact" "back back"; gap: clamp(.8rem, 2vh, 1.4rem) clamp(1rem, 2.4vw, 2rem); width: 100%; }
+.px .px-ns .px-oc-head { grid-area: head; }
+.px .px-res-steps .px-ns-h { white-space: normal !important; text-wrap: balance; font-size: min(5.2cqi, 4.2rem, 8vh) !important; line-height: 1 !important; }
+.px .px-ns-review { grid-area: review; border: 2px solid #d01e98; padding: clamp(1rem, 2.4vh, 1.75rem); display: flex; flex-direction: column; gap: .6rem; background: rgba(208,30,152,.08); }
+.px .px-ns-review-name { margin: 0; font-family: var(--font-tight), "Inter Tight", sans-serif; font-weight: 800; font-size: clamp(1.8rem, 3.4vw, 3rem); line-height: 1; color: #fff; }
+.px .px-ns-review-line { margin: 0; font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.4; color: rgba(243,242,238,.88); max-width: 42ch; }
+.px .px-ns-cta { margin-top: auto; max-width: 22rem; }
+.px .px-ns-btn { min-height: 3.4rem; font-weight: 700; font-size: 1.05rem; letter-spacing: .02em; }
+.px .px-ns-fact { grid-area: fact; border: 1px solid rgba(243,242,238,.28); padding: clamp(1rem, 2.4vh, 1.75rem); display: flex; flex-direction: column; gap: .5rem; }
+.px .px-ns-fact-name { margin: 0; font-family: var(--font-tight), "Inter Tight", sans-serif; font-weight: 800; font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: .95; color: #fff; letter-spacing: -.01em; }
+.px .px-ns-fact-full { margin: 0; font-family: var(--mono); font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; color: rgba(243,242,238,.72); }
+.px .px-ns-fact-line { margin: .3rem 0 0; font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.4; color: rgba(243,242,238,.88); }
+.px .px-ns-back { grid-area: back; border-top: 1px solid rgba(243,242,238,.16); padding-top: .8rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1.2rem; color: rgba(243,242,238,.62); font-size: .9375rem; line-height: 1.45; }
+.px .px-ns-back-line, .px .px-ns-back-price { margin: 0; }
+.px .px-ns-back-line b { color: rgba(243,242,238,.85); font-weight: 700; margin-right: .4rem; }
+.px .px-ns-back-price { font-family: var(--mono); font-size: .8125rem; }
+.px .px-ns-link--quiet { margin-top: 0; font-size: .75rem; }
+@media (max-width: 900px) {
+  .px .px-ns { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "review" "fact" "back"; }
+  .px .px-res-steps .px-ns-h { font-size: clamp(1.6rem, 8vw, 2.4rem) !important; }
+  .px .px-ns-cta { max-width: none; }
+}

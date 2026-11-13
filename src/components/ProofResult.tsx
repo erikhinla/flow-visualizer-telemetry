@@ -11,7 +11,7 @@ import type { scoreMap } from '../lib/questionnaire';
 import type { ProfileId } from '../lib/types';
 import { Tip } from './Tip';
 import { NINE, TIP_ANNUAL, TIP_DIMENSION, TIP_FACT_ALL_NINE, TIP_HOURLY, TIP_LEVEL, TIP_MAP_SCORE, TIP_REPAIR_COST, TIP_SCORING, TIP_STAGE, TIP_THREE_OF_NINE } from '../lib/tips';
-import { BackCardPrice, KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPrice';
+import { KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPrice';
 
 import { REVIEW_URL } from '../lib/links';
 export { REVIEW_URL };
@@ -20,15 +20,14 @@ const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/inde
 /** One ladder, used on the result page and in the footer sheet. */
 export const LADDER: ReadonlyArray<readonly [string, string]> = [
   ['PROOF', '15 answers. One pattern. The result shows on screen.'],
-  ['BACK', 'The BACK (Business Aligned Context Keystones) offer. Built from the 15 answers and a short intake. Downloads right after the intake.'],
-  ['Remote FACT', 'Measures all nine in real handoffs from current work, remotely, and writes your Context Keystones from them. $1,750. Call first.'],
-  ['On-Site FACT', 'On site. Ends with the FACT report: where delivery stalls, what it costs, what to change first, and your Context Keystones written from all nine measurements. $4,500 plus travel: $2,250 up front, $1,125 on arrival, $1,125 on completion. Call first.'],
-]
+  ['Review', 'A call with Erik that reads your answers back against the score and the cost. No charge.'],
+  ['FACT', 'Friction Assessment Context Telemetry. Measures all nine in real handoffs from current work.'],
+];
 
-/** FACT spelled out where it first shows on a screen. */
+/** Names spelled out where they first show on a screen. */
 export const LADDER_FULL: Readonly<Record<string, string>> = {
-  'BACK': 'BACK (Business Aligned Context Keystones)',
-  'Remote FACT': 'Remote FACT (Friction Assessment Context Telemetry)',
+  'Review': 'PROOF Review',
+  'FACT': 'FACT (Friction Assessment Context Telemetry)',
 };
 
 /** On phones each results screen shows one layer at a time. Next reveals the next layer. */
@@ -104,7 +103,7 @@ const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = [
 const levelOf = (id: ProfileId) => LEVELS.find((l) => l.id === id)!;
 
 /** Phone results order: diagnostic first, offers last. */
-const PHONE_SCREENS = ['Your level', 'How it was scored', 'Where the work stalls', 'What it costs', 'The next level', 'Your prescription', 'The path forward'] as const;
+const PHONE_SCREENS = ['Your phase', 'How it was scored', 'Where the work stalls', 'What it costs', 'The next phase', 'Your prescription', 'The path forward'] as const;
 const CORE_LINE = "AI creates faster than human-speed handoffs. Context can't keep up.";
 
 /** "X of 15 answers scored low. Most are in A and B." Low = 0 of 2. Falls back to 1 of 2 when no answer scored 0. */
@@ -136,8 +135,6 @@ export function Arrow() {
 }
 
 
-export const REMOTE_FACT_URL = 'https://buy.stripe.com/8x29ASfUzdMW0Px7JUc3m08';
-export const ONSITE_FACT_URL = 'https://calendar.app.google/Xu3RZNM4nEuATHee7';
 
 /** Offer cards, used on the last results screen on desktop and phones. BACK first and the only filled button. Value before price. */
 /** Desktop only: a slight tilt toward the pointer (max 3deg). Off for touch and reduced motion. Writes CSS vars, no re-render. */
@@ -199,69 +196,36 @@ function OfferCard({ id, lead = false, title, back, children }: { id: string; le
   );
 }
 
-const PROOF_BENEFIT = 'Bring this result to Erik. In 45 minutes, leave with the first fix, what it’s worth, and whether BACK or FACT makes sense.';
-const BACK_BENEFIT = "Stop re-explaining the work. The team's context, written down once from these 15 answers, ready right after a short intake.";
-const FACT_BENEFIT = "Get the team's hours back, with proof of what each fix is worth.";
 
-function OfferCards({ code, offer }: { code?: string | null; offer: ReturnType<typeof useKeystonesOffer> }) {
+/** Last results screen: the Review is the one primary step, FACT the main offer, BACK a quiet parallel option. */
+function NextSteps() {
   return (
-    <ol className="px-oc" aria-label="Offers">
-      <OfferCard id="px-oc-proof" title="PROOF Review" back={{
-        sections: [
-          ['What happens on the call', ['Erik walks through this PROOF result line by line', 'Pinpoints the stage of work to fix first and what it costs today', 'Maps the next level and what moves the score', 'Straight answer on BACK, FACT or neither']],
-          ['Who Erik is', 'Decades running operations and workflow for creative and production teams.'],
-          ['What to bring', 'This result and one recent project that slipped.'],
-          ['What it measures', '01 Map score and 08 + 09 Context Repair Cost.'],
-        ],
-      }}>
-        <p className="px-oc-kicker">Review with Erik</p>
-        <p className="px-oc-name">PROOF</p>
-        <p className="px-oc-full px-oc-full--strong">Not sure where to start?</p>
-        <p className="px-oc-def px-oc-def--em">{PROOF_BENEFIT}</p>
-        <div className="px-oc-buy">
-          <a className="px-oc-btn" href={REVIEW_URL} target="_blank" rel="noopener"><small>Book</small> <b>PROOF Review</b> <Arrow /></a>
+    <div className="px-ns">
+      <div className="px-oc-head">
+        <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Bring this result to the Review.</h2>
+        <p className="px-res-sub px-oc-sub">Forty-five minutes with Erik reads your answers back against the score and the cost.</p>
+      </div>
+      <section className="px-ns-review" aria-label="PROOF Review">
+        <p className="px-res-label">Review with Erik</p>
+        <p className="px-ns-review-name">PROOF Review</p>
+        <p className="px-ns-review-line">Your results say how the work moves. They don’t say where it stalls. You leave knowing what the score means, and whether the other six measurements are worth taking.</p>
+        <div className="px-ns-cta">
+          <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
+          <p className="px-rv-free">No charge.</p>
         </div>
-      </OfferCard>
-      <OfferCard id="px-oc-back" lead title="BACK" back={{
-        sections: [
-          ["What's inside", ['The written Context Keystones: folders, markdown files, scripts and handoff protocols', 'A DIY guide to put them in place', 'Ready right after a short intake']],
-          ['What it measures', 'Built from the same 15 answers plus a short intake. No new measurements.'],
-        ],
-        benefit: BACK_BENEFIT,
-      }}>
-        <p className="px-oc-kicker">&nbsp;</p>
-        <p className="px-oc-name">BACK</p>
-        <p className="px-oc-full">Business Aligned Context Keystones</p>
-        <p className="px-oc-def">{BACK_BENEFIT}</p>
-        <div className="px-oc-buy">
-          <BackCardPrice offer={offer} />
-          <a className="px-oc-btn is-fill" href={checkoutHref(code)}><small>Get</small> <b>BACK</b> <Arrow /></a>
-        </div>
-      </OfferCard>
-      <OfferCard id="px-oc-fact" title="FACT" back={{
-        sections: [
-          ["What's inside", ['All nine measurements, taken in real handoffs from current work, remote or on site', 'What stalls, what it costs, what to change first and what each fix is worth', 'Your Context Keystones, written from all nine measurements']],
-          ['All 9 measurements', (
-            <ol className="px-oc-nine">
-              {NINE.map(([n, name, def]) => <li key={n} title={def}><b>{n}</b> {name}</li>)}
-            </ol>
-          )],
-        ],
-        benefit: FACT_BENEFIT,
-      }}>
-        <p className="px-oc-kicker">Remote or on site</p>
-        <p className="px-oc-name">FACT</p>
-        <p className="px-oc-full">Friction Assessment Context Telemetry <Tip label="About FACT measurements">{TIP_FACT_ALL_NINE}</Tip></p>
-        <p className="px-oc-def">{FACT_BENEFIT}</p>
-        <div className="px-oc-buy">
-          <div className="px-oc-split">
-            <a className="px-oc-btn px-oc-mini" href={REMOTE_FACT_URL} target="_blank" rel="noopener"><b>Remote</b> <small>$1,750</small></a>
-            <a className="px-oc-btn px-oc-mini" href={ONSITE_FACT_URL} target="_blank" rel="noopener"><b>On-Site</b> <small>$4,500 plus travel</small></a>
-          </div>
-          <p className="px-oc-note">Call first.</p>
-        </div>
-      </OfferCard>
-    </ol>
+      </section>
+      <section className="px-ns-fact" aria-label="FACT">
+        <p className="px-ns-fact-name">FACT</p>
+        <p className="px-ns-fact-full">Friction Assessment Context Telemetry <Tip label="About FACT measurements">{TIP_FACT_ALL_NINE}</Tip></p>
+        <p className="px-ns-fact-line">AI-aligned workflows support people, and the business can keep up.</p>
+        <a className="px-ns-link" href="https://transformby10x.ai/fact/">See FACT</a>
+      </section>
+      <section className="px-ns-back" aria-label="BACK">
+        <p className="px-ns-back-line"><b>BACK</b> AI capability outpaces workflow capacity. That includes a business of one, which has to be aligned with AI from the start.</p>
+        <p className="px-ns-back-price">Intro $74 for the first 50, then $347.</p>
+        <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See Back</a>
+      </section>
+    </div>
   );
 }
 
@@ -333,7 +297,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
   const nextBand = nextLvl ? BANDS.find((b) => b.id === nextLvl.id)! : null;
   const phoneScreens: readonly string[] = PHONE_SCREENS;
   // Desktop follows the same readiness-first order as phones, in its own layout. Offers only on the last screen.
-  const deskScreens = ['Your level', 'How it was scored', 'Where work stalls', 'What the answers show', 'Payroll hours', 'The next level', 'Your prescription', 'What happens next'];
+  const deskScreens = ['Your phase', 'How it was scored', 'Where work stalls', 'What the answers show', 'Payroll hours', 'The next phase', 'Your prescription', 'What happens next'];
   const phone = usePhone();
   const screens = phone ? phoneScreens : deskScreens;
   const [step, setStep] = useState(0);
@@ -392,7 +356,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
 
   return (
     <section ref={root} className="px-result px-res px-res-steps" aria-labelledby="px-done">
-      <p className="px-res-badge"><span aria-label={`Level ${lvl.n}, ${lvl.name}`}>Level {lvl.n} · {lvl.name}</span><span> · {score.raw} of {RAW_MAX}</span> <Tip label={`About Level ${lvl.n}`}>{TIP_LEVEL[score.profile]}</Tip></p>
+      <p className="px-res-badge"><span aria-label={`Phase ${lvl.n}, ${lvl.name}`}>Phase {lvl.n} · {lvl.name}</span><span> · {score.raw} of {RAW_MAX}</span> <Tip label={`About Phase ${lvl.n}`}>{TIP_LEVEL[score.profile]}</Tip></p>
       <div className="px-res-panel" ref={panel} key={current} data-on={phone ? shown : undefined}>
         {current === 'Where work stalls' ? (
           <div className="px-res-screen">
@@ -410,11 +374,11 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           </div>
         ) : null}
 
-        {current === 'Your level' ? (
+        {current === 'Your phase' ? (
           <div className="px-res-screen">
             <p className="px-res-label">Result · AI Readiness</p>
-            <h1 id="px-done" className="px-res-h px-lvl-h" tabIndex={-1}>Level {lvl.n}: {lvl.name}</h1>
-            <ol className="px-lvl-scale" aria-label="AI Readiness, 4 levels">
+            <h1 id="px-done" className="px-res-h px-lvl-h" tabIndex={-1}>Phase {lvl.n}: {lvl.name}</h1>
+            <ol className="px-lvl-scale" aria-label="AI Readiness, 4 phases">
               {LEVELS.map((l) => {
                 const b = BANDS.find((x) => x.id === l.id)!;
                 return (
@@ -422,18 +386,18 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
                     <b>{l.n}</b>
                     <span>{l.name.replace('-', '\u2011')}</span>
                     <small>{b.from} to {b.to}</small>
-                    <Tip label={`About Level ${l.n}, ${l.name}`}>{TIP_LEVEL[l.id]}</Tip>
+                    <Tip label={`About Phase ${l.n}, ${l.name}`}>{TIP_LEVEL[l.id]}</Tip>
                   </li>
                 );
               })}
             </ol>
             <div className="px-res-box">
-              <p className="px-res-label">What Level {lvl.n} means</p>
+              <p className="px-res-label">What Phase {lvl.n} means</p>
               <p className="px-res-sub">{audience.profile[score.profile]}</p>
             </div>
             <div className="px-res-score">
               <p className="px-res-label">The proof: Map score · {PROFILE_WORD[score.profile]} <Tip label="About the Map score">{TIP_MAP_SCORE}</Tip></p>
-              <p className="px-res-score-num"><b><CountUp value={score.raw} on /></b> <span>of {RAW_MAX} · Level {lvl.n} is {band.from} to {band.to}</span></p>
+              <p className="px-res-score-num"><b><CountUp value={score.raw} on /></b> <span>of {RAW_MAX} · Phase {lvl.n} is {band.from} to {band.to}</span></p>
             </div>
           </div>
         ) : null}
@@ -451,7 +415,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
                 </li>
               ))}
             </ul>
-            <p className="px-res-sub">Total <b>{score.raw} of {RAW_MAX}</b>, the Map score <Tip label="About the Map score">{TIP_MAP_SCORE}</Tip>. The bands: 0 to 7 Level 1, 8 to 14 Level 2, 15 to 22 Level 3, 23 to 30 Level 4.</p>
+            <p className="px-res-sub">Total <b>{score.raw} of {RAW_MAX}</b>, the Map score <Tip label="About the Map score">{TIP_MAP_SCORE}</Tip>. The bands: 0 to 7 Phase 1, 8 to 14 Phase 2, 15 to 22 Phase 3, 23 to 30 Phase 4.</p>
           </div>
         ) : null}
 
@@ -475,12 +439,12 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           </div>
         ) : null}
 
-        {current === 'The next level' ? (
+        {current === 'The next phase' ? (
           <div className="px-res-screen">
-            <h2 className="px-res-h" tabIndex={-1}>{nextLvl ? `What moves you to Level ${nextLvl.n}` : 'What keeps you at Level 4'}</h2>
+            <h2 className="px-res-h" tabIndex={-1}>{nextLvl ? `What moves you to Phase ${nextLvl.n}` : 'What keeps you at Phase 4'}</h2>
             <p className="px-res-sub">
               {nextLvl && nextBand
-                ? `Level ${nextLvl.n} (${nextLvl.name}) starts at ${nextBand.from} points. That is ${gap} more than today. Each answer moved from 0 to 2 adds 2 points.`
+                ? `Phase ${nextLvl.n} (${nextLvl.name}) starts at ${nextBand.from} points. That is ${gap} more than today. Each answer moved from 0 to 2 adds 2 points.`
                 : 'The score is in the top band. The work is keeping the context connected as the team and the AI output grow.'}
             </p>
             {weakest.every((d) => d.points >= d.max) ? null : (
@@ -505,7 +469,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
         {current === 'Your prescription' ? (
           <div className="px-res-screen px-rx">
             <h2 className="px-res-h" tabIndex={-1}>Your <em>prescription</em></h2>
-            <p className="px-res-sub">{nextLvl ? `Level ${lvl.n} today, ${gap} points from Level ${nextLvl.n}. Here’s where context slips for your team, from your own answers, and the Keystones that close each gap.` : `Level ${lvl.n} today. Here’s where context is most likely to slip as the team grows, and the Keystones that hold it.`}</p>
+            <p className="px-res-sub">{nextLvl ? `Phase ${lvl.n} today, ${gap} points from Phase ${nextLvl.n}. Here’s where context slips for your team, from your own answers.` : `Phase ${lvl.n} today. Here’s where context is most likely to slip as the team grows, from your own answers.`}</p>
             <div className="px-rx-grid">
               <div className="px-rx-main">
                 <div className="px-rx-cols" aria-hidden="true"><p className="px-res-label">What’s holding you back</p><p className="px-res-label">Your prescription</p></div>
@@ -525,14 +489,13 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
                   ))}
                 </ol>
               </div>
-              <aside className="px-rx-next" aria-label="Recommended next step">
+              <aside className="px-rx-next px-rv-card" aria-label="Recommended next step">
                 <p className="px-res-label">Your next step</p>
-                <p className="px-rx-lead">Get these Keystones written for your team.</p>
-                <p className="px-rx-body">BACK writes them from your 15 answers and a short intake, ready to drop into the work you already do.</p>
-                <BackCardPrice offer={offer} />
-                <a className="px-oc-btn is-fill px-rx-cta" href={checkoutHref(code)}>Get BACK <span aria-hidden="true">→</span></a>
-                <p className="px-rx-fact">Want us to find and fix it in your real work? FACT measures all nine in your team’s real handoffs, shows what each fix is worth, and writes your Context Keystones from that: <a href={REMOTE_FACT_URL} target="_blank" rel="noopener">Remote, $1,750</a> or <a href={ONSITE_FACT_URL} target="_blank" rel="noopener">On‑Site, $4,500 plus travel</a>.</p>
-                <button type="button" className="px-rx-side" onClick={goNext}>Side-by-side</button>
+                <p className="px-rx-lead">Your results say how the work moves. They don’t say where it stalls.</p>
+                <p className="px-rx-body">You leave knowing what the score means, and whether the other six measurements are worth taking.</p>
+                <a className="px-oc-btn is-fill px-rx-cta" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
+                <p className="px-rv-free">No charge.</p>
+                <a className="px-rv-or" href="https://transformby10x.ai/back/">Or see BACK</a>
               </aside>
             </div>
           </div>
@@ -540,20 +503,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
 
         {current === 'The path forward' ? (
           <div className="px-res-screen">
-            <div className="px-oc-head">
-              <h2 className="px-res-h px-oc-h" tabIndex={-1}><span>Get the team BACK</span> <span>to meaningful work.</span></h2>
-              <p className="px-res-sub px-oc-sub">Choose how much help you want.</p>
-            </div>
-            <OfferCards code={code} offer={offer} />
-            <div className="px-res-box px-back-parts">
-              <p className="px-res-label">Inside BACK (Business Aligned Context Keystones)</p>
-              <ul className="px-prod-parts" aria-label="What's inside BACK">
-                <li><span>01 · Folders</span>A structure where the brief, decisions and status live with the work.</li>
-                <li><span>02 · Markdown files</span>The context written down once, readable by people and agents.</li>
-                <li><span>03 · Scripts</span>Small helpers that keep the record current without extra steps.</li>
-                <li><span>04 · Protocols</span>The handoff rules the team follows at the stage where work stalls{stage ? `: ${stage}` : ''}.</li>
-              </ul>
-            </div>
+            <NextSteps />
           </div>
         ) : null}
 
@@ -612,11 +562,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
 
         {current === 'What happens next' ? (
           <div className="px-res-screen">
-            <div className="px-oc-head">
-              <h2 className="px-res-h px-oc-h" tabIndex={-1}><span>Get the team BACK</span> <span>to meaningful work.</span></h2>
-              <p className="px-res-sub px-oc-sub">Choose how much help you want.</p>
-            </div>
-            <OfferCards code={code} offer={offer} />
+            <NextSteps />
           </div>
         ) : null}
       </div>
@@ -725,7 +671,7 @@ function tidyText(t: string): string {
   return t
     .replace(/([A-Za-z])-(?=[A-Za-z])/g, '$1\u2011')
     .replace(/(\d[\d,.]*%?) (?=[A-Za-z$\d(])/g, '$1' + NB)
-    .replace(/\b(Level|of|to|at|adds|Q|from) (?=[$]?\d)/g, '$1' + NB)
+    .replace(/\b(Phase|of|to|at|adds|Q|from) (?=[$]?\d)/g, '$1' + NB)
     .replace(/\b(an?|per) (hour|year|week|month|person)\b/g, '$1' + NB + '$2')
     .replace(/\b(Remote|On\u2011Site|Context|Repair|plus) (FACT|Repair|Cost|travel)\b/g, '$1' + NB + '$2');
 }
