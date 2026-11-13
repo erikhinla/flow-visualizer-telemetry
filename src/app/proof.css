@@ -2466,3 +2466,28 @@ body:has(.app-main) {
   .px .px-res-steps .px-pat-h { font-size: clamp(2.6rem, 14vw, 3.6rem) !important; }
   .px .px-pat .px-lvl-scale { grid-template-columns: repeat(2, 1fr); }
 }
+/* R3: Review strip is one compact row; pattern screen never squeezes its scale. */
+.px .px-res-cta .px-res-cta-btn { width: auto; margin: 0; min-height: 2.75rem; padding: .45rem 1.1rem; }
+.px .px-res-cta-line { flex: 1 1 auto; max-width: none; }
+.px .px-pat > * { flex-shrink: 0; }
+.px .px-res-steps .px-pat-h { font-size: max(2.4rem, min(6vw, 10.5vh, 6rem)); }
+.px .px-pat .px-lvl-scale li.is-here span, .px .px-pat .px-lvl-scale li.is-here small { color: #fff; opacity: 1; }
+@media (min-width: 901px) {
+  .px .px-pat .px-lvl-scale li { padding: .55rem 1rem; }
+  .px .px-pat .px-res-score { display: flex; align-items: baseline; gap: 1rem; }
+  .px .px-pat .px-res-score-num b { font-size: 2.2rem; }
+}
+@media (max-width: 900px) {
+  .px .px-res-cta { padding: .4rem 0 .2rem; }
+  .px .px-res-cta-line { font-size: .8125rem; }
+  .px .px-res-cta-act { flex-direction: column; align-items: center; gap: .15rem; }
+  .px .px-res-cta-act .px-rv-free { font-size: .6875rem; }
+}
+.px .px-result.px-res-steps > .px-res-cta { display: flex !important; flex-direction: row !important; flex-wrap: nowrap; align-items: center; justify-content: space-between; text-align: left; width: 100%; max-width: 1080px; margin: 0 auto; }
+.px .px-res-cta .px-res-cta-line { text-align: left; margin: 0; }
+@media (max-width: 900px) {
+  .px .px-res-cta-more { display: none; }
+  .px .px-res-cta-line b { display: block; }
+  .px .px-res-cta .px-res-cta-line { font-size: .875rem; }
+  .px .px-foot-line { font-size: .75rem; letter-spacing: .04em; white-space: nowrap; }
+}

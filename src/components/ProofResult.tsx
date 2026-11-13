@@ -470,7 +470,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
 
       {OWN_CTA.includes(current) ? null : (
         <aside className="px-res-cta" aria-label="Your next step">
-          <p className="px-res-cta-line"><b>PROOF Review.</b> 45 minutes with Erik on where work stalls, what it costs, and what to fix first.</p>
+          <p className="px-res-cta-line"><b>PROOF Review.</b> 45 minutes with Erik<span className="px-res-cta-more"> on where work stalls, what it costs, and what to fix first</span>.</p>
           <div className="px-res-cta-act">
             <a className="px-oc-btn is-fill px-res-cta-btn" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
             <p className="px-rv-free">No charge.</p>
