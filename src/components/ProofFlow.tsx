@@ -18,9 +18,9 @@ const BASE = process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? '';
 const AUDIENCE_KEY = 'proof.audience.v1';
 const LETTERS = [
   ['P', 'Process'],
-  ['R', 'Response'],
-  ['O', 'Output'],
-  ['O', 'Operating capacity'],
+  ['R', 'Review'],
+  ['O', 'Observing'],
+  ['O', 'Operating'],
   ['F', 'Friction'],
 ] as const;
 

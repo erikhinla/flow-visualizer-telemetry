@@ -2402,10 +2402,10 @@ body:has(.app-main) {
 .px .px-foot-steps > * + *::before { content: '>'; margin-right: 0.6rem; color: var(--red); }
 .px .px-foot-or { color: var(--mute); text-decoration: none; text-transform: none; letter-spacing: .02em; font-size: .8125rem; }
 .px .px-foot-or:hover { color: var(--ink); text-decoration: underline; }
-@media (max-width: 900px) { .px .px-foot-or { display: none; } }
+@media (max-width: 900px) { .px .px-foot-or, .px .px-foot-path .px-foot-label { display: none; } .px .px-foot .px-foot-steps { display: flex; } }
 
 /* t791: 07 Review card and 08 hierarchy. Headlines solid white. */
-.px .px-res-h em, .px .px-res-h span, .px .px-ns-h { color: inherit; -webkit-text-fill-color: currentColor; background: none; }
+.px .px-res-steps .px-res-h em, .px .px-res-steps .px-res-h span, .px .px-ns-h { color: #f3f2ee !important; -webkit-text-fill-color: currentColor; background: none; }
 .px .px-rv-card .px-rx-lead { font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.15; }
 .px .px-rv-free { margin: .45rem 0 0; font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(243,242,238,.62); }
 .px .px-rv-or, .px .px-ns-link { display: inline-block; margin-top: .9rem; font-family: var(--mono); font-size: .8125rem; letter-spacing: .06em; color: rgba(243,242,238,.72); text-decoration: none; border-bottom: 1px solid rgba(243,242,238,.3); padding-bottom: 1px; align-self: flex-start; }

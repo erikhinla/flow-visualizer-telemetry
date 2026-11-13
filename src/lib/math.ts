@@ -13,9 +13,9 @@ export const RAW_MAX = QUESTIONS.length * POINTS_MAX * WEIGHT; // 30
 
 export const DIMENSIONS = [
   { letter: 'P', name: 'Process', questions: [0, 1, 2] },
-  { letter: 'R', name: 'Response', questions: [3, 4, 5] },
-  { letter: 'O', name: 'Output', questions: [6, 7, 8] },
-  { letter: 'O', name: 'Operating capacity', questions: [9, 10, 11] },
+  { letter: 'R', name: 'Review', questions: [3, 4, 5] },
+  { letter: 'O', name: 'Observing', questions: [6, 7, 8] },
+  { letter: 'O', name: 'Operating', questions: [9, 10, 11] },
   { letter: 'F', name: 'Friction', questions: [12, 13, 14] },
 ] as const;
 
