@@ -87,7 +87,7 @@ function usePhone() {
 const PATTERN_LINE: Record<ProfileId, string> = {
   FRAGMENTED: 'People hold the work together. No shared record does.',
   STALLED: 'The work waits in the gaps between steps.',
-  SCALING: 'The work moves, but the same context gets rebuilt along the way.',
+  SCALING: 'The work moves, but the same details get rebuilt along the way.',
   COMPOUNDING: 'Most of the work is connected. The goal is keeping it that way as the team grows.',
 };
 
@@ -202,13 +202,13 @@ function NextSteps() {
   return (
     <div className="px-ns">
       <div className="px-oc-head">
-        <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Bring this result to the Review.</h2>
-        <p className="px-res-sub px-oc-sub">Forty-five minutes with Erik reads your answers back against the score and the cost.</p>
+        <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Now find out where it stalls.</h2>
+        <p className="px-res-sub px-oc-sub px-ns-sub">Your score shows how work moves. The Review shows where it stops, what it costs you, and what to fix first.</p>
       </div>
       <section className="px-ns-review" aria-label="PROOF Review">
-        <p className="px-res-label">Review with Erik</p>
+        <p className="px-res-label">Your next step</p>
         <p className="px-ns-review-name">PROOF Review</p>
-        <p className="px-ns-review-line">Your results say how the work moves. They don’t say where it stalls. You leave knowing what the score means, and whether the other six measurements are worth taking.</p>
+        <p className="px-ns-review-line">45 minutes with Erik. Your results come with you. You leave knowing what is slowing the business down and the first thing to change.</p>
         <div className="px-ns-cta">
           <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
           <p className="px-rv-free">No charge.</p>
@@ -217,11 +217,11 @@ function NextSteps() {
       <section className="px-ns-fact" aria-label="FACT">
         <p className="px-ns-fact-name">FACT</p>
         <p className="px-ns-fact-full">Friction Assessment Context Telemetry <Tip label="About FACT measurements">{TIP_FACT_ALL_NINE}</Tip></p>
-        <p className="px-ns-fact-line">AI-aligned workflows support people, and the business can keep up.</p>
+        <p className="px-ns-fact-line">Measures all 9 in your real work: where time is lost, what it costs, and what to change first.</p>
         <a className="px-ns-link" href="https://transformby10x.ai/fact/">See FACT</a>
       </section>
       <section className="px-ns-back" aria-label="BACK">
-        <p className="px-ns-back-line"><b>BACK</b> AI capability outpaces workflow capacity. That includes a business of one, which has to be aligned with AI from the start.</p>
+        <p className="px-ns-back-line"><b>BACK</b> Set it up yourself. Context Keystones written from your answers: folders, files and handoff rules your team puts in place.</p>
         <p className="px-ns-back-price">Intro $74 for the first 50, then $347.</p>
         <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See Back</a>
       </section>
@@ -396,7 +396,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               <p className="px-res-sub">{audience.profile[score.profile]}</p>
             </div>
             <div className="px-res-score">
-              <p className="px-res-label">The proof: Map score · {PROFILE_WORD[score.profile]} <Tip label="About the Map score">{TIP_MAP_SCORE}</Tip></p>
+              <p className="px-res-label">Your Map score · {PROFILE_WORD[score.profile]} <Tip label="About the Map score">{TIP_MAP_SCORE}</Tip></p>
               <p className="px-res-score-num"><b><CountUp value={score.raw} on /></b> <span>of {RAW_MAX} · Phase {lvl.n} is {band.from} to {band.to}</span></p>
             </div>
           </div>
@@ -449,13 +449,13 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             </p>
             {weakest.every((d) => d.points >= d.max) ? null : (
               <div className="px-res-box">
-                <p className="px-res-label">Lowest dimension{weakest.length > 1 ? 's' : ''}</p>
+                <p className="px-res-label">Weakest section{weakest.length > 1 ? 's' : ''}</p>
                 <p className="px-res-sub">{weakest.map((d) => `${d.name} (${d.points} of ${d.max})`).join(', ')}</p>
               </div>
             )}
             {listAnswers.length ? (
               <div className="px-res-box">
-                <p className="px-res-label">{nextLvl ? 'Start with these answers' : 'Lowest answers to keep watching'}</p>
+                <p className="px-res-label">{nextLvl ? 'Fix these first' : 'Lowest answers to keep watching'}</p>
                 <ul className="px-res-list px-next-list">
                   {listAnswers.slice(0, 3).map((a) => (
                     <li key={a.q}><b>Q{String(a.q).padStart(2, '0')} · {a.value} of 2</b> {a.text}</li>
@@ -469,7 +469,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
         {current === 'Your prescription' ? (
           <div className="px-res-screen px-rx">
             <h2 className="px-res-h" tabIndex={-1}>Your <em>prescription</em></h2>
-            <p className="px-res-sub">{nextLvl ? `Phase ${lvl.n} today, ${gap} points from Phase ${nextLvl.n}. Here’s where context slips for your team, from your own answers.` : `Phase ${lvl.n} today. Here’s where context is most likely to slip as the team grows, from your own answers.`}</p>
+            <p className="px-res-sub">{nextLvl ? `Phase ${lvl.n} today, ${gap} points from Phase ${nextLvl.n}. Here is what is slowing the work, from your own answers.` : `Phase ${lvl.n} today. Here is what to watch as the team grows, from your own answers.`}</p>
             <div className="px-rx-grid">
               <div className="px-rx-main">
                 <div className="px-rx-cols" aria-hidden="true"><p className="px-res-label">What’s holding you back</p><p className="px-res-label">Your prescription</p></div>
@@ -491,8 +491,8 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               </div>
               <aside className="px-rx-next px-rv-card" aria-label="Recommended next step">
                 <p className="px-res-label">Your next step</p>
-                <p className="px-rx-lead">Your results say how the work moves. They don’t say where it stalls.</p>
-                <p className="px-rx-body">You leave knowing what the score means, and whether the other six measurements are worth taking.</p>
+                <p className="px-rx-lead">See where work stalls and what it costs.</p>
+                <p className="px-rx-body">45 minutes with Erik, built on your answers.</p>
                 <a className="px-oc-btn is-fill px-rx-cta" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
                 <p className="px-rv-free">No charge.</p>
                 <a className="px-rv-or" href="https://transformby10x.ai/back/">Or see BACK</a>
@@ -572,9 +572,6 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
         <span className="px-res-count">
           {String(step + 1).padStart(2, '0')} / {String(screens.length).padStart(2, '0')}<span className="px-res-count-name"> · {current}</span>
         </span>
-        <span className="px-res-tools">
-          <button type="button" className="px-link" onClick={restart}>Retake PROOF</button>
-        </span>
         {shown < layers - 1 ? (
           <button type="button" className="px-res-navbtn is-next" onClick={goNext}>Next →</button>
         ) : step < last ? (
@@ -625,7 +622,7 @@ function Estimate({ phone = false }: { phone?: boolean }) {
         {e ? (
           <>
             <p className="px-est-result">
-              That's <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year in paid time spent repairing context. <Tip label="About the annual Context Repair Cost">{TIP_ANNUAL}</Tip>
+              That's <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year in paid time spent finding, checking and redoing work. <Tip label="About the annual Context Repair Cost">{TIP_ANNUAL}</Tip>
             </p>
             <p className="px-est-plain">
               {num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks.
@@ -654,10 +651,10 @@ function Estimate({ phone = false }: { phone?: boolean }) {
           ) : <p className="px-est-result is-empty">Enter three numbers to see the figure.</p>
         )}
       </div>
-      <p className="px-est-note" data-layer={1}>These hours are an estimate. The figure prices that time, not money saved.</p>
+      <p className="px-est-note" data-layer={1}>This is an estimate of paid time, not money saved.</p>
       {phone ? null : (
         <p className="px-est-bridge" data-layer={1}>
-          PROOF runs 3 of 9 measurements <Tip label="About the 3 of 9 measurements">{TIP_THREE_OF_NINE}</Tip>, where the hours go and what they cost: 01 Map score and 08 + 09 Context Repair Cost. <a href={FRICTION_MODEL_URL}>FACT runs all 9 on real handoffs.</a>
+          PROOF covers 3 of the 9 measurements <Tip label="About the 3 of 9 measurements">{TIP_THREE_OF_NINE}</Tip>: 01 Map score and 08 + 09 Context Repair Cost. <a href={FRICTION_MODEL_URL}>FACT measures all 9 in your real work.</a>
         </p>
       )}
     </section>

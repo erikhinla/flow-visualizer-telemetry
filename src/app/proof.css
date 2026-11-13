@@ -2432,3 +2432,9 @@ body:has(.app-main) {
   .px .px-res-steps .px-ns-h { font-size: clamp(1.6rem, 8vw, 2.4rem) !important; }
   .px .px-ns-cta { max-width: none; }
 }
+
+/* t797: balanced type on results, no orphans; 08 subline width. */
+.px .px-res h1, .px .px-res h2, .px .px-res .px-rx-lead, .px .px-res .px-ns-review-name, .px .px-res .px-ns-fact-name { text-wrap: balance; }
+.px .px-res p, .px .px-res li { text-wrap: pretty; }
+.px .px-ns-sub { max-width: 46ch; text-wrap: balance; }
+.px .px-res-steps .px-res-nav .px-res-navbtn.is-next { margin-left: auto; }
