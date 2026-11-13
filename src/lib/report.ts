@@ -60,7 +60,7 @@ export function renderReport(v: ReportVars): { html: string; text: string } {
   const p = (t: string) => `<p style="margin:0 0 10px">${t}</p>`;
   const html = `<!doctype html><html><body style="margin:0;background:#E9E5DE"><div style="max-width:680px;margin:0 auto;padding:28px 22px;font-family:Helvetica,Arial,sans-serif;color:#1F1F1F;font-size:16px;line-height:1.5;background:#F4F1EA">
 <img src="https://transformby10x.ai/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><p style="font-weight:700;letter-spacing:.1em;font-size:12px;margin:12px 0 0">PROOF REPORT</p>
-<h1 style="font-size:40px;line-height:1;letter-spacing:-.03em;margin:14px 0 6px">Where the work <span style="color:${m}">stalls</span>.</h1>
+<h1 style="font-size:40px;line-height:1;letter-spacing:-.03em;margin:14px 0 6px">Where the work stalls.</h1>
 ${p(v.AUDIENCE_LINE)}
 <table style="width:100%;border-collapse:collapse;margin:16px 0" cellpadding="8"><tr>
 <td style="border:1px solid #1F1F1F"><div style="font-size:12px;font-weight:700">SCORE</div><div style="font-size:24px;font-weight:700">${v.SCORE}</div></td>
@@ -72,8 +72,9 @@ ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
 ${h2('How this was scored')}${p(v.SCORING)}
 ${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost where work stalls, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
 ${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
-${h2('Next steps')}${p('Remote FACT measures all nine in real handoffs from current work and writes your Context Keystones from them. On-Site FACT is the full version, on site.')}
-<p style="margin:18px 0"><a href="${v.REVIEW_URL}" style="background:${m};color:#fff;text-decoration:none;padding:12px 18px;font-weight:700;display:inline-block">Book a PROOF Review call</a></p>
+${h2('Your next step')}${p('The PROOF Review is 45 minutes with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first.')}
+<p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${m};color:#fff;text-decoration:none;padding:12px 18px;font-weight:700;display:inline-block">Open Calendar</a></p>
+<p style="margin:0 0 18px;font-size:13px;letter-spacing:.06em">NO CHARGE.</p>
 ${p(`Retake PROOF: ${v.RETAKE_URL}`)}
 <p style="font-size:13px;margin-top:24px;border-top:1px solid #1F1F1F;padding-top:10px">Questions about this report: reply to this email or write to erik@transformby10x.ai.</p>
 </div></body></html>`;
@@ -84,7 +85,8 @@ ${p(`Retake PROOF: ${v.RETAKE_URL}`)}
     'WHERE THE WORK STALLS', v.STALLS_TEXT, '',
     'WHAT TO CHANGE FIRST', v.FIXES_TEXT, '',
     'THE 15 ANSWERS', v.ANSWERS_TEXT, '',
-    `Book a PROOF Review call: ${v.REVIEW_URL}`, `Retake PROOF: ${v.RETAKE_URL}`,
+    'YOUR NEXT STEP', 'The PROOF Review is 45 minutes with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first. No charge.',
+    `Open Calendar: ${v.REVIEW_URL}`, '', `Retake PROOF: ${v.RETAKE_URL}`,
   ].join('\n');
   return { html, text };
 }

@@ -10,11 +10,11 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /** Live Stripe Payment Links and prices for the four paid offers. */
-const LINKS: Record<string, 'report' | 'toolkit' | 'refresh' | 'audit' | 'keystones'> = {
+const LINKS: Record<string, 'report' | 'toolkit' | 'refresh' | 'retired' | 'keystones'> = {
   plink_1UThXdCMxQwcbhDndm8NLuU2: 'report',
   plink_1UThXfCMxQwcbhDnT4aqhmyA: 'toolkit',
   plink_1UThXhCMxQwcbhDnN7aXSTIH: 'refresh',
-  plink_1UThXjCMxQwcbhDnMwgfeKkR: 'audit',
+  plink_1UThXjCMxQwcbhDnMwgfeKkR: 'retired',
   [INTRO_LINK]: 'keystones',
   [FULL_LINK]: 'keystones',
   [LEGACY_INTRO_LINK]: 'keystones',
@@ -50,8 +50,8 @@ function mailsFor(kind: string, session: Obj, email: string, idem: string): { ma
   }
   if (kind === 'refresh') return { mails: [tm(email, idem, 'refresh_active', { RETAKE_URL: RETAKE })] };
   return { mails: [
-    tm(email, idem, 'audit_intake', {}, { replyTo: ERIK }),
-    tm(ERIK, idem, 'audit_erik', { BUYER: buyer, SESSION_ID: String(session.id) }),
+    tm(email, idem, 'retired_link_buyer', {}, { replyTo: ERIK }),
+    tm(ERIK, idem, 'retired_link_erik', { BUYER: buyer, SESSION_ID: String(session.id) }),
   ] };
 }
 
