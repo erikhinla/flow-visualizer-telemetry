@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, isAudienceId, type AudienceId } from '../lib/audiences';
 import { QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
-import { Ladder, Result } from './ProofResult';
+import { Result } from './ProofResult';
 import { tidyAll } from '../lib/tidy';
 import { encodeProof } from '../lib/proof-code';
 import { RAW_MAX, liveMath } from '../lib/math';
@@ -353,7 +353,6 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             <button type="button" className="px-close" onClick={() => setSheet(null)} aria-label="Close">
               ×
             </button>
-            {sheet === 'path' ? <PathPanel /> : null}
             {sheet === 'story' ? (
               <div className="px-sheet-body">
                 <p className="px-kicker">
@@ -425,18 +424,6 @@ function Processing() {
         ))}
       </ol>
     </section>
-  );
-}
-
-function PathPanel() {
-  return (
-    <div className="px-sheet-body">
-      <p className="px-kicker">What happens after PROOF</p>
-      <Ladder light />
-      <p className="px-path-note">
-        <span>The Review reads your answers back against the score and the cost. FACT measures all nine in real handoffs. BACK is the other option: Context Keystones your team puts in place itself.</span>
-      </p>
-    </div>
   );
 }
 

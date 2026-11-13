@@ -17,19 +17,6 @@ import { REVIEW_URL } from '../lib/links';
 export { REVIEW_URL };
 const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/index.html';
 
-/** One ladder, used on the result page and in the footer sheet. */
-export const LADDER: ReadonlyArray<readonly [string, string]> = [
-  ['PROOF', '15 answers. One pattern. The result shows on screen.'],
-  ['Review', 'A call with Erik that reads your answers back against the score and the cost. No charge.'],
-  ['FACT', 'Friction Assessment Context Telemetry. Measures all nine in real handoffs from current work.'],
-];
-
-/** Names spelled out where they first show on a screen. */
-export const LADDER_FULL: Readonly<Record<string, string>> = {
-  'Review': 'PROOF Review',
-  'FACT': 'FACT (Friction Assessment Context Telemetry)',
-};
-
 /** On phones each results screen shows one layer at a time. Next reveals the next layer. */
 const LAYERS: Readonly<Record<string, number>> = {
   'Where work stalls': 1,
@@ -228,21 +215,6 @@ function NextSteps() {
     </div>
   );
 }
-
-export function Ladder({ light = false, split = false }: { light?: boolean; split?: boolean }) {
-  return (
-    <ol className={light ? 'px-ks-ladder is-light' : 'px-ks-ladder'} aria-label="What happens next">
-      {LADDER.map(([name, line], i) => (
-        <li key={name} className={i === 0 ? 'is-here' : undefined} data-layer={split ? (i < 2 ? 0 : 1) : undefined}>
-          <span className="px-no">{String(i + 1).padStart(2, '0')}</span>
-          <strong>{LADDER_FULL[name] ?? name}</strong>
-          <em>{line}</em>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
 
 /** Round 18 draft: each answer maps to the Keystones that fix it (vocabulary from keystones/generator). */
 type Key = { name: string; kind: 'Folder' | 'Markdown file' | 'Script' | 'Protocol'; does: string };
