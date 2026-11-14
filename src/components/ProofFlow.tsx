@@ -12,10 +12,22 @@ import { RAW_MAX, liveMath } from '../lib/math';
 import type { Choice } from '../lib/types';
 import { DiagnosticsToggle } from './Shell';
 import { useSession } from './SessionProvider';
+import { appPath } from '../lib/paths';
 
 const BASE = process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? '';
 
 const AUDIENCE_KEY = 'proof.audience.v1';
+
+/** One anonymous count when a result is reached. Sends the campaign tag from the link (?s=), never answers or the score. */
+function countFinish(): void {
+  try {
+    const raw = new URLSearchParams(window.location.search).get('s') ?? '';
+    const tag = /^[a-z0-9-]{1,24}$/.test(raw) ? raw : '';
+    void fetch(appPath('/api/done') + (tag ? `?s=${tag}` : ''), { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => undefined);
+  } catch {
+    // Counting never blocks the result.
+  }
+}
 const LETTERS = [
   ['P', 'Process'],
   ['R', 'Review'],
@@ -145,7 +157,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       optionIds[cursor] = choice.id;
       const done = values.every((value) => value !== null);
       setSession((current) => ({ ...current, values, optionIds, mapCompleted: done || current.mapCompleted }));
-      if (done) trace({ name: 'map-complete' });
+      if (done) { trace({ name: 'map-complete' }); countFinish(); }
       if (cursor < QUESTIONS.length - 1) setCursor(cursor + 1);
       else {
         setTab(0);
@@ -381,7 +393,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             {sheet === 'privacy' ? (
               <div className="px-sheet-body">
                 <p className="px-kicker">Privacy</p>
-                <p>Answers stay in this browser. Nothing is sent unless this setting is on, and then only the page and the step, never the answers.</p>
+                <p>Answers stay in this browser. When PROOF is finished, one anonymous count is recorded, with no answers and no score. Nothing else is sent unless this setting is on, and then only the page and the step, never the answers.</p>
                 <DiagnosticsToggle />
               </div>
             ) : null}
