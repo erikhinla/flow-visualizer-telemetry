@@ -1,0 +1,38 @@
+/* Hand-written paper rules. Appended after the generated block by scripts/paper-theme.py. */
+.px { --paper: #F6F6F2; --ink: #0B0B0C; --paper-2: #E9E9E3; --mute: #55554F; background: #F6F6F2; color: #0B0B0C; }
+/* Door: paper, black lockup, the orb. No film. */
+.px .px-intro.px-door { background: #F6F6F2 !important; color: #0B0B0C; }
+.px .px-door-film, .px .px-door-scrim { display: none !important; }
+.px .px-door-lockup { filter: invert(1); }
+.px .px-door-desc, .px .px-door-status { color: #0B0B0C; }
+.px .px-door-orb:focus-visible { outline-color: #D01E98; }
+/* Bar */
+.px .px-bar { background: #F6F6F2; color: #0B0B0C; border-bottom: 1.5px solid #0B0B0C; }
+.px .px-bar-brand img { filter: invert(1); }
+/* Crop marks on the working area */
+.px .px-stage { position: relative; }
+.px .px-stage::before, .px .px-stage::after { content: ""; position: absolute; width: 22px; height: 22px; pointer-events: none; z-index: 5; }
+.px .px-stage::before { left: 10px; top: 10px; border-left: 1.5px solid #0B0B0C; border-top: 1.5px solid #0B0B0C; }
+.px .px-stage::after { right: 10px; bottom: 10px; border-right: 1.5px solid #0B0B0C; border-bottom: 1.5px solid #0B0B0C; }
+/* The pattern you're in keeps white on magenta */
+.px .px-lvl-scale li.is-here, .px .px-pat .px-lvl-scale li.is-here { background: #D01E98 !important; border-color: #D01E98 !important; color: #fff !important; }
+.px .px-lvl-scale li.is-here span, .px .px-lvl-scale li.is-here small, .px .px-lvl-scale li.is-here b,
+.px .px-pat .px-lvl-scale li.is-here span, .px .px-pat .px-lvl-scale li.is-here small { color: #fff !important; }
+.px .px-lvl-scale li.is-here .px-tip-btn { color: #fff; border-color: #fff; }
+/* Filled buttons: ink by default, magenta for the one action */
+.px .px-oc-btn.is-fill, .px .px-res-navbtn.is-next { color: #fff !important; }
+/* Result headline reads as the verdict */
+.px .px-res-steps .px-pat-h { color: #0B0B0C; }
+.px .px-res-badge { color: #D01E98 !important; border: 2px solid #D01E98 !important; padding: .3rem .6rem !important; transform: rotate(-2deg); background: none !important; }
+.px .px-res-badge span { color: #D01E98 !important; opacity: 1; }
+/* Surfaces that were black become paper. Buttons, the selected answer and progress ticks stay black on purpose. */
+.px .px-result, .px .px-result.px-res-steps, .px .px-path-note, .px .px-res-how-panel { background: #F6F6F2 !important; color: #0B0B0C; }
+.px .px-ask-side { background: #FFFFFF; color: #0B0B0C; border-right: 1.5px solid #0B0B0C; }
+@media (max-width: 900px) { .px .px-mbar { background: #FFFFFF; color: #0B0B0C; border-bottom: 1.5px solid #0B0B0C; } }
+.px .px-res-how-panel { border: 1.5px solid #0B0B0C; }
+/* Navigation: Next is ink, Open Calendar is the one magenta action. */
+.px .px-res-steps .px-res-navbtn.is-next, .px .px-res-navbtn.is-next { background: #0B0B0C !important; color: #fff !important; border-color: #0B0B0C !important; }
+.px .px-res-steps .px-res-navbtn.is-next:hover { background: #D01E98 !important; border-color: #D01E98 !important; }
+/* Panels read as sheets: white, square, hairline ink. */
+.px .px-res-steps .px-res-box, .px .px-res-steps .px-est, .px .px-rx-next, .px .px-ns-fact { background: #FFFFFF !important; border: 1.5px solid #0B0B0C !important; border-radius: 0 !important; box-shadow: none !important; }
+.px .px-ns-review { border-radius: 0 !important; }
