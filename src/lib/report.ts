@@ -56,16 +56,18 @@ export interface Report { subject: string; html: string; text: string; profile: 
  */
 export function renderReport(v: ReportVars): { html: string; text: string } {
   const m = '#d01e98';
-  const h2 = (t: string) => `<h2 style="font-size:20px;margin:28px 0 8px;border-top:2px solid #1F1F1F;padding-top:10px">${t}</h2>`;
+  const ink = '#0B0B0C';
+  const mono = "font-family:'IBM Plex Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase";
+  const h2 = (t: string) => `<h2 style="font-size:21px;line-height:1.1;letter-spacing:-.02em;margin:30px 0 8px;border-top:1.5px solid ${ink};padding-top:12px">${t}</h2>`;
   const p = (t: string) => `<p style="margin:0 0 10px">${t}</p>`;
-  const html = `<!doctype html><html><body style="margin:0;background:#E9E5DE"><div style="max-width:680px;margin:0 auto;padding:28px 22px;font-family:Helvetica,Arial,sans-serif;color:#1F1F1F;font-size:16px;line-height:1.5;background:#F4F1EA">
-<img src="https://transformby10x.ai/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><p style="font-weight:700;letter-spacing:.1em;font-size:12px;margin:12px 0 0">PROOF REPORT</p>
-<h1 style="font-size:40px;line-height:1;letter-spacing:-.03em;margin:14px 0 6px">Where the work stalls.</h1>
+  const html = `<!doctype html><html><body style="margin:0;background:#E6E6E0"><div style="max-width:680px;margin:0 auto;padding:30px 24px;font-family:'Inter Tight',Helvetica,Arial,sans-serif;color:${ink};font-size:16px;line-height:1.5;background:#F6F6F2">
+<img src="https://transformby10x.ai/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><p style="${mono};margin:14px 0 0;padding-top:12px;border-top:1.5px solid ${ink}">PROOF report &middot; <span style="color:${m}">final proof</span></p>
+<h1 style="font-size:44px;line-height:.95;letter-spacing:-.04em;margin:16px 0 8px">Where the work stalls.</h1>
 ${p(v.AUDIENCE_LINE)}
 <table style="width:100%;border-collapse:collapse;margin:16px 0" cellpadding="8"><tr>
-<td style="border:1px solid #1F1F1F"><div style="font-size:12px;font-weight:700">SCORE</div><div style="font-size:24px;font-weight:700">${v.SCORE}</div></td>
-<td style="border:1px solid #1F1F1F"><div style="font-size:12px;font-weight:700">PATTERN</div><div style="font-size:24px;font-weight:700">${v.PATTERN}</div></td>
-<td style="border:1px solid #1F1F1F"><div style="font-size:12px;font-weight:700">STALL POINT</div><div style="font-size:18px;font-weight:700">${v.STALL_POINT}</div></td></tr></table>
+<td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">SCORE</div><div style="font-size:24px;font-weight:700">${v.SCORE}</div></td>
+<td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">PATTERN</div><div style="display:inline-block;margin-top:4px;border:2px solid ${m};color:${m};padding:3px 8px;font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${v.PATTERN}</div></td>
+<td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">STALL POINT</div><div style="font-size:18px;font-weight:700">${v.STALL_POINT}</div></td></tr></table>
 ${h2('What the answers show')}${p(v.PATTERN_LINE)}${p(v.PROFILE_LINE)}${p(v.STORY)}
 ${h2('Where the work stalls')}${v.STALLS_HTML}
 ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
@@ -73,10 +75,11 @@ ${h2('How this was scored')}${p(v.SCORING)}
 ${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost where work stalls, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
 ${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
 ${h2('Your next step')}${p('The PROOF Review is 45 minutes with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first.')}
-<p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${m};color:#fff;text-decoration:none;padding:12px 18px;font-weight:700;display:inline-block">Open Calendar</a></p>
-<p style="margin:0 0 18px;font-size:13px;letter-spacing:.06em">NO CHARGE.</p>
+<p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${ink};color:#F6F6F2;text-decoration:none;padding:15px 24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:14px;display:inline-block">Open Calendar</a></p>
+<p style="${mono};margin:0 0 18px">No charge.</p>
 ${p(`Retake PROOF: ${v.RETAKE_URL}`)}
-<p style="font-size:13px;margin-top:24px;border-top:1px solid #1F1F1F;padding-top:10px">Questions about this report: reply to this email or write to erik@transformby10x.ai.</p>
+<p style="font-size:13px;margin-top:24px;border-top:1.5px solid ${ink};padding-top:12px">Questions about this report: reply to this email or write to erik@transformby10x.ai.</p>
+<table style="width:100%;border-collapse:collapse;margin-top:18px" cellpadding="0"><tr><td style="width:30px;height:14px;background:#00AEEF"></td><td style="width:30px;background:#D01E98"></td><td style="width:30px;background:#FFE600"></td><td style="width:30px;background:#0B0B0C"></td><td style="${mono};text-align:right">TransformBy10X &middot; <span style="color:${m}">approved to send</span></td></tr></table>
 </div></body></html>`;
   const text = [
     'PROOF REPORT', v.AUDIENCE_LINE, '',
