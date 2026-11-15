@@ -50,7 +50,7 @@
 .ks-error { color: var(--ember); margin: 16px 0 0; scroll-margin: 96px; }
 /* Static on every screen: a sticky bar covered the date error on phones. */
 .ks-nav { position: static; margin: 24px -16px 0; display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-  background: rgba(18, 20, 22, .96); border-top: 1px solid var(--line); z-index: 5; }
+  background: rgba(246, 246, 242, .96); border-top: 1px solid var(--line); z-index: 5; }
 .ks-nav .px-btn { min-height: 48px; min-width: 140px; }
 @media (min-width: 900px) {
   .ks { max-width: 760px; padding-top: 48px; }
