@@ -126,7 +126,7 @@ function defaultHandoffs(names: string[]): Handoff[] {
 }
 
 export function KeystonesIntake() {
-  const { ready, session } = useSession();
+  const { ready, session, setSession } = useSession();
   const [step, setStep] = useState(0);
   const [I, setI] = useState<Intake>(blank);
   const [busy, setBusy] = useState(false);
@@ -190,13 +190,24 @@ export function KeystonesIntake() {
   const answered = carried.filter((c) => c.choice);
   const proofDone = answered.length === QUESTIONS.length;
 
+  /** Answer one PROOF question here, after checkout. Stored the same way the PROOF stores it. */
+  const answer = (index: number, choice: { id: string; value: 0 | 1 | 2 }) =>
+    setSession((cur) => {
+      const values = [...cur.values];
+      const optionIds = [...cur.optionIds];
+      values[index] = choice.value;
+      optionIds[index] = choice.id;
+      return { ...cur, values, optionIds, mapCompleted: values.every((v) => v !== null) || cur.mapCompleted };
+    });
+  const firstOpen = carried.findIndex((c) => !c.choice);
+
   const set = <K extends keyof Intake>(k: K, v: Intake[K]) => setI((p) => ({ ...p, [k]: v }));
   const deptNames = I.departments.map((d) => d.name);
   const roleOptions = Array.from(new Set([...I.departments.map((d) => d.lead).filter(Boolean), 'Client marketing lead']));
 
   const dateIssues = firstProjectProblems(I.first_project);
   const problems: Record<number, string> = {
-    0: I.agency_name.trim() ? '' : "The agency's name is needed to build the pack.",
+    0: !proofDone ? 'Finish the 15 answers first. The pack is written from them.' : I.agency_name.trim() ? '' : "The agency's name is needed to build the pack.",
     1: I.departments.length ? '' : 'Pick at least one department.',
     2: I.rounds.length && I.rounds.every((r) => r.name.trim()) ? '' : 'Every round needs a name.',
     5: Object.values(dateIssues)[0] ?? '',
@@ -248,7 +259,7 @@ export function KeystonesIntake() {
   return (
     <article className="ks">
       <header className="ks-head">
-        <p className="ks-kicker">Context Keystones · after the PROOF</p>
+        <p className="ks-kicker">BACK · built from your answers</p>
         <h1>{STEPS[step]}</h1>
         <ol className="ks-progress" aria-label="Steps">
           {STEPS.map((s, i) => <li key={s} className={i === step ? 'now' : i < step ? 'done' : ''} aria-current={i === step ? 'step' : undefined}><span>{s}</span></li>)}
@@ -263,9 +274,9 @@ export function KeystonesIntake() {
             <div className="ks-card">
               <h2>Built after checkout</h2>
               <p>Context Keystones are the folders, markdown files, scripts and protocols an agency&apos;s work runs on, each tailored to its own roles, rounds and clients.</p>
-              <p>{answered.length ? `${answered.length} PROOF answers on this device carry over to checkout and into the pack.` : 'Take the PROOF first and its answers carry over into the pack.'}</p>
+              <p>{answered.length ? `${answered.length} PROOF answers on this device carry over to checkout and into the pack.` : 'No PROOF yet? The 15 answers are the first step after checkout.'}</p>
               <a className="px-btn px-btn-light ks-download" href={checkoutHref(ready ? encodeProof('agency', { values: session.values, optionIds: session.optionIds }) : null)}>Check out and build</a>
-              <p className="ks-hint"><KeystonesPrice offer={offer} /> Up to 5 builds per purchase. {answered.length ? '' : <Link href="/">Take the PROOF first.</Link>}</p>
+              <p className="ks-hint"><KeystonesPrice offer={offer} /> Up to 5 builds per purchase.</p>
               {sessionId ? <p className="ks-hint">This checkout couldn&apos;t be confirmed. Reply to the receipt email and it&apos;ll be sorted out.</p> : null}
             </div>
           )}
@@ -275,16 +286,28 @@ export function KeystonesIntake() {
       {gate === 'paid' && step === 0 && (
         <section className="ks-step">
           <div className="ks-card">
-            <h2>Carried over from the PROOF</h2>
-            {!ready ? <p>Loading the PROOF answers.</p> : answered.length === 0 ? (
-              <p>No PROOF answers on this device yet. <Link href="/">Take the PROOF first</Link> and they&apos;ll carry over here, or keep going without them.</p>
-            ) : (
+            <h2>{proofDone ? 'Carried over from the PROOF' : 'First, the 15 answers'}</h2>
+            {!ready ? <p>Loading the PROOF answers.</p> : proofDone ? (
               <>
-                <p className="ks-hint">{answered.length} of {QUESTIONS.length} answers carry over and won&apos;t be asked again.{proofDone ? '' : ' The rest can be finished in the PROOF.'}</p>
+                <p className="ks-hint">All {QUESTIONS.length} answers are in and won&apos;t be asked again.</p>
                 <details className="ks-carried">
-                  <summary>See the carried answers</summary>
+                  <summary>See the answers</summary>
                   <ul>{answered.map((c) => <li key={c.q.id}><span>{c.q.text}</span><strong>{c.choice!.text}</strong></li>)}</ul>
                 </details>
+              </>
+            ) : (
+              <>
+                <p className="ks-hint">The pack is written from these. Answer for how the work runs today. {answered.length} of {QUESTIONS.length} answered.</p>
+                {firstOpen >= 0 ? (
+                  <fieldset className="ks-q">
+                    <legend><span>{firstOpen + 1} of {QUESTIONS.length}</span>{carried[firstOpen].q.text}</legend>
+                    <div className="ks-q-opts">
+                      {carried[firstOpen].q.choices.map((ch) => (
+                        <button key={ch.id} type="button" className="ks-q-opt" onClick={() => answer(firstOpen, ch)}>{ch.text}</button>
+                      ))}
+                    </div>
+                  </fieldset>
+                ) : null}
               </>
             )}
           </div>
