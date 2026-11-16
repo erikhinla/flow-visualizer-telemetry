@@ -62,3 +62,6 @@
 .ks-field-error { display: block; color: var(--ember); font-size: 0.9rem; margin-top: 6px; }
 .ks-field-note { display: block; opacity: 0.8; font-size: 0.9rem; margin-top: 6px; }
 .ks-field input[aria-invalid="true"] { border-color: var(--ember); }
+/* R9: the pay step is a solid ink button, never plain text. */
+a.ks-download, .ks-wrap a.ks-download, a.px-btn.ks-download { display: inline-flex; align-items: center; justify-content: center; align-self: flex-start; width: auto; min-height: 56px; margin: 14px 0 12px; padding: 0 28px; background: #0B0B0C !important; color: #F6F6F2 !important; border: 1.5px solid #0B0B0C !important; border-radius: 0; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; }
+a.ks-download:hover { background: #D01E98 !important; border-color: #D01E98 !important; }
