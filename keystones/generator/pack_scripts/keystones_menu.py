@@ -178,7 +178,7 @@ def notices_menu():
 
 MENU = """
 ==============================================
- Context Keystones{proj}
+ BACK{proj}
 ==============================================
   1. Start a new project
   2. Move old versions to the archive

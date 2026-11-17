@@ -1,4 +1,4 @@
-"""Shared helpers for the Context Keystones scripts. Python 3.8+, standard library only."""
+"""Shared helpers for the BACK scripts. Python 3.8+, standard library only."""
 import datetime as _dt
 import os
 import re
