@@ -203,7 +203,7 @@ function NextSteps() {
         <a className="px-ns-link" href="https://transformby10x.ai/fact/">See FACT</a>
       </section>
       <section className="px-ns-back" aria-label="BACK">
-        <p className="px-ns-back-line"><b>BACK</b> Set it up yourself. Context Keystones written from your answers: folders, files and handoff rules your team puts in place.</p>
+        <p className="px-ns-back-line"><b>BACK</b> Set it up yourself. A pack written from your answers: folders, files and handoff rules your team puts in place.</p>
         <p className="px-ns-back-price">Intro $74 for the first 50, then $347.</p>
         <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See Back</a>
       </section>

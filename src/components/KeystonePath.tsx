@@ -35,7 +35,7 @@ export function KeystonePath({
   return (
     <section className="stones" aria-labelledby="stones-title" data-open={open ? 'true' : 'false'}>
       <div className="trace-head">
-        <p className="kicker">Context Keystones</p>
+        <p className="kicker">BACK</p>
         <h2 id="stones-title">Four steps to keep this team on track</h2>
         <p className="state-line">{line}</p>
         {open && evidenceKind === 'simulated' ? (

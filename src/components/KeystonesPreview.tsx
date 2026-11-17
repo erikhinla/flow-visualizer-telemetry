@@ -22,9 +22,9 @@ export function KeystonesPreview({ audienceId, stage }: { audienceId: AudienceId
   return (
     <section className="px-ks" aria-labelledby="px-ks-h">
       <div className="px-ks-head">
-        <h2 id="px-ks-h">Context Keystones, before and after</h2>
+        <h2 id="px-ks-h">BACK, before and after</h2>
         <p className="px-ks-lede">
-          A Context Keystone keeps the brief, decisions and status with the work, so the next person or agent doesn't have to rebuild them.
+          BACK keeps the brief, decisions and status with the work, so the next person or agent doesn't have to rebuild them.
         </p>
       </div>
       <p className="px-ks-stall">

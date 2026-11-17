@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate.py : build a tailored Context Keystones pack from intake answers.
+generate.py : build a tailored BACK pack from intake answers.
 
 USAGE
     python3 generate.py --intake intake.json [--proof proof.json] --out OUTPUT_FOLDER [--zip]
@@ -353,7 +353,7 @@ Mark a question that still needs an answer with status `open`.
 
 | date | decision | decided by | round | affects | status |
 |---|---|---|---|---|---|
-| {{CREATED}} | Project set up with Context Keystones | %s | kickoff | everyone | done |
+| {{CREATED}} | Project set up with BACK | %s | kickoff | everyone | done |
 """ % I["record_owner"]
 
 
@@ -562,7 +562,7 @@ def how_it_works(I):
     return f"""
 # How it works
 
-Context Keystones for {I['agency_name']}. Four parts, each holding up the others.
+BACK for {I['agency_name']}. Four parts, each holding up the others.
 
 **Folders.** `project-template/` is the agency's project structure, built on its own stages
 ({' > '.join(I['stages'])}) and deliverables. Each folder has a README saying what lives there and which role owns it.
@@ -627,7 +627,7 @@ Files live in {"the team's shared cloud drive" if I['storage'].strip().lower() i
 
 
 MAC_LAUNCH = """#!/bin/bash
-# Double-click to open the Context Keystones menu. The first time, macOS may ask to confirm:
+# Double-click to open the BACK menu. The first time, macOS may ask to confirm:
 # right-click this file, choose Open, then Open again.
 cd "$(dirname "$0")" || exit 1
 if command -v python3 >/dev/null 2>&1; then
@@ -640,7 +640,7 @@ read -r -p "Press Enter to close this window." _ || true
 """
 
 LINUX_LAUNCH = """#!/bin/sh
-# Opens the Context Keystones menu. Double-click (choose Run in Terminal) or run: sh start-keystones-linux.sh
+# Opens the BACK menu. Double-click (choose Run in Terminal) or run: sh start-keystones-linux.sh
 cd "$(dirname "$0")" || exit 1
 if command -v python3 >/dev/null 2>&1; then
   python3 scripts/keystones_menu.py
@@ -652,7 +652,7 @@ read _ || true
 """
 
 WIN_LAUNCH = """@echo off
-rem Double-click to open the Context Keystones menu.
+rem Double-click to open the BACK menu.
 cd /d "%~dp0"
 where py >nul 2>nul
 if %errorlevel%==0 (
@@ -740,7 +740,7 @@ def build(I, out):
     w(os.path.join(out, "protocols", "review-rounds-protocol.md"), rounds_protocol(I))
     w(os.path.join(out, "protocols", "handoff-protocol.md"), handoff_protocol(I))
     w(os.path.join(out, "HOW-IT-WORKS.md"), how_it_works(I))
-    w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with START HERE.md. Generated %s.\n\n"
+    w(os.path.join(out, "README.md"), "# BACK: %s\n\nStart with START HERE.md. Generated %s.\n\n"
       "Get BACK to work. (Business Aligned Context Keystones)\n%s" % (I["agency_name"], TODAY, video_block()))
     os.makedirs(os.path.join(out, "scripts"))
     for f in sorted(os.listdir(os.path.join(HERE, "pack_scripts"))):

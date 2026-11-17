@@ -284,9 +284,9 @@ def send_test():
     tg = targets(s)
     if not tg:
         return ["Nothing to test yet. Set up email (with at least one address) or a chat link first."]
-    text = "Test notice from Context Keystones, sent %s.\nIf this arrived, change notices can reach this address." % TODAY
+    text = "Test notice from BACK, sent %s.\nIf this arrived, change notices can reach this address." % TODAY
     rep = []
-    mails = [(a, "Context Keystones test notice", text) for k, a, r in tg if k == "email"]
+    mails = [(a, "BACK test notice", text) for k, a, r in tg if k == "email"]
     mails = list({m[0]: m for m in mails}.values())
     if mails:
         try:
