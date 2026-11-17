@@ -98,9 +98,9 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     render: (v) => simpleMail('Action needed: paid order without email', [`Offer: ${v.OFFER}`, `Stripe session: ${v.SESSION_ID}`]),
   },
   keystones: {
-    name: 'TBTX order: Context Keystones delivery', subject: 'Context Keystones are ready', vars: ['AGENCY', 'DOWNLOAD_URL', 'REBUILD_URL'], plain: true,
-    render: (v) => simpleMail('Context Keystones are ready', [
-      `The Context Keystones for ${v.AGENCY} are built from the PROOF answers and the intake.`,
+    name: 'TBTX order: Context Keystones delivery', subject: 'Your BACK pack is ready', vars: ['AGENCY', 'DOWNLOAD_URL', 'REBUILD_URL'], plain: true,
+    render: (v) => simpleMail('Your BACK pack is ready', [
+      `The BACK pack for ${v.AGENCY} is built from the PROOF answers and the intake.`,
       'How to start:',
       '1. Download the zip with the button below and unzip it into the folder where project files live.',
       '2. Open START HERE.md.',
@@ -108,12 +108,12 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
       'When a mandatory, a legal line or a right changes, update its one file in the _context folder, then open the menu again. The scripts carry the change into every template that uses it.',
       'The download link works for 24 hours. To change an answer or download again later, open this page and build again (up to 5 builds per purchase):',
       v.REBUILD_URL,
-    ], { label: 'Download Context Keystones', url: v.DOWNLOAD_URL }),
+    ], { label: 'Download your BACK pack', url: v.DOWNLOAD_URL }),
   },
   keystones_paid: {
-    name: 'TBTX order: Context Keystones intake link', subject: 'Context Keystones: the intake link', vars: ['INTAKE_URL'], plain: true,
+    name: 'TBTX order: Context Keystones intake link', subject: 'BACK: the intake link', vars: ['INTAKE_URL'], plain: true,
     render: (v) => simpleMail('Payment received. The intake is next.', [
-      'Thanks for buying Context Keystones.',
+      'Thanks for buying BACK.',
       "The next step is a short intake. It picks up the PROOF answers, and the pack downloads right after. If the tab got closed, this link opens the same intake again:",
       v.INTAKE_URL,
       'The link belongs to this purchase, so keep it to the team.',

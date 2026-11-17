@@ -24,7 +24,7 @@ export const TIP_REPAIR_COST = 'The paid time spent finding, checking or rebuild
 export const TIP_HOURLY = 'What one paid hour costs: salary divided by 2,080 working hours a year. It turns repair time into a dollar figure.';
 export const TIP_ANNUAL = 'Hourly cost times repair hours times team size times 52 weeks. It shows what carrying context by hand costs over a year.';
 export const TIP_THREE_OF_NINE = 'PROOF runs 01 Map score and 08 + 09 Context Repair Cost from 15 answers. The other 6 need your real work, which FACT measures.';
-export const TIP_FACT_ALL_NINE = 'FACT reads real handoffs in current work and runs all 9 measurements, not the 3 PROOF can run from answers. It ends with what stalls, what it costs, what to change first, and your Context Keystones written from all nine.';
+export const TIP_FACT_ALL_NINE = 'FACT reads real handoffs in current work and runs all 9 measurements, not the 3 PROOF can run from answers. It ends with what stalls, what it costs, what to change first, and your BACK pack written from all nine.';
 export const TIP_STAGE = 'Where work stalls first, based on your lowest answers. PROOF names a stage of work, never a team or person.';
 
 /** The 9 measurements, one line each, for the FACT card back. */
