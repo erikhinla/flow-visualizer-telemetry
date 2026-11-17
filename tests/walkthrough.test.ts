@@ -29,3 +29,17 @@ test('walkthrough: pack has START HERE.md at the root and no video placeholder',
   }
   assert.ok(readFileSync(path.join(out, 'README.md'), 'utf8').includes('START HERE.md'));
 });
+
+test('walkthrough: a set link shows in the email, START HERE.md and README.md', () => {
+  if (!WALKTHROUGH.url) return; // only meaningful while the link is on
+  assert.equal(BACK_WALKTHROUGH_URL, WALKTHROUGH.url.trim());
+  const mail = TEMPLATES.keystones.render({ AGENCY: 'Test Agency', DOWNLOAD_URL: 'https://example.com/d', REBUILD_URL: 'https://example.com/r' });
+  assert.ok(mail.text.includes(BACK_WALKTHROUGH_URL));
+  const out = path.join(mkdtempSync(path.join(tmpdir(), 'ks-walk-on-')), 'pack');
+  execFileSync('python3', [path.join(root, 'keystones/generator/generate.py'), '--intake', path.join(root, 'keystones/generator/intake-example.json'), '--out', out], { stdio: 'pipe' });
+  for (const f of ['START HERE.md', 'README.md']) {
+    const text = readFileSync(path.join(out, f), 'utf8');
+    assert.ok(text.includes(`[Watch the BACK walkthrough](${BACK_WALKTHROUGH_URL})`), f);
+    assert.ok(!text.includes('VIDEO_LINK'), f);
+  }
+});
