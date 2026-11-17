@@ -5,7 +5,7 @@ import { DATA_DIR, ERIK, findEntry, sendMail } from './fulfil';
 import { templated } from './mail-templates';
 import { BACK_INTRO_LIMIT, BACK_INTRO_PRICE, BACK_LIST_PRICE } from './keystones-prices';
 
-/** Server-only rules for paid Context Keystones builds. */
+/** Server-only rules for paid BACK builds. */
 /** Intro: $74 for the first 50 real purchases. After that the checkout switches to the $347 link on its own. */
 export const INTRO_LINK = 'plink_1UWneMCMxQwcbhDnAVR5sHw4';
 export const INTRO_URL = 'https://buy.stripe.com/cNi3cu37N7oy2XFggqc3m09';

@@ -10,7 +10,7 @@ RUN npm run build
 
 FROM node:18-alpine AS runner
 WORKDIR /app
-# Context Keystones are built by the tested Python generator (standard library only).
+# BACK packs are built by the tested Python generator (standard library only).
 RUN apk add --no-cache python3
 # Keep the runtime base path and booking URL identical to the build arguments.
 ARG PROOF_BASE_PATH=/proof/screen
