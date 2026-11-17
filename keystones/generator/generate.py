@@ -572,8 +572,8 @@ Every file gets one home. `_archive/` holds older versions.
 legal-lines.md, rights-and-licenses.md, decisions.md and change-log.md, plus AI-CONTEXT.md so any AI assistant reads
 the same facts. Every stage folder reads from there. `START HERE.md` in each project explains the layout in one line.
 
-**Launch files.** Double-click the one for the computer in use: `Start Keystones (Mac).command`,
-`Start Keystones (Windows).bat` or `start-keystones-linux.sh`. A numbered menu opens. Type a number and press Enter:
+**Launch files.** Double-click the one for the computer in use: `Start BACK (Mac).command`,
+`Start BACK (Windows).bat` or `start-back-linux.sh`. A numbered menu opens. Type a number and press Enter:
 1 Start a new project, 2 Move old versions to the archive, 3 Update mandatories and legal lines,
 4 Build the next round's agenda, 5 Check rights and licenses, 6 Write the pending changes summary,
 7 Turn on watch mode, 8 Switch to a different project, 9 Change notices.
@@ -627,7 +627,7 @@ Files live in {"the team's shared cloud drive" if I['storage'].strip().lower() i
 
 
 MAC_LAUNCH = """#!/bin/bash
-# Double-click to open the BACK menu. The first time, macOS may ask to confirm:
+# Opens the BACK menu. Double-click to open it. The first time, macOS may ask to confirm:
 # right-click this file, choose Open, then Open again.
 cd "$(dirname "$0")" || exit 1
 if command -v python3 >/dev/null 2>&1; then
@@ -640,7 +640,7 @@ read -r -p "Press Enter to close this window." _ || true
 """
 
 LINUX_LAUNCH = """#!/bin/sh
-# Opens the BACK menu. Double-click (choose Run in Terminal) or run: sh start-keystones-linux.sh
+# Opens the BACK menu. Double-click (choose Run in Terminal) or run: sh start-back-linux.sh
 cd "$(dirname "$0")" || exit 1
 if command -v python3 >/dev/null 2>&1; then
   python3 scripts/keystones_menu.py
@@ -652,7 +652,7 @@ read _ || true
 """
 
 WIN_LAUNCH = """@echo off
-rem Double-click to open the BACK menu.
+rem Opens the BACK menu. Double-click to open it.
 cd /d "%~dp0"
 where py >nul 2>nul
 if %errorlevel%==0 (
@@ -695,9 +695,9 @@ def routing_map(I):
 
 
 def write_launchers(out):
-    for name, text, nl in [("Start Keystones (Mac).command", MAC_LAUNCH, "\n"),
-                           ("start-keystones-linux.sh", LINUX_LAUNCH, "\n"),
-                           ("Start Keystones (Windows).bat", WIN_LAUNCH, "\r\n")]:
+    for name, text, nl in [("Start BACK (Mac).command", MAC_LAUNCH, "\n"),
+                           ("start-back-linux.sh", LINUX_LAUNCH, "\n"),
+                           ("Start BACK (Windows).bat", WIN_LAUNCH, "\r\n")]:
         path = os.path.join(out, name)
         with open(path, "w", encoding="utf-8", newline=nl) as f:
             f.write(text if text.endswith("\n") else text + "\n")
@@ -713,10 +713,12 @@ def build(I, out):
     tpl = os.path.join(out, "project-template")
     for rel, what, owner in folder_plan(I):
         w(os.path.join(tpl, rel, "README.md"), "# %s\n\n%s\n\nOwning role: %s.\n" % (os.path.basename(rel), what, owner))
+    # The project template keeps blank rows. Wording typed in the intake belongs to the first project only.
+    blank = dict(I, mandatory_values={}, legal_values={})
     for name, fn in [("project.md", project_md), ("mandatories.md", mandatories_md), ("legal-lines.md", legal_md),
                      ("rights-and-licenses.md", rights_md), ("decisions.md", decisions_md),
                      ("change-log.md", change_log_md), ("AI-CONTEXT.md", ai_context_md)]:
-        w(os.path.join(tpl, "_context", name), fn(I))
+        w(os.path.join(tpl, "_context", name), fn(blank if fn in (mandatories_md, legal_md) else I))
     w(os.path.join(tpl, "_context", "README.md"),
       "# _context: the project's shared facts\n\n"
       "Every stage folder reads from the files here. When a fact changes (a mandatory, a legal line, a license, "
@@ -762,7 +764,24 @@ def build(I, out):
         new_project.main(["--pack", out, "--client", fp["client"], "--project", fp["project"], "--code", fp.get("code", ""),
                           "--due", fp.get("due") or "TBC",
                           "--flight-start", fp.get("flight_start") or "TBC", "--flight-end", fp.get("flight_end") or "TBC"])
+        fill_first_project_wording(I, out)
     w(os.path.join(out, "START HERE.md"), root_start_here(out))
+
+
+def fill_first_project_wording(I, out):
+    """Write the intake's current wording into the first project's mandatories and legal lines."""
+    if not (I.get("mandatory_values") or I.get("legal_values")):
+        return
+    projects = os.path.join(out, "projects")
+    names = [n for n in os.listdir(projects) if os.path.isdir(os.path.join(projects, n)) and n != "__pycache__"]
+    if len(names) != 1:
+        return
+    tokens = {"{{CLIENT}}": I["first_project"]["client"], "{{CREATED}}": TODAY}
+    for name, fn in (("mandatories.md", mandatories_md), ("legal-lines.md", legal_md)):
+        text = fn(I)
+        for tok, val in tokens.items():
+            text = text.replace(tok, val)
+        w(os.path.join(projects, names[0], "_context", name), text)
 
 
 def root_start_here(out):
@@ -790,9 +809,9 @@ def root_start_here(out):
         "Open this file first.\n\n"
         "## Open the menu\n\n"
         "Double-click the launch file for the computer in use:\n\n"
-        "- Mac: `Start Keystones (Mac).command`. The first open may need a right-click, then Open.\n"
-        "- Windows: `Start Keystones (Windows).bat`.\n"
-        "- Linux: `start-keystones-linux.sh`. Double-click it and choose Run in Terminal, or run `sh start-keystones-linux.sh`.\n\n"
+        "- Mac: `Start BACK (Mac).command`. The first open may need a right-click, then Open.\n"
+        "- Windows: `Start BACK (Windows).bat`.\n"
+        "- Linux: `start-back-linux.sh`. Double-click it and choose Run in Terminal, or run `sh start-back-linux.sh`.\n\n"
         "Python 3.8 or newer has to be installed once. Get it from python.org. On Windows, tick \"Add python.exe to PATH\" during install.\n\n"
         "## Then go to the sample project\n\n"
         + sample_step +

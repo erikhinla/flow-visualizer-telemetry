@@ -98,7 +98,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     render: (v) => simpleMail('Action needed: paid order without email', [`Offer: ${v.OFFER}`, `Stripe session: ${v.SESSION_ID}`]),
   },
   keystones: {
-    name: 'TBTX order: Context Keystones delivery', subject: 'Your BACK pack is ready', vars: ['AGENCY', 'DOWNLOAD_URL', 'REBUILD_URL'], plain: true,
+    name: 'TBTX order: BACK delivery', subject: 'Your BACK pack is ready', vars: ['AGENCY', 'DOWNLOAD_URL', 'REBUILD_URL'], plain: true,
     render: (v) => simpleMail('Your BACK pack is ready', [
       `The BACK pack for ${v.AGENCY} is built from the PROOF answers and the intake.`,
       'How to start:',
@@ -111,7 +111,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     ], { label: 'Download your BACK pack', url: v.DOWNLOAD_URL }),
   },
   keystones_paid: {
-    name: 'TBTX order: Context Keystones intake link', subject: 'BACK: the intake link', vars: ['INTAKE_URL'], plain: true,
+    name: 'TBTX order: BACK intake link', subject: 'BACK: the intake link', vars: ['INTAKE_URL'], plain: true,
     render: (v) => simpleMail('Payment received. The intake is next.', [
       'Thanks for buying BACK.',
       "The next step is a short intake. It picks up the PROOF answers, and the pack downloads right after. If the tab got closed, this link opens the same intake again:",
@@ -120,8 +120,8 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     ], { label: 'Open the intake', url: v.INTAKE_URL }),
   },
   keystones_cap_erik: {
-    name: 'TBTX notice: Keystones intro cap reached (Erik)', subject: 'Keystones: 50 intro sales reached', vars: ['SOLD', 'RESULT'], plain: true,
-    render: (v) => simpleMail('Keystones intro cap reached', [
+    name: 'TBTX notice: BACK intro cap reached (Erik)', subject: 'BACK: 50 intro sales reached', vars: ['SOLD', 'RESULT'], plain: true,
+    render: (v) => simpleMail('BACK intro cap reached', [
       `Real intro purchases: ${v.SOLD}. Checkout now sends buyers to the $347 link.`,
       `Intro link status: ${v.RESULT}`,
     ]),
