@@ -276,7 +276,7 @@ export function KeystonesIntake() {
         if (sessionId) localStorage.removeItem(intakeDraftKey(sessionId));
         localStorage.removeItem(INTAKE_DRAFT_LEGACY);
       } catch { /* storage blocked */ }
-      setFile({ url: out.url, name: out.name ?? 'context-keystones.zip', size: out.size ?? 0, emailed: !!out.emailed });
+      setFile({ url: out.url, name: out.name ?? 'back.zip', size: out.size ?? 0, emailed: !!out.emailed });
       setBuildsLeft(out.buildsLeft ?? 0);
       setStep(6);
     } catch {
@@ -303,7 +303,7 @@ export function KeystonesIntake() {
           ) : (
             <div className="ks-card">
               <h2>Built after checkout</h2>
-              <p>Context Keystones are the folders, markdown files, scripts and protocols an agency&apos;s work runs on, each tailored to its own roles, rounds and clients.</p>
+              <p>BACK is the folders, markdown files, scripts and protocols an agency&apos;s work runs on, each tailored to its own roles, rounds and clients.</p>
               <p>{answered.length ? `${answered.length} PROOF answers on this device carry over to checkout and into the pack.` : 'No PROOF yet? The 15 answers are the first step after checkout.'}</p>
               <a className="px-btn px-btn-light ks-download" href={checkoutHref(ready ? encodeProof('agency', { values: session.values, optionIds: session.optionIds }) : null)}>Check out and build</a>
               <p className="ks-hint"><KeystonesPrice offer={offer} /> Up to 5 builds per purchase.</p>
