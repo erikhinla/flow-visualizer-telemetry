@@ -673,7 +673,7 @@ def build(I, out):
     w(os.path.join(out, "protocols", "review-rounds-protocol.md"), rounds_protocol(I))
     w(os.path.join(out, "protocols", "handoff-protocol.md"), handoff_protocol(I))
     w(os.path.join(out, "HOW-IT-WORKS.md"), how_it_works(I))
-    w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with HOW-IT-WORKS.md. Generated %s.\n\n"
+    w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with START HERE.md. Generated %s.\n\n"
       "Get BACK to work. (Business Aligned Context Keystones)\n" % (I["agency_name"], TODAY))
     os.makedirs(os.path.join(out, "scripts"))
     for f in sorted(os.listdir(os.path.join(HERE, "pack_scripts"))):
@@ -695,6 +695,44 @@ def build(I, out):
         new_project.main(["--pack", out, "--client", fp["client"], "--project", fp["project"], "--code", fp.get("code", ""),
                           "--due", fp.get("due") or "TBC",
                           "--flight-start", fp.get("flight_start") or "TBC", "--flight-end", fp.get("flight_end") or "TBC"])
+    w(os.path.join(out, "START HERE.md"), root_start_here(out))
+
+
+def root_start_here(out):
+    """Pack-root first step: which launch file to open, then the sample project."""
+    sample = None
+    projects = os.path.join(out, "projects")
+    if os.path.isdir(projects):
+        names = sorted(
+            n for n in os.listdir(projects)
+            if os.path.isdir(os.path.join(projects, n)) and n != "__pycache__"
+        )
+        if names:
+            sample = names[0]
+    if sample:
+        sample_step = (
+            "A sample project is already in the `projects` folder, named `%s`. Open that folder next.\n\n"
+            "When you want a new project, open the menu and pick 1.\n" % sample
+        )
+    else:
+        sample_step = (
+            "Project folders live in `projects`. Open one next, or open the menu and pick 1 to start a new project.\n"
+        )
+    return (
+        "# Start here\n\n"
+        "Open this file first.\n\n"
+        "## Open the menu\n\n"
+        "Double-click the launch file for the computer in use:\n\n"
+        "- Mac: `Start Keystones (Mac).command`. The first open may need a right-click, then Open.\n"
+        "- Windows: `Start Keystones (Windows).bat`.\n"
+        "- Linux: `start-keystones-linux.sh`. Double-click it and choose Run in Terminal, or run `sh start-keystones-linux.sh`.\n\n"
+        "Python 3.8 or newer has to be installed once. Get it from python.org. On Windows, tick \"Add python.exe to PATH\" during install.\n\n"
+        "## Then go to the sample project\n\n"
+        + sample_step +
+        "\nHOW-IT-WORKS.md has more detail when you want it.\n\n"
+        "## Walkthrough video\n\n"
+        "[Watch the BACK walkthrough](VIDEO_LINK_TBD)\n"
+    )
 
 
 def main():

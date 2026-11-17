@@ -435,8 +435,8 @@ export function KeystonesIntake() {
             <ol className="ks-list">
               <li>Unzip it into the folder where project files live.</li>
               <li>Open START HERE.md.</li>
-              <li>Double-click the launch file for the computer in use and pick 1 to start a project.</li>
             </ol>
+            <p><a href="VIDEO_LINK_TBD">Watch the BACK walkthrough</a></p>
           </div>
         </section>
       )}
