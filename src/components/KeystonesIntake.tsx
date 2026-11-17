@@ -8,6 +8,7 @@ import { decodeProof, encodeProof } from '../lib/proof-code';
 import { QUESTIONS } from '../lib/questionnaire';
 import { useSession } from './SessionProvider';
 import SAMPLE from '../lib/keystones-sample.json';
+import { BACK_WALKTHROUGH_URL } from '../lib/walkthrough';
 
 type Dept = { name: string; lead: string; roles: string[] };
 type Round = { id: string; name: string; reviewers: string[]; business_affairs: boolean; client_sees: boolean; purpose: string };
@@ -51,6 +52,13 @@ const CHANNELS = ['email', 'a team chat channel', 'a status meeting', 'a project
 const VERSIONS = ['v1, v2, v3 at the end of the file name', 'R1, R2, R3 for rounds', 'dates in the file name', "it varies"];
 
 const STEPS = ['From PROOF', 'The team', 'Stages and rounds', 'The work', 'How changes move', 'First project', 'Pack'];
+
+const INTAKE_DRAFT_PREFIX = 'ks.intake.v1:';
+const INTAKE_DRAFT_LEGACY = 'ks.intake.v1';
+
+function intakeDraftKey(sessionId: string) {
+  return `${INTAKE_DRAFT_PREFIX}${sessionId}`;
+}
 
 const blank = (): Intake => ({
   agency_name: '',
@@ -136,6 +144,7 @@ export function KeystonesIntake() {
   const [gate, setGate] = useState<'checking' | 'paid' | 'pending' | 'unpaid'>('checking');
   const [buildsLeft, setBuildsLeft] = useState(0);
   const [code, setCode] = useState<string | null>(null);
+  const [draftSession, setDraftSession] = useState('');
   const errorRef = useRef<HTMLParagraphElement>(null);
   const offer = useKeystonesOffer();
   const base = process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? '';
@@ -164,9 +173,26 @@ export function KeystonesIntake() {
     return () => { stop = true; };
   }, [base]);
 
-  // Answers typed here stay on this device, so a rebuild doesn't start from scratch.
-  useEffect(() => { try { const saved = localStorage.getItem('ks.intake.v1'); if (saved) setI({ ...blank(), ...(JSON.parse(saved) as Intake) }); } catch { /* none saved */ } }, []);
-  useEffect(() => { try { if (I.agency_name) localStorage.setItem('ks.intake.v1', JSON.stringify(I)); } catch { /* storage full */ } }, [I]);
+  // Answers stay on this device for this checkout only, so a rebuild doesn't start from scratch
+  // and one buyer's wording never fills in the next buyer's pack.
+  useEffect(() => {
+    if (!sessionId) {
+      setDraftSession('');
+      return;
+    }
+    try {
+      localStorage.removeItem(INTAKE_DRAFT_LEGACY);
+      const saved = localStorage.getItem(intakeDraftKey(sessionId));
+      setI(saved ? { ...blank(), ...(JSON.parse(saved) as Intake) } : blank());
+    } catch {
+      setI(blank());
+    }
+    setDraftSession(sessionId);
+  }, [sessionId]);
+  useEffect(() => {
+    if (!sessionId || draftSession !== sessionId || !I.agency_name) return;
+    try { localStorage.setItem(intakeDraftKey(sessionId), JSON.stringify(I)); } catch { /* storage full */ }
+  }, [I, sessionId, draftSession]);
   useEffect(() => { if (error) errorRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, [error]);
 
   useEffect(() => {
@@ -246,6 +272,10 @@ export function KeystonesIntake() {
       });
       const out = (await res.json().catch(() => ({}))) as { error?: string; url?: string; name?: string; size?: number; buildsLeft?: number; emailed?: boolean };
       if (!res.ok || !out.url) { setError(out.error ?? "The pack couldn't be built."); return; }
+      try {
+        if (sessionId) localStorage.removeItem(intakeDraftKey(sessionId));
+        localStorage.removeItem(INTAKE_DRAFT_LEGACY);
+      } catch { /* storage blocked */ }
       setFile({ url: out.url, name: out.name ?? 'context-keystones.zip', size: out.size ?? 0, emailed: !!out.emailed });
       setBuildsLeft(out.buildsLeft ?? 0);
       setStep(6);
@@ -433,10 +463,10 @@ export function KeystonesIntake() {
           <div className="ks-card">
             <h2>First steps</h2>
             <ol className="ks-list">
-              <li>Unzip it into the folder where project files live.</li>
-              <li>Open START HERE.md.</li>
-              <li>Double-click the launch file for the computer in use and pick 1 to start a project.</li>
+              <li>Unzip it, then open START HERE.md at the top of the folder.</li>
+              <li>Follow its two steps: open the menu, then the sample project.</li>
             </ol>
+            {BACK_WALKTHROUGH_URL ? <p><a href={BACK_WALKTHROUGH_URL} target="_blank" rel="noopener noreferrer">Watch the BACK walkthrough</a></p> : null}
           </div>
         </section>
       )}

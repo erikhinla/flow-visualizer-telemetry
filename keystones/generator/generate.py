@@ -14,6 +14,18 @@ Python 3.8+, standard library only.
 import argparse, json, os, re, shutil, sys, zipfile, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def walkthrough_url():
+    """BACK walkthrough link from keystones/walkthrough.json. Empty hides the video line."""
+    try:
+        with open(os.path.join(HERE, "..", "walkthrough.json"), encoding="utf-8") as f:
+            url = (json.load(f).get("url") or "").strip()
+    except (OSError, ValueError):
+        return ""
+    return url if re.match(r"^https://\S+$", url) else ""
+
+
 TODAY = datetime.date.today().isoformat()
 
 
@@ -65,6 +77,61 @@ PROOF_NOTES = {
 }
 
 
+
+_MARKS = re.compile(r"[\s\u2122™©®]+$")
+
+
+def _norm_name(s):
+    return re.sub(r"[\s\u2122™©®]+", " ", s or "").strip().lower()
+
+
+def _looks_like_brand_name(val):
+    """A short title-case name, like a client or mark, not a sentence or list."""
+    s = _MARKS.sub("", (val or "").strip())
+    if not s or len(s) > 80 or re.search(r"[,.!?]", s):
+        return False
+    words = s.split()
+    if not (1 <= len(words) <= 6):
+        return False
+    if any(not w[:1].isupper() for w in words):
+        return False
+    return all(re.match(r"^[A-Za-z0-9][A-Za-z0-9'&-]*$", w) for w in words)
+
+
+def _is_current_party(val, I):
+    names = []
+    fp = I.get("first_project") or {}
+    for k in ("client", "project"):
+        if fp.get(k):
+            names.append(fp[k])
+    if I.get("agency_name"):
+        names.append(I["agency_name"])
+    nv = _norm_name(val)
+    for n in names:
+        nn = _norm_name(n)
+        if nn and (nn == nv or nn in nv or nv in nn):
+            return True
+    return False
+
+
+def scrub_client_specific_values(I):
+    """Client wording comes only from this intake. Drop leftover brand-name values that name someone else."""
+    client = (I.get("first_project") or {}).get("client") or ""
+    if not client:
+        return I
+    for key in ("mandatory_values", "legal_values"):
+        vals = I.get(key) or {}
+        kept = {}
+        for k, v in vals.items():
+            if not isinstance(v, str) or not v.strip():
+                continue
+            if _looks_like_brand_name(v) and not _is_current_party(v, I):
+                continue
+            kept[k] = v
+        I[key] = kept
+    return I
+
+
 def load(args):
     with open(args.intake, encoding="utf-8") as f:
         I = json.load(f)
@@ -110,7 +177,7 @@ def load(args):
             sys.exit("First project %s %r: %s" % (label, fp.get(field), problem))
         if field == "due" and past_warning(d, "the due date"):
             print(past_warning(d, "the due date"))
-    return I
+    return scrub_client_specific_values(I)
 
 
 # ---------------------------------------------------------------- folder tree
@@ -673,8 +740,8 @@ def build(I, out):
     w(os.path.join(out, "protocols", "review-rounds-protocol.md"), rounds_protocol(I))
     w(os.path.join(out, "protocols", "handoff-protocol.md"), handoff_protocol(I))
     w(os.path.join(out, "HOW-IT-WORKS.md"), how_it_works(I))
-    w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with HOW-IT-WORKS.md. Generated %s.\n\n"
-      "Get BACK to work. (Business Aligned Context Keystones)\n" % (I["agency_name"], TODAY))
+    w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with START HERE.md. Generated %s.\n\n"
+      "Get BACK to work. (Business Aligned Context Keystones)\n%s" % (I["agency_name"], TODAY, video_block()))
     os.makedirs(os.path.join(out, "scripts"))
     for f in sorted(os.listdir(os.path.join(HERE, "pack_scripts"))):
         if f.endswith(".py"):
@@ -695,6 +762,48 @@ def build(I, out):
         new_project.main(["--pack", out, "--client", fp["client"], "--project", fp["project"], "--code", fp.get("code", ""),
                           "--due", fp.get("due") or "TBC",
                           "--flight-start", fp.get("flight_start") or "TBC", "--flight-end", fp.get("flight_end") or "TBC"])
+    w(os.path.join(out, "START HERE.md"), root_start_here(out))
+
+
+def root_start_here(out):
+    """Pack-root first step: which launch file to open, then the sample project."""
+    sample = None
+    projects = os.path.join(out, "projects")
+    if os.path.isdir(projects):
+        names = sorted(
+            n for n in os.listdir(projects)
+            if os.path.isdir(os.path.join(projects, n)) and n != "__pycache__"
+        )
+        if names:
+            sample = names[0]
+    if sample:
+        sample_step = (
+            "A sample project is already in the `projects` folder, named `%s`. Open that folder next.\n\n"
+            "When you want a new project, open the menu and pick 1.\n" % sample
+        )
+    else:
+        sample_step = (
+            "Project folders live in `projects`. Open one next, or open the menu and pick 1 to start a new project.\n"
+        )
+    return (
+        "# Start here\n\n"
+        "Open this file first.\n\n"
+        "## Open the menu\n\n"
+        "Double-click the launch file for the computer in use:\n\n"
+        "- Mac: `Start Keystones (Mac).command`. The first open may need a right-click, then Open.\n"
+        "- Windows: `Start Keystones (Windows).bat`.\n"
+        "- Linux: `start-keystones-linux.sh`. Double-click it and choose Run in Terminal, or run `sh start-keystones-linux.sh`.\n\n"
+        "Python 3.8 or newer has to be installed once. Get it from python.org. On Windows, tick \"Add python.exe to PATH\" during install.\n\n"
+        "## Then go to the sample project\n\n"
+        + sample_step +
+        "\nHOW-IT-WORKS.md has more detail when you want it.\n"
+        + video_block()
+    )
+
+
+def video_block():
+    url = walkthrough_url()
+    return "\n## Walkthrough video\n\n[Watch the BACK walkthrough](%s)\n" % url if url else ""
 
 
 def main():
