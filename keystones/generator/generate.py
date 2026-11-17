@@ -65,6 +65,61 @@ PROOF_NOTES = {
 }
 
 
+
+_MARKS = re.compile(r"[\s\u2122™©®]+$")
+
+
+def _norm_name(s):
+    return re.sub(r"[\s\u2122™©®]+", " ", s or "").strip().lower()
+
+
+def _looks_like_brand_name(val):
+    """A short title-case name, like a client or mark, not a sentence or list."""
+    s = _MARKS.sub("", (val or "").strip())
+    if not s or len(s) > 80 or re.search(r"[,.!?]", s):
+        return False
+    words = s.split()
+    if not (1 <= len(words) <= 6):
+        return False
+    if any(not w[:1].isupper() for w in words):
+        return False
+    return all(re.match(r"^[A-Za-z0-9][A-Za-z0-9'&-]*$", w) for w in words)
+
+
+def _is_current_party(val, I):
+    names = []
+    fp = I.get("first_project") or {}
+    for k in ("client", "project"):
+        if fp.get(k):
+            names.append(fp[k])
+    if I.get("agency_name"):
+        names.append(I["agency_name"])
+    nv = _norm_name(val)
+    for n in names:
+        nn = _norm_name(n)
+        if nn and (nn == nv or nn in nv or nv in nn):
+            return True
+    return False
+
+
+def scrub_client_specific_values(I):
+    """Client wording comes only from this intake. Drop leftover brand-name values that name someone else."""
+    client = (I.get("first_project") or {}).get("client") or ""
+    if not client:
+        return I
+    for key in ("mandatory_values", "legal_values"):
+        vals = I.get(key) or {}
+        kept = {}
+        for k, v in vals.items():
+            if not isinstance(v, str) or not v.strip():
+                continue
+            if _looks_like_brand_name(v) and not _is_current_party(v, I):
+                continue
+            kept[k] = v
+        I[key] = kept
+    return I
+
+
 def load(args):
     with open(args.intake, encoding="utf-8") as f:
         I = json.load(f)
@@ -110,7 +165,7 @@ def load(args):
             sys.exit("First project %s %r: %s" % (label, fp.get(field), problem))
         if field == "due" and past_warning(d, "the due date"):
             print(past_warning(d, "the due date"))
-    return I
+    return scrub_client_specific_values(I)
 
 
 # ---------------------------------------------------------------- folder tree

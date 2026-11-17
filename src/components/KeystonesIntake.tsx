@@ -52,6 +52,13 @@ const VERSIONS = ['v1, v2, v3 at the end of the file name', 'R1, R2, R3 for roun
 
 const STEPS = ['From PROOF', 'The team', 'Stages and rounds', 'The work', 'How changes move', 'First project', 'Pack'];
 
+const INTAKE_DRAFT_PREFIX = 'ks.intake.v1:';
+const INTAKE_DRAFT_LEGACY = 'ks.intake.v1';
+
+function intakeDraftKey(sessionId: string) {
+  return `${INTAKE_DRAFT_PREFIX}${sessionId}`;
+}
+
 const blank = (): Intake => ({
   agency_name: '',
   team_size: '',
@@ -136,6 +143,7 @@ export function KeystonesIntake() {
   const [gate, setGate] = useState<'checking' | 'paid' | 'pending' | 'unpaid'>('checking');
   const [buildsLeft, setBuildsLeft] = useState(0);
   const [code, setCode] = useState<string | null>(null);
+  const [draftSession, setDraftSession] = useState('');
   const errorRef = useRef<HTMLParagraphElement>(null);
   const offer = useKeystonesOffer();
   const base = process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? '';
@@ -164,9 +172,26 @@ export function KeystonesIntake() {
     return () => { stop = true; };
   }, [base]);
 
-  // Answers typed here stay on this device, so a rebuild doesn't start from scratch.
-  useEffect(() => { try { const saved = localStorage.getItem('ks.intake.v1'); if (saved) setI({ ...blank(), ...(JSON.parse(saved) as Intake) }); } catch { /* none saved */ } }, []);
-  useEffect(() => { try { if (I.agency_name) localStorage.setItem('ks.intake.v1', JSON.stringify(I)); } catch { /* storage full */ } }, [I]);
+  // Answers stay on this device for this checkout only, so a rebuild doesn't start from scratch
+  // and one buyer's wording never fills in the next buyer's pack.
+  useEffect(() => {
+    if (!sessionId) {
+      setDraftSession('');
+      return;
+    }
+    try {
+      localStorage.removeItem(INTAKE_DRAFT_LEGACY);
+      const saved = localStorage.getItem(intakeDraftKey(sessionId));
+      setI(saved ? { ...blank(), ...(JSON.parse(saved) as Intake) } : blank());
+    } catch {
+      setI(blank());
+    }
+    setDraftSession(sessionId);
+  }, [sessionId]);
+  useEffect(() => {
+    if (!sessionId || draftSession !== sessionId || !I.agency_name) return;
+    try { localStorage.setItem(intakeDraftKey(sessionId), JSON.stringify(I)); } catch { /* storage full */ }
+  }, [I, sessionId, draftSession]);
   useEffect(() => { if (error) errorRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, [error]);
 
   useEffect(() => {
@@ -246,6 +271,10 @@ export function KeystonesIntake() {
       });
       const out = (await res.json().catch(() => ({}))) as { error?: string; url?: string; name?: string; size?: number; buildsLeft?: number; emailed?: boolean };
       if (!res.ok || !out.url) { setError(out.error ?? "The pack couldn't be built."); return; }
+      try {
+        if (sessionId) localStorage.removeItem(intakeDraftKey(sessionId));
+        localStorage.removeItem(INTAKE_DRAFT_LEGACY);
+      } catch { /* storage blocked */ }
       setFile({ url: out.url, name: out.name ?? 'context-keystones.zip', size: out.size ?? 0, emailed: !!out.emailed });
       setBuildsLeft(out.buildsLeft ?? 0);
       setStep(6);
