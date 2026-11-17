@@ -8,6 +8,7 @@ import { decodeProof, encodeProof } from '../lib/proof-code';
 import { QUESTIONS } from '../lib/questionnaire';
 import { useSession } from './SessionProvider';
 import SAMPLE from '../lib/keystones-sample.json';
+import { BACK_WALKTHROUGH_URL } from '../lib/walkthrough';
 
 type Dept = { name: string; lead: string; roles: string[] };
 type Round = { id: string; name: string; reviewers: string[]; business_affairs: boolean; client_sees: boolean; purpose: string };
@@ -462,10 +463,10 @@ export function KeystonesIntake() {
           <div className="ks-card">
             <h2>First steps</h2>
             <ol className="ks-list">
-              <li>Unzip it into the folder where project files live.</li>
-              <li>Open START HERE.md.</li>
+              <li>Unzip it, then open START HERE.md at the top of the folder.</li>
+              <li>Follow its two steps: open the menu, then the sample project.</li>
             </ol>
-            <p><a href="VIDEO_LINK_TBD">Watch the BACK walkthrough</a></p>
+            {BACK_WALKTHROUGH_URL ? <p><a href={BACK_WALKTHROUGH_URL} target="_blank" rel="noopener noreferrer">Watch the BACK walkthrough</a></p> : null}
           </div>
         </section>
       )}

@@ -1,5 +1,6 @@
 import { simpleMail } from './fulfil';
 import { REPORT_VAR_KEYS, renderReport, type ReportVars } from './report';
+import { BACK_WALKTHROUGH_URL } from './walkthrough';
 
 /**
  * Every order email the app sends. Resend holds a published copy of each one (built from these
@@ -103,7 +104,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
       'How to start:',
       '1. Download the zip with the button below and unzip it into the folder where project files live.',
       '2. Open START HERE.md.',
-      'Walkthrough video (link to come): [Watch the BACK walkthrough](VIDEO_LINK_TBD)',
+      ...(BACK_WALKTHROUGH_URL ? [`Walkthrough video: ${BACK_WALKTHROUGH_URL}`] : []),
       'When a mandatory, a legal line or a right changes, update its one file in the _context folder, then open the menu again. The scripts carry the change into every template that uses it.',
       'The download link works for 24 hours. To change an answer or download again later, open this page and build again (up to 5 builds per purchase):',
       v.REBUILD_URL,

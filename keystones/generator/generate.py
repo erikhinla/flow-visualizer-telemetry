@@ -14,6 +14,18 @@ Python 3.8+, standard library only.
 import argparse, json, os, re, shutil, sys, zipfile, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def walkthrough_url():
+    """BACK walkthrough link from keystones/walkthrough.json. Empty hides the video line."""
+    try:
+        with open(os.path.join(HERE, "..", "walkthrough.json"), encoding="utf-8") as f:
+            url = (json.load(f).get("url") or "").strip()
+    except (OSError, ValueError):
+        return ""
+    return url if re.match(r"^https://\S+$", url) else ""
+
+
 TODAY = datetime.date.today().isoformat()
 
 
@@ -729,7 +741,7 @@ def build(I, out):
     w(os.path.join(out, "protocols", "handoff-protocol.md"), handoff_protocol(I))
     w(os.path.join(out, "HOW-IT-WORKS.md"), how_it_works(I))
     w(os.path.join(out, "README.md"), "# Context Keystones: %s\n\nStart with START HERE.md. Generated %s.\n\n"
-      "Get BACK to work. (Business Aligned Context Keystones)\n" % (I["agency_name"], TODAY))
+      "Get BACK to work. (Business Aligned Context Keystones)\n%s" % (I["agency_name"], TODAY, video_block()))
     os.makedirs(os.path.join(out, "scripts"))
     for f in sorted(os.listdir(os.path.join(HERE, "pack_scripts"))):
         if f.endswith(".py"):
@@ -784,10 +796,14 @@ def root_start_here(out):
         "Python 3.8 or newer has to be installed once. Get it from python.org. On Windows, tick \"Add python.exe to PATH\" during install.\n\n"
         "## Then go to the sample project\n\n"
         + sample_step +
-        "\nHOW-IT-WORKS.md has more detail when you want it.\n\n"
-        "## Walkthrough video\n\n"
-        "[Watch the BACK walkthrough](VIDEO_LINK_TBD)\n"
+        "\nHOW-IT-WORKS.md has more detail when you want it.\n"
+        + video_block()
     )
+
+
+def video_block():
+    url = walkthrough_url()
+    return "\n## Walkthrough video\n\n[Watch the BACK walkthrough](%s)\n" % url if url else ""
 
 
 def main():
