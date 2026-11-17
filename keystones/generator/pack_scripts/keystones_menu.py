@@ -3,9 +3,9 @@
 keystones_menu.py : the plain-English menu behind the launch files.
 
 Double-click the launch file for the computer in use, in the pack's top folder:
-    Mac:      Start Keystones (Mac).command
-    Windows:  Start Keystones (Windows).bat
-    Linux:    start-keystones-linux.sh
+    Mac:      Start BACK (Mac).command
+    Windows:  Start BACK (Windows).bat
+    Linux:    start-back-linux.sh
 Each one opens this menu. Type a number and press Enter. Nothing changes without a yes.
 Python 3.8+ standard library only.
 """
