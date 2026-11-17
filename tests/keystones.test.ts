@@ -110,9 +110,9 @@ test('five builds per session, and a failed build is given back', async () => {
 test('stored zips download by token and are removed after 24 hours', async () => {
   const f = path.join(dir, 'a.zip');
   writeFileSync(f, 'PK');
-  const token = await ks.storeZip(f, 'context-keystones-acme.zip', 'cs_test_x');
+  const token = await ks.storeZip(f, 'back-acme.zip', 'cs_test_x');
   assert.match(token, ks.TOKEN_RE);
-  assert.equal((await ks.readZip(token))?.name, 'context-keystones-acme.zip');
+  assert.equal((await ks.readZip(token))?.name, 'back-acme.zip');
   assert.equal(await ks.readZip('../../keystones-builds'), null);
   const old = (Date.now() - 25 * 3600 * 1000) / 1000;
   for (const ext of ['zip', 'json']) utimesSync(path.join(dir, 'keystones', `${token}.${ext}`), old, old);
