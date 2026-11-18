@@ -166,7 +166,7 @@ h3 {
   font-family: var(--font-display), 'Arial Narrow', sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 0.95;
+  line-height: 1.1;
   text-wrap: balance;
 }
 
@@ -174,7 +174,7 @@ h3 {
   max-width: 12em;
   margin: 0;
   font-size: clamp(2.7rem, 7.4vw, 5.4rem);
-  line-height: 0.92;
+  line-height: 1.05;
   font-variation-settings:
     'SOFT' 30,
     'opsz' 144;
@@ -245,6 +245,19 @@ h2 {
   max-width: 38rem;
   font-size: 1.2rem;
   color: var(--ivory);
+}
+
+/* t850: offer cards and the intro share one measure, so the lede is not a narrow column in a wide box. */
+.offer .sequence {
+  max-width: 44rem;
+}
+.offer .sequence .lede {
+  max-width: none;
+}
+.offer h1,
+.offer h2 {
+  line-height: 1.1;
+  overflow: visible;
 }
 
 .note,
@@ -1125,5 +1138,22 @@ figcaption,
   .hero-instrument {
     border-color: #bbb;
     background: white;
+  }
+}
+
+/* t852: department rail. At desktop widths every tile shows; the scroll rail cut the last tiles at 1440. Phones keep the swipe rail. */
+@media (min-width: 760px) {
+  .dept-rail {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    overflow-x: visible;
+  }
+  .dept-rail .dept {
+    min-width: 0;
+  }
+}
+@media (min-width: 1240px) {
+  .dept-rail {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
   }
 }

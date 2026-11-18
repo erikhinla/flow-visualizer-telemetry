@@ -74,7 +74,7 @@ ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
 ${h2('How this was scored')}${p(v.SCORING)}
 ${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost where work stalls, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
 ${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
-${h2('Your next step')}${p('The PROOF Review is 45 minutes with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first.')}
+${h2('Your next step')}${p('The PROOF Review is a working session with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first.')}
 <p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${ink};color:#F6F6F2;text-decoration:none;padding:15px 24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:14px;display:inline-block">Open Calendar</a></p>
 <p style="${mono};margin:0 0 18px">No charge.</p>
 ${p(`Retake PROOF: ${v.RETAKE_URL}`)}
@@ -88,7 +88,7 @@ ${p(`Retake PROOF: ${v.RETAKE_URL}`)}
     'WHERE THE WORK STALLS', v.STALLS_TEXT, '',
     'WHAT TO CHANGE FIRST', v.FIXES_TEXT, '',
     'THE 15 ANSWERS', v.ANSWERS_TEXT, '',
-    'YOUR NEXT STEP', 'The PROOF Review is 45 minutes with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first. No charge.',
+    'YOUR NEXT STEP', 'The PROOF Review is a working session with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first. No charge.',
     `Open Calendar: ${v.REVIEW_URL}`, '', `Retake PROOF: ${v.RETAKE_URL}`,
   ].join('\n');
   return { html, text };

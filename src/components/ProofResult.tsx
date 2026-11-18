@@ -190,7 +190,7 @@ function NextSteps() {
       <section className="px-ns-review" aria-label="PROOF Review">
         <p className="px-res-label">Your next step</p>
         <p className="px-ns-review-name">PROOF Review</p>
-        <p className="px-ns-review-line">45 minutes with Erik. Your results come with you. You leave knowing what is slowing the business down and the first thing to change.</p>
+        <p className="px-ns-review-line">A Review with Erik. Your results come with you. You leave knowing what is slowing the business down and the first thing to change.</p>
         <div className="px-ns-cta">
           <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
           <p className="px-rv-free">No charge.</p>
@@ -431,7 +431,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               <aside className="px-rx-next px-rv-card" aria-label="Recommended next step">
                 <p className="px-res-label">Your next step</p>
                 <p className="px-rx-lead">See where work stalls and what it costs.</p>
-                <p className="px-rx-body">45 minutes with Erik, built on your answers.</p>
+                <p className="px-rx-body">A Review with Erik, built on your answers.</p>
                 <a className="px-oc-btn is-fill px-rx-cta" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
                 <p className="px-rv-free">No charge.</p>
                 <a className="px-rv-or" href="https://transformby10x.ai/back/">Or see BACK</a>
@@ -470,7 +470,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
 
       {OWN_CTA.includes(current) ? null : (
         <aside className="px-res-cta" aria-label="Your next step">
-          <p className="px-res-cta-line"><b>PROOF Review.</b> 45 minutes with Erik<span className="px-res-cta-more"> on where work stalls, what it costs, and what to fix first</span>.</p>
+          <p className="px-res-cta-line"><b>PROOF Review.</b> Built on your answers<span className="px-res-cta-more">: where work stalls, what it costs, and what to fix first</span>.</p>
           <div className="px-res-cta-act">
             <a className="px-oc-btn is-fill px-res-cta-btn" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
             <p className="px-rv-free">No charge.</p>
