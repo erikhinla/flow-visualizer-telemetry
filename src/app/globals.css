@@ -1140,3 +1140,20 @@ figcaption,
     background: white;
   }
 }
+
+/* t852: department rail. At desktop widths every tile shows; the scroll rail cut the last tiles at 1440. Phones keep the swipe rail. */
+@media (min-width: 760px) {
+  .dept-rail {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    overflow-x: visible;
+  }
+  .dept-rail .dept {
+    min-width: 0;
+  }
+}
+@media (min-width: 1240px) {
+  .dept-rail {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
