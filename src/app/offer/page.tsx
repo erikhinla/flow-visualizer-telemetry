@@ -5,7 +5,7 @@ import { BOOKING_MAILTO } from '../../lib/offer';
 export const metadata: Metadata = {
   title: 'Talk through the pattern · PROOF',
   description:
-    'Ninety minutes on one function. Real counts. A yes or a no on the change. No client result is published yet.',
+    'One function, its last week of work, and a record. Real counts. A yes or a no on the change. No client result is published yet.',
 };
 
 const HUNTS = [
@@ -25,7 +25,7 @@ export default function OfferPage() {
   return (
     <article className="offer">
       <p className="kicker">Erik H Bush · TransformBy10X</p>
-      <h1>Align the system for AI-velocity.</h1>
+      <h1>Align the system for AI speed.</h1>
       <p className="benefit">Free people up to do work meant for them.</p>
       <p className="lede">Choose how we help you get there:</p>
       <div className="actions">
@@ -40,7 +40,7 @@ export default function OfferPage() {
       <section className="sequence">
         <h2>What the conversation includes</h2>
         <p className="lede">
-          Ninety minutes with me. Not a tour of the company. Not me watching the team. The session covers
+          A working session with me. Not a tour of the company. Not me watching the team. The session covers
           one function and its last week of work, and ends with a record.
         </p>
         <ol>
@@ -87,7 +87,7 @@ export default function OfferPage() {
           </li>
           <li>
             <strong>The conversation</strong>
-            The ninety minutes above. Account, creative, production, public relations, or media are
+            The session above. Account, creative, production, public relations, or media are
             the five I will book first.
           </li>
           <li>

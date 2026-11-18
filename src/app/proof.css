@@ -1504,12 +1504,12 @@ body:has(.app-main) {
 .px-back-note { font-family: var(--display); font-size: .875rem; line-height: 1.4; text-transform: none; letter-spacing: 0; color: #9a9a9a; margin: .8rem 0 0; }
 
 /* v15: stepped results, one screen at a time, no page scroll */
-.px .px-result.px-res-steps { display: flex; flex-direction: column; overflow: hidden; padding: clamp(.7rem, 2.4vh, 1.8rem) clamp(1rem, 4vw, 3.5rem) 0; gap: 0; min-height: 0; height: 100%; }
-.px-res-panel { flex: 1 1 auto; min-height: 0; display: flex; overflow: hidden; }
+.px .px-result.px-res-steps { display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto; padding: clamp(.7rem, 2.4vh, 1.8rem) clamp(1rem, 4vw, 3.5rem) 0; gap: 0; min-height: 0; height: 100%; }
+.px-res-panel { flex: 1 1 auto; min-width: 0; min-height: 0; display: flex; overflow-x: hidden; overflow-y: auto; }
 .px-res-screen { width: 100%; max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; gap: clamp(.6rem, 2.2vh, 1.4rem); min-height: 0; overflow-y: auto; scrollbar-width: none; }
 .px-res-screen::-webkit-scrollbar { display: none; }
-.px .px-res-steps .px-done { font-size: max(.875rem, clamp(2rem, min(5.4vw, 9vh), 5rem)); line-height: .95; letter-spacing: -.03em; margin: 0; }
-.px .px-res-h { margin: 0; font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: max(.875rem, clamp(1.8rem, min(4.6vw, 7.5vh), 4rem)); line-height: .95; letter-spacing: -.03em; outline: none; }
+.px .px-res-steps .px-done { font-size: max(.875rem, clamp(2rem, min(5.4vw, 9vh), 5rem)); line-height: 1.1; letter-spacing: -.03em; margin: 0; padding-top: 0.08em; overflow: visible; }
+.px .px-res-h { margin: 0; font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: max(.875rem, clamp(1.8rem, min(4.6vw, 7.5vh), 4rem)); line-height: 1.1; letter-spacing: -.03em; outline: none; padding-top: 0.08em; overflow: visible; overflow-wrap: anywhere; text-wrap: balance; white-space: normal; min-width: 0; }
 .px-res-box { display: grid; gap: .5rem; padding: clamp(.8rem, 2vh, 1.3rem) clamp(.9rem, 2vw, 1.4rem); border: 1px solid rgba(243,242,238,.25); border-top: 3px solid var(--tbtx); background: rgba(255,255,255,.03); }
 .px .px-res-big { font-size: max(.875rem, clamp(1.6rem, min(4vw, 6vh), 3rem)); }
 .px .px-res-feel { margin: 0; font-size: max(.875rem, clamp(1rem, 2.2vh, 1.2rem)); line-height: 1.4; }
@@ -1571,8 +1571,8 @@ body:has(.app-main) {
   --lh-body: 1.4;
 }
 /* Display + headings */
-.px .px-res-steps .px-done { font-size: var(--fs-display); line-height: .92; }
-.px .px-res-steps .px-res-h, .px .px-res-steps .px-est h2 { font-size: var(--fs-h2); line-height: .95; }
+.px .px-res-steps .px-done { font-size: var(--fs-display); line-height: 1.05; padding-top: 0.08em; }
+.px .px-res-steps .px-res-h, .px .px-res-steps .px-est h2 { font-size: var(--fs-h2); line-height: 1.1; overflow-wrap: anywhere; text-wrap: balance; white-space: normal; min-width: 0; }
 .px .px-res-steps .px-prod-name { font-size: var(--fs-h2); line-height: .9; }
 .px .px-res-steps .px-res-big, .px .px-res-steps .px-res-value { font-size: var(--fs-card); line-height: 1; }
 /* Labels / eyebrows */
@@ -2052,7 +2052,7 @@ body:has(.app-main) {
 
 /* Final offers screen polish (2026-10-31): fit-to-width heading, equal names, depth and motion. */
 .px .px-oc-head { container-type: inline-size; display: grid; gap: .5rem; }
-.px .px-res-steps .px-oc-h { margin: 0; font-size: 8.4cqi !important; line-height: .95 !important; letter-spacing: -.02em !important; text-wrap: nowrap; white-space: nowrap; }
+.px .px-res-steps .px-oc-h { margin: 0; font-size: 8.4cqi !important; line-height: 1.1 !important; letter-spacing: -.02em !important; text-wrap: balance; white-space: normal; overflow-wrap: anywhere; }
 .px .px-oc-h span { display: block; }
 .px .px-res-steps .px-oc-sub { font-size: clamp(1.15rem, 2.1vw, 1.65rem); line-height: 1.25; color: #e8e8e8; text-wrap: balance; }
 /* Equal names: every card is the same width, so one size gives the same cap height. Sized to fit PROOF. */
@@ -2826,3 +2826,11 @@ body:has(.app-main) {
 /* Panels read as sheets: white, square, hairline ink. */
 .px .px-res-steps .px-res-box, .px .px-res-steps .px-est, .px .px-rx-next, .px .px-ns-fact { background: #FFFFFF !important; border: 1.5px solid #0B0B0C !important; border-radius: 0 !important; box-shadow: none !important; }
 .px .px-ns-review { border-radius: 0 !important; }
+
+
+/* t850: result type. Caps were clipping because line-height sat under the font size, the Stalled pill could sit on the headline, and overflow:hidden plus nowrap cut long lines such as What moves you to Scaling. */
+.px .px-result.px-res-steps > .px-res-badge { flex: 0 0 auto; position: relative; z-index: 2; margin: 0 0 0.7rem; align-self: flex-start; transform-origin: left center; }
+.px .px-res-screen { min-width: 0; }
+.px .px-res-box { overflow: visible; max-width: 66ch; width: 100%; }
+.px .px-res-box p, .px .px-res-box li, .px .px-res-story, .px .px-res-feel { max-width: none; overflow-wrap: break-word; }
+.px .px-res-sub { overflow-wrap: break-word; min-width: 0; }
