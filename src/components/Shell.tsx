@@ -54,7 +54,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <img className="colophon-mark" src={`${process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? ''}/brand/tbtx-white.png`} alt="TransformBy10X" width={449} height={365} />
           {PROOF_TAGLINE}</p>
         <p>
-          <Link href="/">Back to PROOF</Link> · <Link href="/offer">Talk through the pattern</Link>
+          <Link href="/">Back to PROOF</Link> · <a href="/dept/">Depts</a> · <Link href="/offer">Talk through the pattern</Link>
         </p>
         <DiagnosticsToggle />
       </footer>

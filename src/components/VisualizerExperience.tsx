@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Balance } from './Balance';
 import { DepartmentMark } from './DepartmentMark';
 import { FlowTrack } from './FlowTrack';
-import { deptHeader } from '../lib/brand';
+import { deptHeader, deptPageHref } from '../lib/brand';
 import './visualizer-fig.css';
 import { Readout } from './Readout';
 import { SeizureCurve } from './SeizureCurve';
@@ -378,7 +378,10 @@ export function VisualizerExperience() {
         </dl>
         <Link className="button" href="/record">
           Open the record
-        </Link>
+        </Link>{' '}
+        <a className="button ghost" href={deptPageHref(department.name)}>
+          The {department.name} page
+        </a>
       </section>
 
       <details className="inspector">
