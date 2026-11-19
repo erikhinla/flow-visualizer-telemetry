@@ -15,6 +15,8 @@ import { NINE, TIP_ANNUAL, TIP_DIMENSION, TIP_FACT_ALL_NINE, TIP_HOURLY, TIP_LEV
 import { KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPrice';
 
 import { REVIEW_URL } from '../lib/links';
+import { deptPageHref } from '../lib/brand';
+import { getDepartment } from '../lib/departments';
 export { REVIEW_URL };
 const FACT_URL = 'https://transformby10x.ai/fact/';
 
@@ -437,6 +439,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
                 <p className="px-rv-free">No charge.</p>
                 <a className="px-rv-or" href="https://transformby10x.ai/back/">Or see BACK</a>
                 <Link className="px-rv-or px-rv-dept" href="/visualizer?from=map">See your answers in one dept <span aria-hidden="true">→</span></Link>
+                <a className="px-rv-or px-rv-dept" href={deptPageHref(getDepartment(session.departmentId).name)}>The {getDepartment(session.departmentId).name} dept page <span aria-hidden="true">→</span></a>
               </aside>
             </div>
           </div>
