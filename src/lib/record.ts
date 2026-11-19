@@ -118,10 +118,10 @@ export function buildRecord(input: PortableRecordInput) {
       complete: factState(comparison.baseline.band, comparison.baseline.repairHours) !== 'untraced',
       state: factState(comparison.baseline.band, comparison.baseline.repairHours),
       facts: deskTrace(input.departmentId).facts,
-      keystones: deskTrace(input.departmentId).keystones,
+      steps: deskTrace(input.departmentId).keystones,
       ownerRole: department.action.ownerRole,
       reviewInDays: department.action.reviewInDays,
-      note: 'On screen, keystone actions stay hidden until the scenario is known. This record keeps the planned actions and marks whether the team numbers were complete.',
+      note: 'On screen, the next steps stay hidden until the scenario is known. This record keeps the planned steps and marks whether the team numbers were complete.',
     },
     balance: AGENCY_BALANCE[input.departmentId],
     action: {

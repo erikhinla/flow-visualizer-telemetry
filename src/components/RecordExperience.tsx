@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Balance } from './Balance';
-import { KeystonePath } from './KeystonePath';
 import { TraceBoard } from './TraceBoard';
 import { useSession } from './SessionProvider';
 import { trace } from '../lib/diagnostics';
@@ -64,13 +63,6 @@ export function RecordExperience() {
       <p className="note">{record.provenance.sentence}</p>
 
       <TraceBoard
-        departmentId={department.id}
-        band={baseline.band}
-        repairHours={baseline.repairHours}
-        known={baseline.known}
-        evidenceKind={record.provenance.kind}
-      />
-      <KeystonePath
         departmentId={department.id}
         band={baseline.band}
         repairHours={baseline.repairHours}
@@ -186,7 +178,7 @@ export function RecordExperience() {
           Print
         </button>
         <Link className="button ghost" href="/visualizer">
-          Back to the department
+          Back to the Dept model
         </Link>
         <button type="button" className="button ghost" onClick={clearSession}>
           Clear this browser

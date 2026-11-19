@@ -316,7 +316,7 @@ export function KeystonesIntake() {
       {gate === 'paid' && step === 0 && (
         <section className="ks-step">
           <div className="ks-card">
-            <h2>{proofDone ? 'Carried over from the PROOF' : 'First, the 15 answers'}</h2>
+            <h2>{proofDone ? 'Carried over from PROOF' : 'First, the 15 answers'}</h2>
             {!ready ? <p>Loading the PROOF answers.</p> : proofDone ? (
               <>
                 <p className="ks-hint">All {QUESTIONS.length} answers are in and won&apos;t be asked again.</p>
