@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent as RPointerEvent, type ReactNode } from 'react';
 import { AUDIENCES, PROFILE_WORD, type AudienceId } from '../lib/audiences';
 import { BANDS, HOURS_PER_YEAR, RAW_MAX, WEEKS_PER_YEAR, estimate, liveMath } from '../lib/math';
@@ -435,6 +436,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
                 <a className="px-oc-btn is-fill px-rx-cta" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
                 <p className="px-rv-free">No charge.</p>
                 <a className="px-rv-or" href="https://transformby10x.ai/back/">Or see BACK</a>
+                <Link className="px-rv-or px-rv-dept" href="/visualizer?from=map">See your answers in one dept <span aria-hidden="true">→</span></Link>
               </aside>
             </div>
           </div>

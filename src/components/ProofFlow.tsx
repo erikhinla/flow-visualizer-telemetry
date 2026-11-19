@@ -13,6 +13,7 @@ import type { Choice } from '../lib/types';
 import { DiagnosticsToggle } from './Shell';
 import { useSession } from './SessionProvider';
 import { appPath } from '../lib/paths';
+import { PROOF_TAGLINE } from '../lib/brand';
 
 const BASE = process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? '';
 
@@ -51,7 +52,7 @@ const STORY = [
   },
   {
     no: '03',
-    title: 'Digital Friction',
+    title: 'Workflow Friction',
     line: 'When lost context stops the work.',
     body: 'Rework grows. Handoffs stall. Momentum stops. The process just can’t carry what AI produces.',
   },
@@ -267,11 +268,11 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               <h1 id="px-title" className="px-door-title">
                 <img className="px-door-lockup" src={`${BASE}/brand/proof-lockup-word.png`} alt="PROOF: Process, Review, Observing, Operating, Friction" width={817} height={181} />
               </h1>
-              <p className="px-door-desc">AI Workflow Diagnostic</p>
+              <p className="px-door-desc px-door-tag">{PROOF_TAGLINE}</p>
               <button type="button" className="px-door-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'SEE PROOF'}>
                 <img src={`${BASE}/brand/orb-see-proof.png`} alt="" width={483} height={482} />
               </button>
-              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : null}
+              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : <p className="px-door-status px-door-free">No charge.</p>}
             </div>
           </section>
         ) : stage === 'ask' ? (
@@ -482,7 +483,7 @@ type LiveProps = {
   label: (id: import('../lib/types').PressureId) => string;
 };
 
-const SCORE_DIRECTION = 'Higher means work moves smoother, with less Digital Friction.';
+const SCORE_DIRECTION = 'Higher means work moves smoother, with less Workflow Friction.';
 
 function liveView({ values, optionIds, label }: LiveProps) {
   // Running score from liveMath (src/lib/math.ts), the same arithmetic as scoreMap.
@@ -535,7 +536,7 @@ function LivePanel(props: LiveProps) {
       </div>
       {friction.length ? (
         <div className="px-live-block">
-          <p className="px-live-label">Digital Friction so far</p>
+          <p className="px-live-label">Workflow Friction so far</p>
           <ul className="px-live-list">
             {friction.map((text) => (
               <li key={text}>{text}</li>
@@ -587,7 +588,7 @@ function LiveBar(props: LiveProps) {
           <p className="px-live-note">{MEASURES[cursor]}</p>
           {friction.length ? (
             <>
-              <p className="px-live-label">Digital Friction so far</p>
+              <p className="px-live-label">Workflow Friction so far</p>
               <ul className="px-live-list">
                 {friction.map((text) => (
                   <li key={text}>{text}</li>

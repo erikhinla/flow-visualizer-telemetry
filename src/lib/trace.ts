@@ -96,7 +96,7 @@ export const DESK_TRACE: Record<DepartmentId, DeskTrace> = {
     facts: facts(
       ["The latest version is spread across email, decks and desktops.", "The current version sits in the project folder."],
       ["Nobody's sure what the client approved or what comes next.", "The approval and the next step are written on the project."],
-      ["Account Management is piecing together who signed off.", "The person who signs off is named."],
+      ["Account is piecing together who signed off.", "The person who signs off is named."],
       ["The approval moves whenever the chasing stops.", "Each client approval has a due date."]
     ),
     keystones: stones(
@@ -208,7 +208,7 @@ export const DESK_TRACE: Record<DepartmentId, DeskTrace> = {
     facts: facts(
       ["Drafts point to an old policy, or none.", "The current policy is filed with the case."],
       ["Finding which rule applies is a search.", "The facts and the rule are written on the draft."],
-      ["Human Resources double-checks policy before anything moves.", "The reviewer for exceptions is named."],
+      ["HR double-checks policy before anything moves.", "The reviewer for exceptions is named."],
       ["Corrections arrive after the decision.", "Each case has a due date."]
     ),
     keystones: stones(

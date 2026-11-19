@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Archivo, Barlow, Barlow_Condensed, IBM_Plex_Mono, Inter_Tight } from 'next/font/google';
 import { SessionProvider } from '../components/SessionProvider';
 import { Shell } from '../components/Shell';
+import { PROOF_TAGLINE } from '../lib/brand';
 import './globals.css';
 import './proof.css';
 
@@ -42,7 +43,7 @@ const tight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  title: 'PROOF · See where Digital Friction shows up',
+  title: `PROOF · ${PROOF_TAGLINE}`,
   description:
     "AI tools made more work, not less. When context lives in the system, not in people’s heads, talented teams stop burning out. From TransformBy10X.",
   ...(process.env.NEXT_PUBLIC_PROOF_NOINDEX ? { robots: { index: false, follow: false } } : {}),

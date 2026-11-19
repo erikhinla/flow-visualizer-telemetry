@@ -12,7 +12,7 @@ const week = (
 export const DEPARTMENTS: readonly Department[] = [
   {
     id: 'ACC',
-    name: 'Account Management',
+    name: 'Account',
     mirror: "Hours lost tracking down what the client approved.",
     relief: '',
     moniker: 'The Context Relay',
@@ -20,7 +20,7 @@ export const DEPARTMENTS: readonly Department[] = [
     signal: 'Route-line brackets',
     gap: "AI tools increase output, but context doesn't keep up, so people fill the gap.",
     repair: 'Tracking down the approved version, who signed off and what changed.',
-    repairRole: 'Account Management',
+    repairRole: 'Account',
     connection: 'One record per approval with the version, the sign-off and what changed.',
     compare: 'Time spent tracking things down, and how long approvals take.',
     workItem: 'Client approval',
@@ -37,7 +37,7 @@ export const DEPARTMENTS: readonly Department[] = [
       {
         id: 'repair',
         label: 'Finding history',
-        detail: 'Account Management rebuilds the last approval by hand.',
+        detail: 'Account rebuilds the last approval by hand.',
         repair: true,
       },
       { id: 'accepted', label: 'Approved', detail: 'The decision moves.' },
@@ -314,7 +314,7 @@ export const DEPARTMENTS: readonly Department[] = [
   },
   {
     id: 'PR',
-    name: 'Public Relations',
+    name: 'PR',
     mirror: "Hours lost chasing facts and sign-off before a statement goes out.",
     relief: '',
     moniker: 'The Approval Pulse',
@@ -322,7 +322,7 @@ export const DEPARTMENTS: readonly Department[] = [
     signal: 'A pulse through an approval gate',
     gap: "AI tools increase output, but context doesn't keep up, so people fill the gap.",
     repair: 'Finding the facts and the person who can approve the statement.',
-    repairRole: 'Public Relations',
+    repairRole: 'PR',
     connection: 'Facts and a named approver for each kind of statement.',
     compare: 'Time to an approved statement, and deadlines missed.',
     workItem: 'Statement',
@@ -364,7 +364,7 @@ export const DEPARTMENTS: readonly Department[] = [
   },
   {
     id: 'MED',
-    name: 'Media Buying / Planning',
+    name: 'Media',
     mirror: "Hours lost matching the plan to what was actually spent.",
     relief: '',
     moniker: 'The Attribution Maze',
@@ -414,7 +414,7 @@ export const DEPARTMENTS: readonly Department[] = [
   },
   {
     id: 'HR',
-    name: 'Human Resources',
+    name: 'HR',
     mirror: "Hours lost checking which policy applies.",
     relief: '',
     moniker: 'The Human Context Check',
@@ -422,7 +422,7 @@ export const DEPARTMENTS: readonly Department[] = [
     signal: 'A person inside policy brackets',
     gap: "AI tools increase output, but context doesn't keep up, so people fill the gap.",
     repair: 'Checking which policy applies, and what actually happened.',
-    repairRole: 'Human Resources',
+    repairRole: 'HR',
     connection: 'The current policy filed with each case, and a named reviewer for exceptions.',
     compare: 'Time spent checking policy, and decisions that had to be corrected.',
     workItem: 'People decision',
@@ -438,7 +438,7 @@ export const DEPARTMENTS: readonly Department[] = [
       {
         id: 'repair',
         label: 'Verification',
-        detail: 'Human Resources works out which rule applies.',
+        detail: 'HR works out which rule applies.',
         repair: true,
       },
       {

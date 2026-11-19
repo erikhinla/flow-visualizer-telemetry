@@ -1,0 +1,25 @@
+/* t875: Dept model in the stamped exhibit system. Charcoal bars, FIG. labels, magenta stamps, white chrome. Math untouched. */
+.vz-fig{--vz-ink:#111;--vz-char:#383838;--vz-mg:#d01e98;--vz-paper:#fff;gap:2.5rem}
+.vz-fig .see-intro{border:2px solid var(--vz-ink);background:var(--vz-paper);padding:0}
+.vz-fig .see-intro .vz-bar{display:flex;justify-content:space-between;gap:12px;margin:0;background:var(--vz-char);color:#f4f4f0;padding:11px 16px;font-size:12px;letter-spacing:.14em}
+.vz-fig .see-intro .vz-bar b{font-weight:500;color:rgba(244,244,240,.62)}
+.vz-fig .see-intro h1{margin:0;padding:clamp(20px,3vw,36px) clamp(16px,3vw,32px);font-family:"Inter Tight",var(--font-display),sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:-.04em;line-height:.92;font-size:clamp(34px,4.4vw,64px);color:var(--vz-ink)}
+.vz-fig .vz-fig-label{margin:0 0 -2.5rem;background:var(--vz-char);color:#f4f4f0;font-family:var(--font-mono),monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:11px 16px;border:2px solid var(--vz-ink);border-bottom:0;position:relative;z-index:1}
+.vz-fig .trace,.vz-fig .scenario,.vz-fig .action-card,.vz-fig > .balance,.vz-fig .inspector,.vz-fig .schematic,.vz-fig .see-grid{border:2px solid var(--vz-ink);border-radius:0;background:var(--vz-paper)}
+.vz-fig .see-grid{padding:1.3rem}
+.vz-fig .schematic{padding:1.3rem}
+.vz-fig .see-grid > *{border-radius:0}
+.vz-fig .kicker{color:var(--vz-char)}
+.vz-fig .trace-head .kicker{display:none}
+.vz-fig .trace h2,.vz-fig .scenario h2,.vz-fig .action-card h2{font-family:"Inter Tight",var(--font-display),sans-serif;font-weight:800;letter-spacing:-.02em;color:var(--vz-ink)}
+.vz-fig .state-pill,.vz-fig .state-pill[class]{display:inline-block;font-family:var(--font-mono),monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--vz-mg);background:var(--vz-paper);border:2px solid var(--vz-mg);border-radius:0;padding:4px 7px;transform:rotate(-3deg);box-shadow:none}
+.vz-fig .state-line{color:var(--vz-ink)}
+.vz-fig .fact-index{color:var(--vz-mg)}
+.vz-fig .dept-rail{gap:0;border:2px solid var(--vz-ink);background:var(--vz-ink);column-gap:2px}
+.vz-fig .dept{border:0;border-radius:0;background:var(--vz-paper);min-width:7.5rem}
+.vz-fig .dept.selected{background:var(--vz-char);color:#f4f4f0;box-shadow:none}
+.vz-fig .dept.selected .mark{filter:invert(1) grayscale(1)}
+.vz-fig .button{border-radius:0}
+.vz-fig .button:not(.ghost){background:var(--vz-ink);color:#fff;border-color:var(--vz-ink)}
+.vz-fig .desk-banner{border:2px solid var(--vz-mg);border-radius:0}
+@media (max-width:640px){.vz-fig .see-intro .vz-bar b{display:none}.vz-fig .vz-fig-label{font-size:11px;letter-spacing:.1em}}

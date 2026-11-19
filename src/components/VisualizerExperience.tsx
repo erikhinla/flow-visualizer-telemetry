@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Balance } from './Balance';
 import { DepartmentMark } from './DepartmentMark';
 import { FlowTrack } from './FlowTrack';
-import { KeystonePath } from './KeystonePath';
+import { deptHeader } from '../lib/brand';
+import './visualizer-fig.css';
 import { Readout } from './Readout';
 import { SeizureCurve } from './SeizureCurve';
 import { TraceBoard } from './TraceBoard';
@@ -107,7 +108,7 @@ export function VisualizerExperience() {
   });
 
   const replaceDesk = (id: DepartmentId) => {
-    if (dirty && !window.confirm('Switch teams? The edited numbers will be replaced by the sample.')) {
+    if (dirty && !window.confirm('Switch dept? The edited numbers will be replaced by the sample.')) {
       return;
     }
     selectDepartment(id);
@@ -115,15 +116,15 @@ export function VisualizerExperience() {
   };
 
   if (!ready || !settled) {
-    return <p className="note">Opening the team…</p>;
+    return <p className="note">Opening the dept…</p>;
   }
 
   const bannerName = bannerDesk ? getDepartment(bannerDesk).name : '';
 
   return (
-    <article className="see">
+    <article className="see vz-fig">
       <header className="see-intro">
-        <p className="kicker">{department.name}</p>
+        <p className="kicker vz-bar"><span>{deptHeader(department.name)}</span><b>FIG. 00 / Dept model</b></p>
         <h1>{department.mirror}</h1>
         {department.relief ? <p className="benefit">{department.relief}</p> : null}
         {department.campaignLine ? <p className="campaign">{department.campaignLine}</p> : null}
@@ -142,7 +143,7 @@ export function VisualizerExperience() {
                 if (
                   dirty &&
                   !window.confirm(
-                    'Switch teams? The edited numbers will be replaced by the sample.'
+                    'Switch dept? The edited numbers will be replaced by the sample.'
                   )
                 ) {
                   return;
@@ -191,6 +192,7 @@ export function VisualizerExperience() {
         })}
       </div>
 
+      <p className="vz-fig-label">FIG. 01 / Where the context drops</p>
       <TraceBoard
         departmentId={department.id}
         band={comparison.baseline.band}
@@ -198,20 +200,15 @@ export function VisualizerExperience() {
         known={comparison.baseline.known}
         evidenceKind={presentation.kind}
       />
-      <KeystonePath
-        departmentId={department.id}
-        band={comparison.baseline.band}
-        repairHours={comparison.baseline.repairHours}
-        known={comparison.baseline.known}
-        evidenceKind={presentation.kind}
-      />
 
+      <p className="vz-fig-label">FIG. 02 / The route</p>
       <FlowTrack
         stages={department.stages}
         band={comparison.baseline.band}
         accent={department.accent}
       />
 
+      <p className="vz-fig-label">FIG. 03 / The week, before and after</p>
       <div className="see-grid">
         <Readout
           baseline={comparison.baseline}
@@ -229,6 +226,7 @@ export function VisualizerExperience() {
         />
       </div>
 
+      <p className="vz-fig-label">FIG. 04 / Your numbers</p>
       <section className="scenario">
         <div className="scenario-head">
           <h2>
@@ -346,6 +344,7 @@ export function VisualizerExperience() {
         </button>
       </section>
 
+      <p className="vz-fig-label">FIG. 05 / The balance</p>
       <Balance
         departmentId={department.id}
         change={department.action.change}
@@ -356,6 +355,7 @@ export function VisualizerExperience() {
         reason={reason}
       />
 
+      <p className="vz-fig-label">FIG. 06 / Owner and check back</p>
       <section className="action-card">
                 <h2>Who owns this, and when to check back</h2>
         <dl>

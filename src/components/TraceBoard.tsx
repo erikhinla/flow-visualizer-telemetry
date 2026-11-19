@@ -1,3 +1,4 @@
+import { deptHeader } from '../lib/brand';
 import { getDepartment } from '../lib/departments';
 import {
   FACT_QUESTION,
@@ -42,7 +43,7 @@ export function TraceBoard({
   return (
     <section className="trace" aria-labelledby="trace-title" data-state={state}>
       <div className="trace-head">
-        <p className="kicker">Team · {department.name}</p>
+        <p className="kicker">{deptHeader(department.name)}</p>
         <h2 id="trace-title">Status, next step, owner and deadline for every project in {department.name}</h2>
         <p className={`state-line is-${state}`}>{line}</p>
         {evidenceKind === 'simulated' ? (

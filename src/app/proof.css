@@ -2834,3 +2834,7 @@ body:has(.app-main) {
 .px .px-res-box { overflow: visible; max-width: 66ch; width: 100%; }
 .px .px-res-box p, .px .px-res-box li, .px .px-res-story, .px .px-res-feel { max-width: none; overflow-wrap: break-word; }
 .px .px-res-sub { overflow-wrap: break-word; min-width: 0; }
+
+/* t875: tagline B under the wordmark, No charge under the button */
+.px .px-door-desc.px-door-tag { text-transform: none; letter-spacing: 0; }
+.px .px-door-free { opacity: .8; }
