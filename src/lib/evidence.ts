@@ -31,8 +31,8 @@ export function presentedEvidence(input: {
   ) {
     const sentence =
       input.evidenceKind === 'observed'
-        ? 'Marked observed by you. PROOF did not check these figures.'
-        : 'Marked self-reported by you. PROOF did not check these figures.';
+        ? "Marked as observed. PROOF didn't check these figures."
+        : "Marked as self-reported. PROOF didn't check these figures.";
     return { kind: input.evidenceKind, sentence, locked: false };
   }
   return {

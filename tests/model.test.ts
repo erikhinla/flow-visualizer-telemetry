@@ -50,7 +50,6 @@ describe('momentum map', () => {
 
   it('rounds the answer index and assigns the saved profiles', () => {
     const cases: Array<[number, number, string]> = [
-      [0, 0, 'FRAGMENTED'],
       [1, 3, 'FRAGMENTED'],
       [7, 23, 'FRAGMENTED'],
       [8, 27, 'STALLED'],
@@ -61,13 +60,17 @@ describe('momentum map', () => {
       [30, 100, 'COMPOUNDING'],
     ];
     for (const [raw, index, profile] of cases) {
+      // Q4 has no 0-point answer since the rescore, so its floor is 1 and raw starts at 1.
       const built = Array.from({ length: 15 }, () => 0) as Array<0 | 1 | 2>;
-      let remaining = raw;
+      built[3] = 1;
+      let remaining = raw - 1;
       for (let position = 0; position < built.length && remaining > 0; position += 1) {
+        if (position === 3) continue;
         const step = Math.min(2, remaining) as 0 | 1 | 2;
         built[position] = step;
         remaining -= step;
       }
+      if (remaining > 0) built[3] = 2;
       const score = scoreMap(answered(built));
       assert.ok(score);
       assert.equal(score.raw, raw);
@@ -89,13 +92,10 @@ describe('momentum map', () => {
     assert.equal(score?.archetype, 'bottleneckOperator');
   });
 
-  it('lets ownership outrank tools when both are in the four', () => {
-    const values = Array.from({ length: 15 }, () => 2) as Array<0 | 1 | 2>;
-    values[3] = 0; // tools
-    values[6] = 1; // informal-owner
-    const score = scoreMap(answered(values));
-    assert.deepEqual(score?.pressures, ['tools', 'informal-owner']);
-    assert.equal(score?.archetype, 'bottleneckOperator');
+  it('lets ownership outrank tools when both are present', () => {
+    // Q4 no longer flags tools from an answer; the precedence rule still holds.
+    assert.equal(archetypeFor(['tools', 'informal-owner']), 'bottleneckOperator');
+    assert.equal(archetypeFor(['tools']), 'toolOverload');
   });
 
   it('routes the documented single-answer cases', () => {
@@ -112,7 +112,6 @@ describe('momentum map', () => {
     only(10, 1, 'fragmentedWorkflow');
     only(13, 0, 'executionStall');
     only(0, 0, 'executionStall');
-    only(3, 0, 'toolOverload');
     only(6, 0, 'bottleneckOperator');
     only(11, 0, 'bottleneckOperator');
     assert.equal(scoreMap(all(2))?.archetype, null);

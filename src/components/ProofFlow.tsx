@@ -3,53 +3,62 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
-import { AUDIENCES, AUDIENCE_ORDER, PROFILE_WORD, isAudienceId, type AudienceId } from '../lib/audiences';
-import { QUESTIONS, isComplete, scoreMap, suggestDepartment } from '../lib/questionnaire';
-import { BANDS, DEFAULT_SALARY, HOURS_PER_YEAR, POINTS_MAX, RAW_MAX, WEEKS_PER_YEAR, WEIGHT, estimate, liveMath, type LiveMath } from '../lib/math';
+import { AUDIENCES, AUDIENCE_ORDER, isAudienceId, type AudienceId } from '../lib/audiences';
+import { QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
+import { Result } from './ProofResult';
+import { tidyAll } from '../lib/tidy';
+import { encodeProof } from '../lib/proof-code';
+import { RAW_MAX, liveMath } from '../lib/math';
 import type { Choice } from '../lib/types';
 import { DiagnosticsToggle } from './Shell';
 import { useSession } from './SessionProvider';
+import { appPath } from '../lib/paths';
+import { PROOF_TAGLINE } from '../lib/brand';
 
 const BASE = process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? '';
 
 const AUDIENCE_KEY = 'proof.audience.v1';
+
+/** One anonymous count when a result is reached. Sends the campaign tag from the link (?s=), never answers or the score. */
+function countFinish(): void {
+  try {
+    const raw = new URLSearchParams(window.location.search).get('s') ?? '';
+    const tag = /^[a-z0-9-]{1,24}$/.test(raw) ? raw : '';
+    void fetch(appPath('/api/done') + (tag ? `?s=${tag}` : ''), { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => undefined);
+  } catch {
+    // Counting never blocks the result.
+  }
+}
 const LETTERS = [
   ['P', 'Process'],
-  ['R', 'Response'],
-  ['O', 'Output'],
-  ['O', 'Operating capacity'],
+  ['R', 'Review'],
+  ['O', 'Observing'],
+  ['O', 'Operating'],
   ['F', 'Friction'],
 ] as const;
 
 const STORY = [
   {
     no: '01',
-    title: 'Digital Fog',
-    line: 'AI outpaced the infrastructure around it.',
+    title: 'Context Erosion',
+    line: "AI tools increase output, but context doesn't keep up, so humans fill the gap.",
     body: 'More drafts, faster, in more directions. The folders, owners and approvals stayed the same. Context starts getting lost between tools and people.',
   },
   {
     no: '02',
     title: 'The Role Reversal',
-    line: 'AI was meant to help your team. Now your team helps the AI.',
+    line: 'AI was meant to assist people.\nBut people are assisting AI.',
     body: '',
   },
   {
     no: '03',
-    title: 'Digital Friction',
-    line: 'When the fog stops the work.',
-    body: 'Handoffs stall. Rework grows. Momentum stops. The tools still work. The business just can’t carry what they produce.',
+    title: 'Workflow Friction',
+    line: 'When lost context stops the work.',
+    body: 'Rework grows. Handoffs stall. Momentum stops. The process just can’t carry what AI produces.',
   },
 ] as const;
 
-const BOOKING_URL = process.env.NEXT_PUBLIC_PROOF_BOOKING_URL ?? '';
-const FRICTION_MODEL_URL = 'https://transformby10x.ai/review/friction-model/index.html';
 
-const PATH = [
-  ['PROOF', 'Free. 15 answers. Your map.'],
-  ['Friction Audit', 'Paid. 2 weeks. Delivers your FACT report and your BizBlueprint.'],
-  ['The Pipeline Airlock', 'Built by BizBuilders AI.'],
-] as const;
 
 /** Keep the last two words together so a line never ends on one short word. */
 function tie(text: string): string {
@@ -57,7 +66,12 @@ function tie(text: string): string {
   return i > 0 && text.length - i < 16 ? text.slice(0, i) + '\u00a0' + text.slice(i + 1) : text;
 }
 
-type Stage = 'intro' | 'ask' | 'result';
+type Stage = 'intro' | 'ask' | 'processing' | 'result';
+
+/** Phones only: the short beat between the last answer and the result. */
+const PROCESS_MS = 1500;
+const PICK_MS = 180;
+const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   const { ready, session, setSession, resetMap } = useSession();
@@ -66,13 +80,27 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   const [audienceId, setAudienceId] = useState<AudienceId>('agency');
   const [openStory, setOpenStory] = useState<number | null>(1);
   const [tab, setTab] = useState(0);
-  const [sheet, setSheet] = useState<null | 'path' | 'readout' | 'privacy' | 'story'>(null);
+  const [sheet, setSheet] = useState<null | 'path' | 'privacy' | 'story'>(null);
   const [storyIndex, setStoryIndex] = useState(0);
   const [last, setLast] = useState<number | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
+  const timers = useRef<number[]>([]);
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const audience = AUDIENCES[audienceId];
 
   // Audience: ?for= wins, then the last choice on this device.
+  // Keep line breaks clean where text-wrap: pretty is unsupported. Runs after React renders.
+  useEffect(() => {
+    const root = document.querySelector('.px');
+    if (!root) return;
+    let raf = 0;
+    const run = () => { raf = 0; obs.disconnect(); tidyAll(root); obs.observe(root, { subtree: true, childList: true, characterData: true }); };
+    const obs = new MutationObserver(() => { if (!raf) raf = requestAnimationFrame(run); });
+    run();
+    return () => { obs.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+
   useEffect(() => {
     if (window.matchMedia('(max-width: 860px)').matches) setOpenStory(null);
     try {
@@ -100,6 +128,16 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   // Restore where the visitor left off.
   useEffect(() => {
     if (!ready) return;
+    // A fresh visit always starts a fresh run. Only a share/result code in the URL keeps the last result.
+    const q = new URLSearchParams(window.location.search);
+    const keep = q.has('result') || q.has('code') || q.has('share');
+    if (!keep) {
+      if (session.values.some((value) => value !== null) || session.mapCompleted) resetMap();
+      setCursor(0);
+      // ?start=1 (the homepage orb): skip the door and open on Answer 1.
+      if (q.get('start') === '1') setStage('ask');
+      return;
+    }
     const open = session.values.findIndex((value) => value === null);
     if (session.mapCompleted && open === -1) setStage('result');
     else {
@@ -107,10 +145,12 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       if (open > 0) setStage('ask');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, session.mapCompleted]);
+    // Runs once when the session is ready.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready]);
 
-  const choose = useCallback(
-    (choice: Choice) => {
+  const commit = useCallback(
+    (choice: Choice, phone: boolean) => {
       const values = [...session.values];
       const optionIds = [...session.optionIds];
       setLast(cursor);
@@ -118,14 +158,33 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       optionIds[cursor] = choice.id;
       const done = values.every((value) => value !== null);
       setSession((current) => ({ ...current, values, optionIds, mapCompleted: done || current.mapCompleted }));
-      if (done) trace({ name: 'map-complete' });
+      if (done) { trace({ name: 'map-complete' }); countFinish(); }
       if (cursor < QUESTIONS.length - 1) setCursor(cursor + 1);
       else {
         setTab(0);
-        setStage('result');
+        if (done) {
+          // Phones: lock input and show the processing beat before the result.
+          setStage('processing');
+          timers.current.push(window.setTimeout(() => setStage('result'), reducedMotion() ? 600 : PROCESS_MS));
+        } else setStage('result');
       }
     },
     [cursor, session.optionIds, session.values, setSession]
+  );
+
+  const choose = useCallback(
+    (choice: Choice) => {
+      if (picked) return;
+      // Both viewports (round 17): hold the tapped answer for a beat so the selection reads before the next question.
+      setPicked(choice.id);
+      timers.current.push(
+        window.setTimeout(() => {
+          setPicked(null);
+          commit(choice, true);
+        }, reducedMotion() ? 0 : PICK_MS)
+      );
+    },
+    [commit, picked]
   );
 
   useEffect(() => {
@@ -156,7 +215,6 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
 
   const answers = { values: session.values, optionIds: session.optionIds };
   const answered = session.values.filter((value) => value !== null).length;
-  const live = useMemo(() => liveMath(answers), [session.values, session.optionIds]); // eslint-disable-line react-hooks/exhaustive-deps
   const score = useMemo(() => (ready ? scoreMap(answers) : null), [ready, session.values, session.optionIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const begin = () => {
@@ -173,6 +231,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
 
   const letterIndex = stage === 'result' ? 5 : Math.floor(cursor / 3);
 
+
   return (
     <div className={`px px--${stage}`} data-stage={stage}>
       <header className="px-bar">
@@ -180,11 +239,10 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
           <span className="px-mark-dot" aria-hidden="true" />
           PROOF
         </Link>
-        <span className="px-bar-sub">Fog &amp; friction diagnostic</span>
-        <Letters filled={stage === 'intro' ? 0 : Math.floor(answered / 3)} current={stage === 'ask' ? letterIndex : -1} />
+        <Sections stage={stage} current={letterIndex} />
         <label className="px-select">
           <span>For</span>
-          <select value={audienceId} onChange={(event) => chooseAudience(event.target.value as AudienceId)} aria-label="Your business">
+          <select value={audienceId} onChange={(event) => chooseAudience(event.target.value as AudienceId)} aria-label="Business type">
             {AUDIENCE_ORDER.map((id) => (
               <option key={id} value={id}>
                 {AUDIENCES[id].label}
@@ -192,86 +250,41 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             ))}
           </select>
         </label>
+        <a className="px-bar-brand" href="https://transformby10x.ai" aria-label="TransformBy10X">
+          <img src={`${BASE}/brand/tbtx-white.png`} alt="TransformBy10X" width={431} height={348} />
+        </a>
       </header>
 
       <div className="px-stage" id="proof-stage">
         {!ready ? (
           <p className="px-loading">Opening PROOF</p>
         ) : stage === 'intro' ? (
-          <section className="px-intro" aria-labelledby="px-title">
-            <div className="px-intro-copy">
-              <p className="px-kicker">
-                <b>01</b> // The condition
-              </p>
-              <h1 id="px-title" className="px-display px-display--long">
-                <span>AI was meant to help your team.</span>
-                <span className="px-fog">Now your team helps the AI.</span>
-                <span className="px-red px-display-q">{audience.headQuestion}</span>
+          <section className="px-intro px-door" aria-labelledby="px-title">
+            <video className="px-door-film" autoPlay muted loop playsInline preload="auto" poster={`${BASE}/brand/door-hall-poster.jpg`} aria-hidden="true">
+              <source src={`${BASE}/brand/door-hall.mp4`} type="video/mp4" />
+            </video>
+            <div className="px-door-scrim" aria-hidden="true" />
+            <div className="px-door-hero">
+              <h1 id="px-title" className="px-door-title">
+                <img className="px-door-lockup" src={`${BASE}/brand/proof-lockup-word.png`} alt="PROOF: Process, Review, Observing, Operating, Friction" width={817} height={181} />
               </h1>
-              <p className="px-lede">
-                {audience.lede[0]} <strong>{audience.lede[1]}</strong>
-              </p>
-              <div className="px-actions">
-                <button type="button" className="px-btn" onClick={begin}>
-                  {answered > 0 && answered < 15 ? `Continue PROOF · ${answered}/15` : score ? 'See your pattern' : 'Start PROOF'}
-                  <Arrow />
-                </button>
-                <p className="px-meta">15 answers · free · no email</p>
-              </div>
-            </div>
-
-            <div className="px-story-wrap">
-            <p className="px-kicker px-story-kicker">// How it happens. Tap to open.</p>
-            <ol className="px-story" aria-label="How it happens">
-              {STORY.map((item, index) => {
-                const open = openStory === index;
-                return (
-                  <li key={item.no} className={open ? 'is-open' : undefined}>
-                    <button
-                      type="button"
-                      aria-expanded={open}
-                      onClick={() => {
-                        if (window.matchMedia('(max-width: 860px)').matches) {
-                          setStoryIndex(index);
-                          setSheet('story');
-                          return;
-                        }
-                        setOpenStory(open ? null : index);
-                      }}
-                    >
-                      <span className="px-no">{item.no}</span>
-                      <span className="px-story-head">
-                        <strong>{item.title}</strong>
-                        <em>{item.line}</em>
-                      </span>
-                      <span className="px-plus" aria-hidden="true" />
-                    </button>
-                    <div className="px-story-body" hidden={!open}>
-                      {index === 1 ? (
-                        <>
-                          <p>Capable people chase, check, remember and rebuild what the system should hold.</p>
-                          <p className="px-quote">{audience.moment}</p>
-                        </>
-                      ) : (
-                        <p>{item.body}</p>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+              <p className="px-door-desc px-door-tag">{PROOF_TAGLINE}</p>
+              <button type="button" className="px-door-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'SEE PROOF'}>
+                <img src={`${BASE}/brand/orb-see-proof.png`} alt="" width={483} height={482} />
+              </button>
+              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : <p className="px-door-status px-door-free">No charge.</p>}
             </div>
           </section>
         ) : stage === 'ask' ? (
           <section className="px-ask" aria-labelledby="px-q">
-            <aside className="px-ask-side" aria-label="The math, live">
-              <p className="px-kicker px-kicker-light">
-                <b>{LETTERS[letterIndex][0]}</b> // {LETTERS[letterIndex][1]} · question {cursor + 1} of 15
-              </p>
-              <MathPanel live={live} current={cursor} last={last} />
+            <aside className="px-ask-side" aria-label="Progress">
+              <p className="px-kicker px-kicker-light">Question {cursor + 1} of 15</p>
+              <p className="px-ask-tip">Answer for how the work runs today.</p>
+              <p className="px-ask-tip px-ask-tip-sub">{15 - answered > 0 ? `${answered} of 15 answered.` : 'All 15 answered.'}</p>
+              <LivePanel cursor={cursor} values={session.values} optionIds={session.optionIds} label={(id) => audience.pressure[id]} />
             </aside>
             <div className="px-ask-main">
-              <MathStrip live={live} />
+              <LiveBar cursor={cursor} values={session.values} optionIds={session.optionIds} label={(id) => audience.pressure[id]} />
               <div className="px-progress" aria-hidden="true">
                 {QUESTIONS.map((item, index) => (
                   <i key={item.id} className={session.values[index] !== null ? 'on' : index === cursor ? 'now' : undefined} />
@@ -286,16 +299,17 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               <div className="px-options" role="group" aria-labelledby="px-q">
                 {QUESTIONS[cursor].choices.map((choice, index) => {
                   const selected = session.optionIds[cursor] === choice.id;
+                  const cls = 'px-option' + (selected ? ' is-selected' : '') + (picked === choice.id ? ' is-picked' : '');
                   return (
                     <button
                       key={choice.id}
                       type="button"
-                      className={selected ? 'px-option is-selected' : 'px-option'}
+                      className={cls}
+                      aria-disabled={picked ? true : undefined}
                       aria-pressed={selected}
                       onClick={() => choose(choice)}
                     >
                       <span>{tie(audience.choices[cursor][index])}</span>
-                      <b className="px-option-pts">{choice.value} pt</b>
                       <kbd>[{index + 1}]</kbd>
                     </button>
                   );
@@ -307,7 +321,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 </button>
                 {isComplete(answers) ? (
                   <button type="button" className="px-link" onClick={() => setStage('result')}>
-                    See the pattern <Arrow />
+                    See the PROOF results <Arrow />
                   </button>
                 ) : (
                   <span className="px-hint">Keys 1 to 4 answer</span>
@@ -315,20 +329,10 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               </div>
             </div>
           </section>
+        ) : stage === 'processing' ? (
+          <Processing />
         ) : score ? (
-          <Result
-            audienceId={audienceId}
-            score={score}
-            live={live}
-            tab={tab}
-            setTab={setTab}
-            openReadout={() => setSheet('readout')}
-            review={() => {
-              setCursor(0);
-              setStage('ask');
-            }}
-            restart={restart}
-          />
+          <Result audienceId={audienceId} score={score} restart={restart} code={encodeProof(audienceId, answers)} />
         ) : (
           <section className="px-intro">
             <p className="px-lede">Some answers are missing.</p>
@@ -340,21 +344,12 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       </div>
 
       <footer className="px-foot">
-        <button type="button" className="px-foot-path" onClick={() => setSheet(sheet === 'path' ? null : 'path')} aria-expanded={sheet === 'path'}>
-          <span className="px-foot-label">What happens after</span>
-          <span className="px-foot-steps" aria-hidden="true">
-            {PATH.map(([name], index) => (
-              <span key={name} className={index === 0 ? 'is-here' : index === 2 ? 'is-bbai' : undefined}>
-                {name}
-              </span>
-            ))}
-          </span>
-        </button>
+        <p className="px-foot-line">15 answers. No charge. No email.</p>
         <button type="button" className="px-foot-link" onClick={() => setSheet(sheet === 'privacy' ? null : 'privacy')} aria-expanded={sheet === 'privacy'}>
           Privacy
         </button>
         <a className="px-foot-brand" href="https://transformby10x.ai" aria-label="TransformBy10X">
-          <img src={`${BASE}/brand/tbtx-wordmark-black.png`} alt="TransformBy10X" width={263} height={137} />
+          <img src={`${BASE}/brand/tbtx-black.png`} alt="TransformBy10X" width={431} height={348} />
         </a>
       </footer>
 
@@ -364,7 +359,6 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             <button type="button" className="px-close" onClick={() => setSheet(null)} aria-label="Close">
               ×
             </button>
-            {sheet === 'path' ? <PathPanel /> : null}
             {sheet === 'story' ? (
               <div className="px-sheet-body">
                 <p className="px-kicker">
@@ -373,7 +367,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                 <p className="px-sheet-title">{STORY[storyIndex].line}</p>
                 {storyIndex === 1 ? (
                   <>
-                    <p>Capable people chase, check, remember and rebuild what the system should hold.</p>
+                    <p>Capable people chase, check, remember and rebuild what the system should keep track of.</p>
                     <p className="px-quote">{audience.moment}</p>
                   </>
                 ) : (
@@ -400,11 +394,10 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             {sheet === 'privacy' ? (
               <div className="px-sheet-body">
                 <p className="px-kicker">Privacy</p>
-                <p>Your answers stay in this browser. Nothing is sent unless you turn this on, and then only the page and the step, never your answers.</p>
+                <p>Answers stay in this browser. When PROOF is finished, one anonymous count is recorded, with no answers and no score. Nothing else is sent unless this setting is on, and then only the page and the step, never the answers.</p>
                 <DiagnosticsToggle />
               </div>
             ) : null}
-            {sheet === 'readout' && score ? <Readout audienceId={audienceId} score={score} tab={tab} setTab={setTab} /> : null}
           </div>
         </div>
       ) : null}
@@ -412,408 +405,47 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   );
 }
 
-type Score = NonNullable<ReturnType<typeof scoreMap>>;
+const PROCESS_LINES = ['15 answers locked', 'Scoring the Map', 'Locating where work stalls', 'Building the PROOF result'] as const;
 
-function Result({
-  audienceId,
-  score,
-  live,
-  tab,
-  setTab,
-  openReadout,
-  review,
-  restart,
-}: {
-  audienceId: AudienceId;
-  score: Score;
-  live: LiveMath;
-  tab: number;
-  setTab: (n: number) => void;
-  openReadout: () => void;
-  review: () => void;
-  restart: () => void;
-}) {
-  const audience = AUDIENCES[audienceId];
-  const departmentId = suggestDepartment(score.allPressures);
-  const where = departmentId ? audience.department[departmentId] : 'Nothing stood out';
-  const first = score.pressures[0] ? audience.pressure[score.pressures[0]] : 'No pressure was selected';
-  const note = bookingNote(audience.label, PROFILE_WORD[score.profile], where, first, score.raw, score.index);
-  const [copied, setCopied] = useState(false);
-  const book = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!BOOKING_URL) return;
-    try {
-      void navigator.clipboard?.writeText(note).then(() => setCopied(true), () => undefined);
-    } catch {
-      // Clipboard can be blocked. The booking page still opens.
+/** Both viewports. A short status beat while the result opens. Input is locked because no answers render. */
+function Processing() {
+  const [shown, setShown] = useState(1);
+  useEffect(() => {
+    if (reducedMotion()) {
+      setShown(PROCESS_LINES.length);
+      return;
     }
-    void event;
-  };
-
+    const step = PROCESS_MS / PROCESS_LINES.length;
+    const ids = PROCESS_LINES.slice(1).map((_, i) => window.setTimeout(() => setShown(i + 2), step * (i + 1)));
+    return () => ids.forEach((t) => window.clearTimeout(t));
+  }, []);
   return (
-    <section className="px-result" aria-labelledby="px-done">
-      <div className="px-result-main">
-        <p className="px-status">
-          <span>
-            PATTERN: <b className="px-red">{PROFILE_WORD[score.profile].toUpperCase()}</b>
-          </span>
-          <span>ANSWERS: 15/15</span>
-          <span className="px-hide-sm">
-            STALL POINT: <b className="px-blue">{where.toUpperCase()}</b>
-          </span>
-        </p>
-        <h1 id="px-done" className="px-done" tabIndex={-1}>
-          <span>Your map is ready.</span>
-        </h1>
-        <p className="px-stall">
-          Your work stalls in <b>{where.toLowerCase()}</b>. {tie(first)}.
-        </p>
-        <div className="px-actions px-book">
-          <a
-            className="px-btn px-btn-light"
-            href={BOOKING_URL || mailtoLink(note)}
-            target={BOOKING_URL ? '_blank' : undefined}
-            rel={BOOKING_URL ? 'noopener' : undefined}
-            onClick={book}
-          >
-            Book your 45-minute readout <Arrow />
-          </a>
-          <button type="button" className="px-link px-link-light px-show-sm" onClick={openReadout}>
-            Open the readout <Arrow />
-          </button>
-        </div>
-        <p className="px-book-sub">
-          We go through your map, the stall point, and what to fix first.
-          {BOOKING_URL ? <span> {copied ? 'Your map summary is copied. Paste it in the booking note.' : 'We copy your map summary for the booking note.'}</span> : null}
-        </p>
-        <WorkedMath live={live} score={score} />
-        <Estimate />
-        <p className="px-result-links">
-          <button type="button" onClick={review}>Review answers</button>
-          <button type="button" onClick={restart}>Start again</button>
-          <Link href="/visualizer?from=map">Open the desk model</Link>
-        </p>
-      </div>
-      <aside className="px-snapshot" aria-label="Your snapshot">
-        <p className="px-kicker">Your snapshot</p>
-        <dl>
-          <div>
-            <dt>Pattern</dt>
-            <dd>{PROFILE_WORD[score.profile]}</dd>
-          </div>
-          <div>
-            <dt>Primary gap</dt>
-            <dd>{first}</dd>
-          </div>
-          <div>
-            <dt>Where it sits</dt>
-            <dd>{where}</dd>
-          </div>
-        </dl>
-        <div className="px-hide-sm">
-          <Readout audienceId={audienceId} score={score} tab={tab} setTab={setTab} compact />
-        </div>
-      </aside>
-    </section>
-  );
-}
-
-const READOUT_TABS = ['Feeling', 'Cause', 'Where', 'Cost', 'Fix first', 'Next'] as const;
-
-function Readout({
-  audienceId,
-  score,
-  tab,
-  setTab,
-  compact = false,
-}: {
-  audienceId: AudienceId;
-  score: Score;
-  tab: number;
-  setTab: (n: number) => void;
-  compact?: boolean;
-}) {
-  const audience = AUDIENCES[audienceId];
-  const departmentId = suggestDepartment(score.allPressures);
-  const where = departmentId ? audience.department[departmentId] : null;
-  const parts: Array<[string, React.ReactNode]> = [
-    ['What you’re feeling', <p key="f">{audience.profile[score.profile]}</p>],
-    [
-      'What’s causing it',
-      <p key="c">
-        {score.archetype ? audience.archetype[score.archetype] + '.' : 'No single cause stood out.'} The tools work. The context around them didn’t keep up, so people carry it.
-      </p>,
-    ],
-    [
-      'Where it shows up',
-      score.pressures.length ? (
-        <ul key="w">
-          {score.pressures.map((id) => (
-            <li key={id}>{audience.pressure[id]}</li>
-          ))}
-        </ul>
-      ) : (
-        <p key="w">None of your answers flagged a pressure.</p>
-      ),
-    ],
-    [
-      'What it’s taking away',
-      <p key="t">
-        Time that should go to the {audience.client} goes to finding, checking and rebuilding context. That work isn’t on anyone’s job description.
-      </p>,
-    ],
-    [
-      'What to fix first',
-      <p key="m">{where ? `Start with ${where.toLowerCase()}. ` : ''}{score.pressures[0] ? audience.pressure[score.pressures[0]] + '.' : 'Keep the connections you already have.'}</p>,
-    ],
-    [
-      'What happens next',
-      <p key="n">
-        Book the 45-minute readout and we go through this map with you. If the stall is worth fixing, the Friction Audit runs for 2 weeks and delivers your FACT report and your BizBlueprint. BizBuilders AI then builds The Pipeline Airlock.
-      </p>,
-    ],
-  ];
-  return (
-    <div className={compact ? 'px-readout is-compact' : 'px-readout'}>
-      <div className="px-tabs" role="tablist" aria-label="Readout">
-        {parts.map(([label], index) => (
-          <button
-            key={label}
-            type="button"
-            role="tab"
-            aria-selected={tab === index}
-            className={tab === index ? 'is-on' : undefined}
-            onClick={() => setTab(index)}
-            title={label}
-          >
-            <i>{String(index + 1).padStart(2, '0')}</i>
-            <span>{READOUT_TABS[index]}</span>
-          </button>
-        ))}
-      </div>
-      <div className="px-tab-panel" role="tabpanel">
-        <p className="px-tab-title">{parts[tab][0]}</p>
-        {parts[tab][1]}
-      </div>
-    </div>
-  );
-}
-
-function PathPanel() {
-  return (
-    <div className="px-sheet-body">
-      <p className="px-kicker">What happens after PROOF</p>
-      <ol className="px-path">
-        {PATH.map(([name, line], index) => (
-          <li key={name} className={index === 2 ? 'is-bbai' : undefined}>
-            <span className="px-no">{String(index + 1).padStart(2, '0')}</span>
-            <strong>{name}</strong>
-            <em>
-              {line}
-              {index === 2 ? (
-                <img className="px-step-mark" src={`${BASE}/brand/bbai-wordmark-black.png`} alt="BizBuilders AI" width={274} height={138} />
-              ) : null}
-            </em>
+    <section className="px-proc" role="status" aria-live="polite" aria-label="Building the PROOF result">
+      <span className="px-proc-orb" aria-hidden="true" />
+      <ol className="px-proc-log">
+        {PROCESS_LINES.slice(0, shown).map((line, i) => (
+          <li key={line} className={i === shown - 1 ? 'is-now' : undefined}>
+            <span aria-hidden="true">&gt;</span> {line}
           </li>
         ))}
       </ol>
-      <p className="px-path-note">
-        <span>Friction Audit and the readout are booked on the result screen.</span>
-      </p>
-    </div>
-  );
-}
-
-/** The live instrument. Every number is read from liveMath, which mirrors scoreMap. */
-function MathPanel({ live, current, last }: { live: LiveMath; current: number; last: number | null }) {
-  const lastValue = last !== null ? live.dimensions.flatMap((d) => d.values)[last] : null;
-  return (
-    <div className="px-math">
-      <p className="px-math-head">
-        <span>The math</span>
-        <span>answer pts × weight {WEIGHT} = contribution</span>
-      </p>
-      <ol className="px-math-dims">
-        {live.dimensions.map((d, di) => {
-          const active = Math.floor(current / 3) === di;
-          return (
-            <li key={d.name} className={active ? 'is-now' : undefined}>
-              <b className="px-math-letter">{d.letter}</b>
-              <span className="px-math-name">{d.name}</span>
-              <span className="px-math-cells">
-                {d.values.map((v, vi) => (
-                  <i key={vi} className={di * 3 + vi === current ? 'is-cur' : v === null ? undefined : `v${v}`}>
-                    {v === null ? '·' : v}
-                  </i>
-                ))}
-              </span>
-              <span className="px-math-bar" aria-hidden="true">
-                <span style={{ width: `${(100 * d.points) / d.max}%` }} />
-              </span>
-              <span className="px-math-sub">
-                {d.points}/{d.max}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
-      <p className="px-math-last" key={`${last}-${lastValue}`}>
-        {last !== null && lastValue !== null ? (
-          <>
-            Q{String(last + 1).padStart(2, '0')} <span>{lastValue} pt × {WEIGHT}</span> = <b>+{lastValue * WEIGHT}</b>
-          </>
-        ) : (
-          <>Each answer adds 0, 1 or {POINTS_MAX} points.</>
-        )}
-      </p>
-      <div className="px-math-total">
-        <p>
-          <span>Raw</span>
-          <b>{live.raw}</b>
-          <em>/ {RAW_MAX}</em>
-        </p>
-        <p>
-          <span>{live.answered === 15 ? 'Index' : 'Can still finish'}</span>
-          {live.answered === 15 ? <b>{live.index}</b> : <b className="px-math-range">{live.floor} to {live.ceiling}</b>}
-          <em>{live.answered === 15 ? '/ 100' : 'raw'}</em>
-        </p>
-      </div>
-      <BandScale live={live} />
-      <p className="px-math-foot">
-        Index = round(100 × raw ÷ {RAW_MAX}) at 15/15 · Pressures flagged: <b>{live.pressureAtZero}</b> at 0 pt (ranked first), <b>{live.pressureAtOne}</b> at 1 pt
-      </p>
-    </div>
-  );
-}
-
-function BandScale({ live }: { live: LiveMath }) {
-  const pct = (n: number) => `${(100 * n) / RAW_MAX}%`;
-  return (
-    <div className="px-band" aria-label="Pattern bands on raw points">
-      <div className="px-band-track">
-        {BANDS.map((band) => (
-          <span
-            key={band.id}
-            className={live.profile === band.id ? 'is-on' : undefined}
-            style={{ left: pct(band.from), width: pct(band.to - band.from + 1) }}
-          >
-            <em>{PROFILE_WORD[band.id]}</em>
-            <i>
-              {band.from}-{band.to}
-            </i>
-          </span>
-        ))}
-        <b className="px-band-range" style={{ left: pct(live.floor), width: `max(3px, ${pct(live.ceiling - live.floor)})` }} />
-      </div>
-    </div>
-  );
-}
-
-function MathStrip({ live }: { live: LiveMath }) {
-  return (
-    <p className="px-math-strip px-show-sm" aria-label="Running score">
-      {live.dimensions.map((d) => (
-        <span key={d.name}>
-          {d.letter} <b>{d.points}</b>/{d.max}
-        </span>
-      ))}
-      <span className="px-math-strip-raw">
-        Raw <b>{live.raw}</b>/{RAW_MAX}
-      </span>
-    </p>
-  );
-}
-
-function WorkedMath({ live, score }: { live: LiveMath; score: Score }) {
-  const band = BANDS.find((b) => b.id === score.profile)!;
-  return (
-    <div className="px-worked" aria-label="How your pattern was calculated">
-      <p className="px-worked-row">
-        {live.dimensions.map((d, i) => (
-          <span key={d.name}>
-            {i > 0 ? <i>+</i> : null}
-            <b>{d.points}</b>
-            <em>{d.letter}</em>
-          </span>
-        ))}
-        <span>
-          <i>=</i>
-          <b className="px-blue">{score.raw}</b>
-          <em>raw / {RAW_MAX}</em>
-        </span>
-      </p>
-      <p className="px-worked-line">
-        Index = round(100 × {score.raw} ÷ {RAW_MAX}) = <b>{score.index}</b> · Raw {band.from} to {band.to} reads <b>{PROFILE_WORD[score.profile]}</b> · {score.allPressures.length} pressures flagged
-      </p>
-    </div>
-  );
-}
-
-const usd0 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-const usd2 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const num = (v: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(v);
-
-function Estimate() {
-  const [team, setTeam] = useState(1);
-  const [salary, setSalary] = useState(DEFAULT_SALARY);
-  const [hours, setHours] = useState(8);
-  const e = estimate(team, salary, hours);
-  const field = (label: string, value: number, set: (n: number) => void, step: number, unit?: string) => (
-    <label className="px-est-field">
-      <span>{label}</span>
-      <span className="px-est-input">
-        {unit === '$' ? <i>$</i> : null}
-        <input type="number" inputMode="decimal" min={0} step={step} value={Number.isFinite(value) ? value : ''} onChange={(ev) => set(ev.target.value === '' ? 0 : Number(ev.target.value))} />
-        {unit && unit !== '$' ? <i>{unit}</i> : null}
-      </span>
-    </label>
-  );
-  return (
-    <section className="px-est" aria-labelledby="px-est-h">
-      <div className="px-est-head">
-        <h2 id="px-est-h">Your estimate</h2>
-        <p>Capacity-cost equivalent, not cash savings or ROI</p>
-      </div>
-      <div className="px-est-fields">
-        {field('Team size', team, setTeam, 1, 'people')}
-        {field('Average salary', salary, setSalary, 1000, '$')}
-        {field('Repair hours per week, per person', hours, setHours, 0.5, 'h')}
-      </div>
-      <ol className="px-est-steps" aria-live="polite">
-        <li>
-          <span className="px-eq"><var>C</var><sub>hour</sub> = <span className="px-frac"><span>salary</span><span>{num(HOURS_PER_YEAR)}</span></span> = <span className="px-frac"><span>{usd0.format(salary)}</span><span>{num(HOURS_PER_YEAR)}</span></span> = <b>{usd2.format(e.hourly)}</b></span>
-          <small>What one paid hour costs. 2,080 is 40 hours over 52 weeks.</small>
-        </li>
-        <li>
-          <span className="px-eq">weekly = hours × team × <var>C</var><sub>hour</sub> = {num(hours)} × {num(team)} × {usd2.format(e.hourly)} = <b>{usd2.format(e.weekly)}</b></span>
-          <small>Paid time spent each week repairing work that arrived without what it needed.</small>
-        </li>
-        <li>
-          <span className="px-eq">annual = weekly × {WEEKS_PER_YEAR} = {usd2.format(e.weekly)} × {WEEKS_PER_YEAR} = <b className="px-est-total">{usd0.format(e.annual)}</b></span>
-          <small>Equal to {num(Math.round(e.salaryShare * 1000) / 10)}% of one {usd0.format(salary)} salary.</small>
-        </li>
-      </ol>
-      <p className="px-est-note">These hours are your own estimate. The figure prices that time. It does not predict money saved.</p>
-      <p className="px-est-bridge">
-        This estimate used 2 of 9 equations. <a href={FRICTION_MODEL_URL}>The Friction Audit runs all 9 on your real handoffs in your FACT report (Friction Audit Context Telemetry).</a>
-      </p>
-      <div className="px-actions">
-        <a className="px-btn px-btn-light" href={BOOKING_URL || 'https://calendar.app.google/ecuH2cxigdh5NQKy9'} target="_blank" rel="noopener">
-          Book your 45-minute readout <Arrow />
-        </a>
-      </div>
     </section>
   );
 }
 
-function Letters({ filled, current }: { filled: number; current: number }) {
+/** Section words in the bar. Status only, not links: current magenta, done white, upcoming muted, all lit on results. */
+function Sections({ stage, current }: { stage: string; current: number }) {
+  const state = (i: number) =>
+    stage === 'result' || stage === 'processing' ? 'is-lit' : stage === 'ask' ? (i < current ? 'is-done' : i === current ? 'is-now' : 'is-next') : undefined;
   return (
-    <span className="px-letters" aria-hidden="true">
-      {LETTERS.map(([letter, word], index) => (
-        <span key={word} className={index < filled ? 'on' : index === current ? 'now' : undefined} title={word}>
-          {letter}
+    <p className="px-bar-sub" data-stage={stage}>
+      {LETTERS.map(([, word], i) => (
+        <span key={word} className={state(i)} aria-current={state(i) === 'is-now' ? 'step' : undefined}>
+          {i ? <i aria-hidden="true"> · </i> : null}
+          {word}
         </span>
       ))}
-    </span>
+    </p>
   );
 }
 
@@ -825,11 +457,147 @@ function Arrow({ back = false }: { back?: boolean }) {
   );
 }
 
-function bookingNote(audience: string, pattern: string, where: string, gap: string, raw: number, index: number): string {
-  return `PROOF map\nBusiness: ${audience}\nPattern: ${pattern} (raw ${raw}/30, index ${index})\nStall point: ${where}\nPrimary gap: ${gap}`;
+/** What each question measures, read from the question and its four choices. */
+const MEASURES: readonly string[] = [
+  'Where work stops moving: at the start, at handoffs, or at the finish.',
+  'Whether the next piece of work is set by a system or worked out as it goes.',
+  'Whether approvals, feedback, and notes sit in one shared record or in memory and messages.',
+  'How many AI tools are in use, and whether they connect to each other.',
+  'Whether what the team learned on one piece of work carries into the next.',
+  'Whether missed leads, requests, and questions get followed up without relying on memory.',
+  'Whether each piece of work has a named owner when it needs to move.',
+  'Whether AI use has operating rules and a person accountable for it.',
+  'Whether decisions under deadline follow a written rule or whoever is around.',
+  'How much follow-up still depends on someone remembering it.',
+  'How often existing work gets redone or searched for.',
+  'Whether work keeps moving when the one key person is out.',
+  'Whether live work and approvals can be seen as they change.',
+  'Whether finished work changes how the next piece runs.',
+  'One word for how the operation runs day to day.',
+]
+
+type LiveProps = {
+  cursor: number;
+  values: Array<0 | 1 | 2 | null>;
+  optionIds: Array<string | null>;
+  label: (id: import('../lib/types').PressureId) => string;
+};
+
+const SCORE_DIRECTION = 'Higher means work moves smoother, with less Workflow Friction.';
+
+function liveView({ values, optionIds, label }: LiveProps) {
+  // Running score from liveMath (src/lib/math.ts), the same arithmetic as scoreMap.
+  const live = liveMath({ values, optionIds } as Parameters<typeof liveMath>[0]);
+  // Friction order matches scoreMap: 0-point pressures first, then 1-point pressures.
+  const zeros: string[] = [];
+  const ones: string[] = [];
+  QUESTIONS.forEach((question, index) => {
+    const value = values[index];
+    if (value === null || value === undefined) return;
+    const pressure = question.choices.find((item) => item.id === optionIds[index])?.pressure;
+    if (!pressure) return;
+    const text = label(pressure);
+    if (value === 0 && !zeros.includes(text)) zeros.push(text);
+    if (value === 1 && !ones.includes(text) && !zeros.includes(text)) ones.push(text);
+  });
+  const friction = [...zeros, ...ones].slice(0, 4);
+  // Phone terminal: one line per answered question that scored under 2, newest last. Real answers only.
+  const log: Array<{ q: number; text: string; pts: number }> = [];
+  QUESTIONS.forEach((question, index) => {
+    const value = values[index];
+    if (value === null || value === undefined || value >= 2) return;
+    const pressure = question.choices.find((item) => item.id === optionIds[index])?.pressure;
+    if (pressure) log.push({ q: index + 1, text: label(pressure), pts: value });
+  });
+  return { live, friction, log };
 }
 
-function mailtoLink(note: string): string {
-  const subject = 'PROOF: book my 45-minute readout';
-  return `mailto:erik@transformby10x.ai?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(note + '\n\nA good time to talk:\n')}`;
+function LivePanel(props: LiveProps) {
+  const { cursor } = props;
+  const { live, friction } = liveView(props);
+  return (
+    <div className="px-live">
+      <div className="px-live-block">
+        <p className="px-live-label">Running Map score</p>
+        <p className="px-live-num">
+          <b>{live.raw}</b> <span>of {RAW_MAX} points</span>
+        </p>
+        <div className="px-live-bar" aria-hidden="true">
+          <i style={{ width: `${(100 * live.raw) / RAW_MAX}%` }} />
+        </div>
+        <p className="px-live-note">
+          {live.answered === 0 ? 'Builds with each answer. Final score after all 15.' : `After ${live.answered} answer${live.answered > 1 ? 's' : ''}. Final score after all 15.`}
+        </p>
+        <p className="px-live-note">{SCORE_DIRECTION}</p>
+      </div>
+      <div className="px-live-block">
+        <p className="px-live-label">This question measures</p>
+        <p className="px-live-note px-live-measure">{MEASURES[cursor]}</p>
+      </div>
+      {friction.length ? (
+        <div className="px-live-block">
+          <p className="px-live-label">Workflow Friction so far</p>
+          <ul className="px-live-list">
+            {friction.map((text) => (
+              <li key={text}>{text}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function LiveBar(props: LiveProps) {
+  const { cursor } = props;
+  const { live, friction, log } = liveView(props);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="px-mbar">
+      <ol className="px-term" aria-label="Friction found so far">
+        {log.length ? (
+          log.slice(-3).map((line) => (
+            <li key={line.q}>
+              <span aria-hidden="true">&gt;</span> Q{String(line.q).padStart(2, '0')} · {line.text} · {line.pts} of 2
+            </li>
+          ))
+        ) : (
+          <li className="is-idle">
+            <span aria-hidden="true">&gt;</span> {live.answered ? 'No friction flagged yet' : 'Waiting for the first answer'}
+          </li>
+        )}
+      </ol>
+      <p className="px-term-range">
+        Map score range <b>{live.floor}</b> to <b>{live.ceiling}</b> of {RAW_MAX}
+      </p>
+      <div className="px-mbar-row">
+        <p className="px-mbar-score">
+          Running Map score <b>{live.raw}</b> of {RAW_MAX}
+        </p>
+        <button type="button" className="px-mbar-toggle" aria-expanded={open} aria-controls="px-mbar-drawer" onClick={() => setOpen(!open)}>
+          {open ? 'Close' : 'Details'}
+        </button>
+      </div>
+      <div className="px-live-bar" aria-hidden="true">
+        <i style={{ width: `${(100 * live.raw) / RAW_MAX}%` }} />
+      </div>
+      {open ? (
+        <div id="px-mbar-drawer" className="px-mbar-drawer">
+          <p className="px-live-note">{SCORE_DIRECTION}</p>
+          <p className="px-live-label">This question measures</p>
+          <p className="px-live-note">{MEASURES[cursor]}</p>
+          {friction.length ? (
+            <>
+              <p className="px-live-label">Workflow Friction so far</p>
+              <ul className="px-live-list">
+                {friction.map((text) => (
+                  <li key={text}>{text}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
 }

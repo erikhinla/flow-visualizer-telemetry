@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import { Archivo, Barlow, Barlow_Condensed, IBM_Plex_Mono } from 'next/font/google';
+import { Archivo, Barlow, Barlow_Condensed, IBM_Plex_Mono, Inter_Tight } from 'next/font/google';
 import { SessionProvider } from '../components/SessionProvider';
 import { Shell } from '../components/Shell';
+import { PROOF_TAGLINE } from '../lib/brand';
 import './globals.css';
 import './proof.css';
 
@@ -34,10 +35,17 @@ const mono = IBM_Plex_Mono({
   variable: '--font-mono',
 });
 
+const tight = Inter_Tight({
+  subsets: ['latin'],
+  weight: ['700', '800'],
+  display: 'swap',
+  variable: '--font-tight',
+});
+
 export const metadata: Metadata = {
-  title: 'PROOF · See where Digital Friction shows up',
+  title: `PROOF · ${PROOF_TAGLINE}`,
   description:
-    'AI was meant to help your team. Now your team helps the AI. AI sped up the work, but context still gets carried by hand. 15 answers map the route, show where fog and friction stall it, and get your people back to the work they were hired for. Free, from TransformBy10X.',
+    "AI tools made more work, not less. When context lives in the system, not in people’s heads, talented teams stop burning out. From TransformBy10X.",
   ...(process.env.NEXT_PUBLIC_PROOF_NOINDEX ? { robots: { index: false, follow: false } } : {}),
 };
 
@@ -49,7 +57,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${grotesk.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${grotesk.variable} ${mono.variable} ${tight.variable}`}>
       <body>
         <SessionProvider>
           <Shell>{children}</Shell>

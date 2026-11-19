@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 import { diagnosticsOn, setDiagnostics } from '../lib/telemetry';
+import { PROOF_TAGLINE } from '../lib/brand';
 
 const LINKS = [
   { href: '/', label: 'PROOF' },
-  { href: '/visualizer', label: 'Desk model' },
+  { href: '/visualizer', label: 'By dept' },
   { href: '/record', label: 'Record' },
 ];
 
@@ -50,8 +51,8 @@ export function Shell({ children }: { children: ReactNode }) {
       <main id="content">{children}</main>
       <footer className="colophon">
         <p>
-          <img className="colophon-mark" src={`${process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? ''}/brand/tbtx-wordmark-white.png`} alt="TransformBy10X" width={284} height={143} />
-          PROOF is 15 answers that show where Digital Friction shows up.</p>
+          <img className="colophon-mark" src={`${process.env.NEXT_PUBLIC_PROOF_BASE_PATH ?? ''}/brand/tbtx-white.png`} alt="TransformBy10X" width={449} height={365} />
+          {PROOF_TAGLINE}</p>
         <p>
           <Link href="/">Back to PROOF</Link> · <Link href="/offer">Talk through the pattern</Link>
         </p>
@@ -77,8 +78,8 @@ export function DiagnosticsToggle() {
           setOn(next);
         }}
       />
-      Send anonymous diagnostics. Off until you turn this on. PROOF sends the page and the desk, not
-      your numbers.
+      Send anonymous diagnostics. Off until switched on. PROOF sends the page and the department, not
+      the numbers.
     </label>
   );
 }

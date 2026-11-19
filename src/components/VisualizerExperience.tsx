@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Balance } from './Balance';
 import { DepartmentMark } from './DepartmentMark';
 import { FlowTrack } from './FlowTrack';
-import { KeystonePath } from './KeystonePath';
+import { deptHeader } from '../lib/brand';
+import './visualizer-fig.css';
 import { Readout } from './Readout';
 import { SeizureCurve } from './SeizureCurve';
 import { TraceBoard } from './TraceBoard';
@@ -107,7 +108,7 @@ export function VisualizerExperience() {
   });
 
   const replaceDesk = (id: DepartmentId) => {
-    if (dirty && !window.confirm('Replace this desk? The numbers you edited will be replaced by that sample.')) {
+    if (dirty && !window.confirm('Switch dept? The edited numbers will be replaced by the sample.')) {
       return;
     }
     selectDepartment(id);
@@ -115,17 +116,17 @@ export function VisualizerExperience() {
   };
 
   if (!ready || !settled) {
-    return <p className="note">Opening the desk…</p>;
+    return <p className="note">Opening the dept…</p>;
   }
 
   const bannerName = bannerDesk ? getDepartment(bannerDesk).name : '';
 
   return (
-    <article className="see">
+    <article className="see vz-fig">
       <header className="see-intro">
-        <p className="kicker">{department.name}</p>
+        <p className="kicker vz-bar"><span>{deptHeader(department.name)}</span><b>FIG. 00 / Dept model</b></p>
         <h1>{department.mirror}</h1>
-        <p className="benefit">{department.relief}</p>
+        {department.relief ? <p className="benefit">{department.relief}</p> : null}
         {department.campaignLine ? <p className="campaign">{department.campaignLine}</p> : null}
       </header>
 
@@ -142,7 +143,7 @@ export function VisualizerExperience() {
                 if (
                   dirty &&
                   !window.confirm(
-                    'Replace this desk? The numbers you edited will be replaced by that sample.'
+                    'Switch dept? The edited numbers will be replaced by the sample.'
                   )
                 ) {
                   return;
@@ -191,6 +192,7 @@ export function VisualizerExperience() {
         })}
       </div>
 
+      <p className="vz-fig-label">FIG. 01 / Where the context drops</p>
       <TraceBoard
         departmentId={department.id}
         band={comparison.baseline.band}
@@ -198,20 +200,15 @@ export function VisualizerExperience() {
         known={comparison.baseline.known}
         evidenceKind={presentation.kind}
       />
-      <KeystonePath
-        departmentId={department.id}
-        band={comparison.baseline.band}
-        repairHours={comparison.baseline.repairHours}
-        known={comparison.baseline.known}
-        evidenceKind={presentation.kind}
-      />
 
+      <p className="vz-fig-label">FIG. 02 / The route</p>
       <FlowTrack
         stages={department.stages}
         band={comparison.baseline.band}
         accent={department.accent}
       />
 
+      <p className="vz-fig-label">FIG. 03 / The week, before and after</p>
       <div className="see-grid">
         <Readout
           baseline={comparison.baseline}
@@ -229,6 +226,7 @@ export function VisualizerExperience() {
         />
       </div>
 
+      <p className="vz-fig-label">FIG. 04 / Your numbers</p>
       <section className="scenario">
         <div className="scenario-head">
           <h2>
@@ -252,8 +250,8 @@ export function VisualizerExperience() {
           />
         </div>
         <p className="note">
-          Blank means unknown. Unknown is not zero. A sample stays simulated until the numbers
-          change. Observed and self-reported stay estimated until you attest them, and the next edit
+          Blank means unknown. Unknown isn't zero. A sample stays simulated until the numbers
+          change. Observed and self-reported stay estimated until someone attests them, and the next edit
           clears that claim.
         </p>
         <div className="fields">
@@ -293,7 +291,7 @@ export function VisualizerExperience() {
           />
           <NumberField
             id="available"
-            label="Desk hours available"
+            label="Team hours available"
             suffix="h"
             value={session.inputs.availableHours}
             onChange={(availableHours) => editInputs({ availableHours })}
@@ -307,13 +305,13 @@ export function VisualizerExperience() {
               checked={showChange}
               onChange={(event) => setShowChange(event.target.checked)}
             />
-            Compare the week after the fix
+            Compare the week after the change
           </label>
           {showChange ? (
             <div className="fields">
               <PercentField
                 id="next-share"
-                label="Share still missing after the fix"
+                label="Share still missing after the change"
                 value={session.inputs.nextMissingShare}
                 onChange={(nextMissingShare) => editInputs({ nextMissingShare })}
               />
@@ -326,7 +324,7 @@ export function VisualizerExperience() {
               />
               <NumberField
                 id="ongoing"
-                label="Hours to keep the fix"
+                label="Hours to keep the change"
                 suffix="h"
                 value={session.inputs.ongoingHours}
                 onChange={(ongoingHours) => editInputs({ ongoingHours })}
@@ -342,10 +340,11 @@ export function VisualizerExperience() {
           ) : null}
         </div>
         <button type="button" className="button ghost" onClick={() => selectDepartment(department.id)}>
-          Reset this desk’s sample
+          Reset the sample
         </button>
       </section>
 
+      <p className="vz-fig-label">FIG. 05 / The balance</p>
       <Balance
         departmentId={department.id}
         change={department.action.change}
@@ -356,29 +355,29 @@ export function VisualizerExperience() {
         reason={reason}
       />
 
+      <p className="vz-fig-label">FIG. 06 / Owner and check back</p>
       <section className="action-card">
-        <p className="kicker">Who carries it</p>
-        <h2>The Owner Keeps the Judgment</h2>
+                <h2>Who owns this, and when to check back</h2>
         <dl>
           <div>
-            <dt>Owner role</dt>
+            <dt>Owner</dt>
             <dd>{department.action.ownerRole}</dd>
           </div>
           <div>
-            <dt>What to compare</dt>
+            <dt>What to measure</dt>
             <dd>{department.compare}</dd>
           </div>
           <div>
-            <dt>Evidence to bring back</dt>
+            <dt>What to bring back</dt>
             <dd>{department.action.evidence}</dd>
           </div>
           <div>
-            <dt>Review</dt>
-            <dd>In {department.action.reviewInDays} days, on this same workflow.</dd>
+            <dt>Check back</dt>
+            <dd>In {department.action.reviewInDays} days.</dd>
           </div>
         </dl>
         <Link className="button" href="/record">
-          Follow This Task
+          Open the record
         </Link>
       </section>
 
@@ -389,9 +388,9 @@ export function VisualizerExperience() {
           other. Pressure = required ÷ available role-hours. Margin = available − required.
         </p>
         <p>
-          Waiting uses Kingman’s approximation for one role: variability × (pressure ÷ (1 −
+          Waiting uses the Kingman approximation for one role: variability × (pressure ÷ (1 −
           pressure)) × mean handling time. Arrivals are assumed to spread across the available
-          hours. Variability of 1 matches exponential arrivals and service. It is not measured here.
+          hours. Variability of 1 matches exponential arrivals and service. Variability isn't measured here.
           At pressure of 1 or more, the model has no finite steady wait.
         </p>
         <label className="field" htmlFor="variability">
@@ -410,14 +409,14 @@ export function VisualizerExperience() {
           </span>
         </label>
         <p>
-          Display bands, not a certification: fog while repair is absorbed under 0.70 pressure,
+          Display bands, not a certification: drift while repair is absorbed under 0.70 pressure,
           forming from 0.70, closing from 0.90, stalled at 1. The curve is continuous. Necessary
-          review is not repair.
+          review isn't repair.
         </p>
         <h3>Recorded scenario index · {MANIFESTATION_MODEL_VERSION}</h3>
         <p>
           This index is the old illustration. Its exponent, weights, and modifier are uncalibrated.
-          It is not repair hours and not a loss percentage. Height is an artistic 0 to 30 scale.
+          The index isn't repair hours or a loss percentage. Height is an artistic 0 to 30 scale.
         </p>
         {index ? (
           <>
@@ -429,7 +428,7 @@ export function VisualizerExperience() {
                   setSession((current) => ({ ...current, modifierOn: event.target.checked }))
                 }
               />
-              FLOW modifier. Multiplies the assumed fragility by 0.25. It does not deploy anything.
+              Structure modifier. Multiplies the assumed fragility by 0.25. The setting doesn't deploy anything.
             </label>
             <p className="index-figure">
               Index {index.score.toFixed(2)} · height {index.height.toFixed(2)}
@@ -438,7 +437,7 @@ export function VisualizerExperience() {
           </>
         ) : (
           <p>
-            Finish the scan to calculate this index. Unanswered questions are not treated as zero.
+            Finish the scan to calculate this index. Unanswered questions aren't treated as zero.
           </p>
         )}
       </details>
@@ -486,7 +485,7 @@ function EvidenceControl({
             checked={attested}
             onChange={(event) => onAttest(event.target.checked)}
           />
-          I counted these figures on a real project. PROOF will not check them.
+          I counted these figures on a real project. PROOF won't check them.
         </label>
       ) : null}
     </div>

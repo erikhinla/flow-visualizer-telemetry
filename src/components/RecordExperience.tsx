@@ -58,9 +58,9 @@ export function RecordExperience() {
 
   return (
     <article className="record">
-      <p className="kicker">{department.name} · the record you can take with you</p>
+      <p className="kicker">{department.name} · the record to take away</p>
       <h1>{department.mirror}</h1>
-      <p className="benefit">{department.relief}</p>
+      {department.relief ? <p className="benefit">{department.relief}</p> : null}
       <p className="note">{record.provenance.sentence}</p>
 
       <TraceBoard
@@ -79,10 +79,10 @@ export function RecordExperience() {
       />
 
       <section>
-        <h2>The hours spent finding it</h2>
+        <h2>Hours spent searching</h2>
         <p>
-          {department.repairRole} is losing these hours to the search. The craft, the client’s
-          review, and the judgment are not part of that count.
+          {department.repairRole} is losing these hours to the search. The craft, the review by the client,
+          and the judgment aren't part of that count.
         </p>
         <p className={`band-word band-${baseline.band}`}>
           <span>{BAND_WORD[baseline.band]}</span>
@@ -90,15 +90,15 @@ export function RecordExperience() {
         </p>
         <dl className="record-stats">
           <div>
-            <dt>Hours finding it</dt>
+            <dt>Hours searching</dt>
             <dd>{formatHours(baseline.repairHours)}</dd>
           </div>
           <div>
-            <dt>Hours the desk needs</dt>
+            <dt>Total hours required</dt>
             <dd>{formatHours(baseline.requiredHours)}</dd>
           </div>
           <div>
-            <dt>Desk hours</dt>
+            <dt>Team hours</dt>
             <dd>{formatHours(session.inputs.availableHours)}</dd>
           </div>
           <div>
@@ -114,7 +114,7 @@ export function RecordExperience() {
             </dd>
           </div>
           <div>
-            <dt>Hours back after the fix</dt>
+            <dt>Hours back after the change</dt>
             <dd>{formatHours(record.scenario.netReleasedHours)}</dd>
           </div>
         </dl>
@@ -141,7 +141,7 @@ export function RecordExperience() {
       ) : (
         <section>
           <h2>Scan</h2>
-          <p>The scan is unfinished, so this record does not invent a score.</p>
+          <p>The scan is unfinished, so this record doesn't invent a score.</p>
           <Link href="/map">Finish the scan</Link>
         </section>
       )}
@@ -162,7 +162,7 @@ export function RecordExperience() {
       />
 
       <section>
-        <h2>Who carries it</h2>
+        <h2>Owner and review</h2>
         <p>
           Owner role: {department.action.ownerRole}. Bring back: {department.action.evidence} Review
           date: {due ?? `in ${department.action.reviewInDays} days`}.
@@ -186,7 +186,7 @@ export function RecordExperience() {
           Print
         </button>
         <Link className="button ghost" href="/visualizer">
-          Back to the desk
+          Back to the department
         </Link>
         <button type="button" className="button ghost" onClick={clearSession}>
           Clear this browser

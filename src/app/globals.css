@@ -1,16 +1,17 @@
 :root {
-  --carbon: #121416;
-  --carbon-2: #1b1f23;
-  --line: #3a4148;
-  --ivory: #e6eaee;
-  --muted: #9aa3ab;
-  --brass: #c17f4e;
-  --brass-deep: #8d5a34;
-  --signal: #b4231c;
-  --ember: #d4654a;
-  --sage: #b7c3bb;
-  --fog: rgba(230, 234, 238, 0.08);
-  color-scheme: dark;
+  /* Proof-sheet palette (R7). Names are kept so every rule below still works: carbon is now paper, ivory is ink, brass is magenta. */
+  --carbon: #F6F6F2;
+  --carbon-2: #FFFFFF;
+  --line: rgba(11, 11, 12, 0.85);
+  --ivory: #0B0B0C;
+  --muted: #55554F;
+  --brass: #D01E98;
+  --brass-deep: #A01575;
+  --signal: #D01E98;
+  --ember: #D01E98;
+  --sage: #55554F;
+  --fog: rgba(11, 11, 12, 0.06);
+  color-scheme: light;
 }
 
 * {
@@ -24,9 +25,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(900px 380px at 100% -20%, rgba(193, 127, 78, 0.07), transparent 55%),
-    var(--carbon);
+  background: var(--carbon);
   color: var(--ivory);
   font-family: var(--font-sans), sans-serif;
   font-size: 1.05rem;
@@ -167,7 +166,7 @@ h3 {
   font-family: var(--font-display), 'Arial Narrow', sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 0.95;
+  line-height: 1.1;
   text-wrap: balance;
 }
 
@@ -175,7 +174,7 @@ h3 {
   max-width: 12em;
   margin: 0;
   font-size: clamp(2.7rem, 7.4vw, 5.4rem);
-  line-height: 0.92;
+  line-height: 1.05;
   font-variation-settings:
     'SOFT' 30,
     'opsz' 144;
@@ -248,6 +247,19 @@ h2 {
   color: var(--ivory);
 }
 
+/* t850: offer cards and the intro share one measure, so the lede is not a narrow column in a wide box. */
+.offer .sequence {
+  max-width: 44rem;
+}
+.offer .sequence .lede {
+  max-width: none;
+}
+.offer h1,
+.offer h2 {
+  line-height: 1.1;
+  overflow: visible;
+}
+
 .note,
 .schematic,
 figcaption,
@@ -271,7 +283,7 @@ figcaption,
   min-height: 48px;
   padding: 0.7rem 1.15rem;
   border-radius: 4px;
-  border: 1px solid #6e1612;
+  border: 1px solid #D01E98;
   background: var(--signal);
   color: #fff;
   text-decoration: none;
@@ -1126,5 +1138,22 @@ figcaption,
   .hero-instrument {
     border-color: #bbb;
     background: white;
+  }
+}
+
+/* t852: department rail. At desktop widths every tile shows; the scroll rail cut the last tiles at 1440. Phones keep the swipe rail. */
+@media (min-width: 760px) {
+  .dept-rail {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    overflow-x: visible;
+  }
+  .dept-rail .dept {
+    min-width: 0;
+  }
+}
+@media (min-width: 1240px) {
+  .dept-rail {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
   }
 }

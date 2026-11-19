@@ -19,7 +19,7 @@ function encodeRaw(value: unknown) {
 describe('one Scan contract', () => {
   it('preserves the 60 saved points and canonical option identities', () => {
     const points = [
-      [0,1,1,2], [0,1,1,2], [0,0,1,2], [0,1,1,2], [0,1,1,2],
+      [0,1,1,2], [0,1,1,2], [0,0,1,2], [1,1,1,2], [0,1,1,2],
       [0,0,1,2], [0,1,1,2], [0,1,1,2], [0,0,1,2], [0,0,1,2],
       [0,0,1,2], [0,0,1,2], [0,1,1,2], [0,1,1,2], [0,0,1,2],
     ];

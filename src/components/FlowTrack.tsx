@@ -57,7 +57,7 @@ export function FlowTrack({
         ))}
       </ol>
       <p className="schematic">
-        Schematic. The marks show where this scenario holds the work. They are not a count of items.
+        Diagram only. The marks show where work waits, not how many items.
       </p>
     </div>
   );

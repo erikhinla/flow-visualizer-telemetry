@@ -13,9 +13,9 @@ export const RAW_MAX = QUESTIONS.length * POINTS_MAX * WEIGHT; // 30
 
 export const DIMENSIONS = [
   { letter: 'P', name: 'Process', questions: [0, 1, 2] },
-  { letter: 'R', name: 'Response', questions: [3, 4, 5] },
-  { letter: 'O', name: 'Output', questions: [6, 7, 8] },
-  { letter: 'O', name: 'Operating capacity', questions: [9, 10, 11] },
+  { letter: 'R', name: 'Review', questions: [3, 4, 5] },
+  { letter: 'O', name: 'Observing', questions: [6, 7, 8] },
+  { letter: 'O', name: 'Operating', questions: [9, 10, 11] },
   { letter: 'F', name: 'Friction', questions: [12, 13, 14] },
 ] as const;
 
@@ -90,7 +90,8 @@ export function liveMath(answers: MapAnswers): LiveMath {
 }
 
 /**
- * Capacity-cost equivalent. Two of the nine Friction Model equations:
+ * Capacity-cost equivalent. Equations 08 + 09 (Context repair cost) of the nine Friction Model
+ * equations; with 01 Map score above, PROOF runs 3 of the 9:
  * C_hour = salary / 2,080 and annual = hours x team x C_hour x 52.
  * This prices time, it is not cash savings or ROI.
  */
