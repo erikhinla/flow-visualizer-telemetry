@@ -77,25 +77,33 @@ const PATTERN_LINE: Record<ProfileId, string> = {
 
 type Score = NonNullable<ReturnType<typeof scoreMap>>;
 
-/** The four patterns in score order, one per band in math.ts BANDS. The pattern word is the result headline. */
-/** Plain result names and headlines. The internal pattern ids stay the same. */
+/** The 4 phases of AI-Aligned BizOps. The phase is the reader's name tag; the next phase is what they reach for.
+    Internal pattern ids stay the same: FRAGMENTED = phase 1 ... COMPOUNDING = phase 4. */
 const RESULT_NAME: Record<ProfileId, string> = {
-  FRAGMENTED: 'Runs on memory',
-  STALLED: 'Stuck in handoffs',
-  SCALING: 'Moving, with rework',
-  COMPOUNDING: 'Running clean',
+  FRAGMENTED: 'AI Aware',
+  STALLED: 'AI-Ready',
+  SCALING: 'AI-Integrated',
+  COMPOUNDING: 'Agentic',
 };
-const RESULT_HEAD: Record<ProfileId, string> = {
-  FRAGMENTED: 'Your work runs on people’s memory.',
-  STALLED: 'Your work gets stuck between teams.',
-  SCALING: 'Work moves, but gets redone along the way.',
-  COMPOUNDING: 'Your work moves cleanly. Keep it that way.',
+/** What is true at this phase, in one line: the reason they are here and not one phase up. */
+const PHASE_TRUTH: Record<ProfileId, string> = {
+  FRAGMENTED: 'Your team uses AI. The work still runs on people’s memory.',
+  STALLED: 'The basics are in place. The work still gets stuck between teams.',
+  SCALING: 'AI is in the work and the work moves. It still gets redone along the way.',
+  COMPOUNDING: 'Agents carry the handoffs and people make the calls.',
+};
+/** What the next phase looks like, so there is something to reach for. */
+const NEXT_LOOKS: Record<ProfileId, string> = {
+  FRAGMENTED: 'AI-Ready: the brief, approvals and feedback in one place anyone can open.',
+  STALLED: 'AI-Integrated: work and AI output move from Account to Creative to Production with nobody chasing.',
+  SCALING: 'Agentic: agents carry the handoffs, and your people make the calls.',
+  COMPOUNDING: 'Stay Agentic as you add people, clients and tools.',
 };
 const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = BANDS.map((b, i) => ({ id: b.id, n: i + 1, name: RESULT_NAME[b.id] }));
 const levelOf = (id: ProfileId) => LEVELS.find((l) => l.id === id)!;
 
 /** Phone results order: pattern and where it stalls, then what it costs, then the detail. */
-const PHONE_SCREENS = ['Your result', 'What it’s costing', 'Where to start', 'Want help'] as const;
+const PHONE_SCREENS = ['Your result', 'What it’s costing', 'Next phase', 'Want help'] as const;
 /** Screens that carry their own Review card. Every other screen shows the Review strip above the nav. */
 const OWN_CTA: readonly string[] = ['Want help'];
 /** Example inputs for the cost screen until the visitor types their own. */
@@ -328,21 +336,27 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
 
   return (
     <section ref={root} className="px-result px-res px-res-steps" aria-labelledby="px-done">
-      <p className="px-res-badge"><span>{lvl.name}</span><span> · {score.raw} of {RAW_MAX}</span> <Tip label={`About ${lvl.name}`}>{TIP_LEVEL[score.profile]}</Tip></p>
+      <p className="px-res-badge"><span>Phase {lvl.n} · {lvl.name}</span><span> · {score.raw} of {RAW_MAX}</span> <Tip label={`About ${lvl.name}`}>{TIP_LEVEL[score.profile]}</Tip></p>
       <div className="px-res-panel" ref={panel} key={current} data-on={phone ? shown : undefined}>
         {current === 'Your result' ? (
           <div className="px-res-screen px-pat">
-            <p className="px-res-label">Your result</p>
-            <h1 id="px-done" className="px-res-h px-lvl-h px-pat-h" tabIndex={-1}>{RESULT_HEAD[score.profile]}</h1>
-            <p className="px-res-sub px-pat-lede">{audience.profile[score.profile]}</p>
+            <p className="px-res-label">Your phase · {lvl.n} of 4</p>
+            <h1 id="px-done" className="px-res-h px-lvl-h px-pat-h" tabIndex={-1}>{lvl.name}.</h1>
+            <p className="px-res-sub px-pat-lede">{PHASE_TRUTH[score.profile]}</p>
+            <ol className="px-phases" aria-label="The 4 phases of AI-Aligned BizOps">
+              {LEVELS.map((l) => (
+                <li key={l.id} className={l.n === lvl.n ? 'is-here' : l.n < lvl.n ? 'is-past' : undefined} aria-current={l.n === lvl.n ? 'step' : undefined}>{l.name}</li>
+              ))}
+            </ol>
             <div className="px-res-box">
               <p className="px-res-label">Where it stalls</p>
               <p className="px-res-value px-res-big">{stage ?? 'No single stage'}</p>
               <p className="px-res-sub">{first ? `${first}.` : 'It shows up all over, not in one place.'}</p>
             </div>
+            <p className="px-res-sub px-next-phase"><b>Next:</b> {NEXT_LOOKS[score.profile]}</p>
             <details className="px-res-how">
               <summary>How this was scored</summary>
-              <p className="px-res-sub">You scored {score.raw} of {RAW_MAX}. Each of the 15 answers is worth 0, 1 or 2 points. 0 to 7: {RESULT_NAME.FRAGMENTED}. 8 to 14: {RESULT_NAME.STALLED}. 15 to 22: {RESULT_NAME.SCALING}. 23 to 30: {RESULT_NAME.COMPOUNDING}.</p>
+              <p className="px-res-sub">You scored {score.raw} of {RAW_MAX}. Each of the 15 answers is worth 0, 1 or 2 points. 0 to 7: {RESULT_NAME.FRAGMENTED}. 8 to 14: {RESULT_NAME.STALLED}. 15 to 22: {RESULT_NAME.SCALING}. 23 to 30: {RESULT_NAME.COMPOUNDING}. {audience.profile[score.profile]}</p>
             </details>
           </div>
         ) : null}
@@ -353,9 +367,9 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           </div>
         ) : null}
 
-        {current === 'Where to start' ? (
+        {current === 'Next phase' ? (
           <div className="px-res-screen px-rx">
-            <h2 className="px-res-h" tabIndex={-1}>Where to start</h2>
+            <h2 className="px-res-h" tabIndex={-1}>{nextLvl ? `What gets you to ${nextLvl.name}` : 'What keeps you Agentic'}</h2>
             <p className="px-res-sub">Three fixes from your answers. Tap one to see it.</p>
             <ol className="px-rx-list px-start-list">
               {rxPick.map((a) => (

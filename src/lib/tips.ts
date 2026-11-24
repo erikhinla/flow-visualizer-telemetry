@@ -1,13 +1,13 @@
 /** Approved (i) tooltip copy. Source: tooltip-copy.md (Erik, round 7). 02 is "Stage score". */
 import type { ProfileId } from './types';
 
-export const TIP_MAP_SCORE = 'The sum of the 15 answers, from 0 to 30. It places the business in one of 4 patterns (Fragmented, Stalled, Scaling, Compounding) and is the first of the 9 measurements.';
+export const TIP_MAP_SCORE = 'Your 15 answers added up, from 0 to 30. It places you in one of the 4 phases: AI Aware, AI-Ready, AI-Integrated, Agentic.';
 
 export const TIP_LEVEL: Record<ProfileId, string> = {
-  FRAGMENTED: 'People hold the work together and little of the context lives in a shared record. AI adds output, but each handoff still depends on someone remembering.',
-  STALLED: 'Some context is written down, but work still waits in the gaps between steps. The basics are in place for AI to help once handoffs carry what they need.',
-  SCALING: 'Work moves, but the same context is rebuilt along the way. Closing those repeats is what lets AI output flow without extra checking.',
-  COMPOUNDING: 'Most of the work is connected and context travels with it. The job is keeping it that way as the team and AI output grow.',
+  FRAGMENTED: 'Phase 1 of 4 (0 to 7 of 30). Your team uses AI, but the brief, approvals and feedback live with people, so the work moves only as fast as they do.',
+  STALLED: 'Phase 2 of 4 (8 to 14 of 30). The basics are in place. Work still waits every time it changes hands.',
+  SCALING: 'Phase 3 of 4 (15 to 22 of 30). AI is in the work and it moves, but versions and answers get rebuilt along the way.',
+  COMPOUNDING: 'Phase 4 of 4 (23 to 30 of 30). The brief, files and approvals travel with the work, so agents can carry the handoffs.',
 };
 
 /** Keyed by dimension index (P, R, O Output, O Operating capacity, F). */

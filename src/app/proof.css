@@ -2928,3 +2928,14 @@ body:has(.app-main) {
 .px .px-est-own .px-est-fields { margin-top: .6rem; }
 .px .px-res-steps .px-est-result { margin-top: 1rem; }
 .px .px-result.px-res-steps .px-pat { padding-top: 1.4rem; }
+/* Phase strip: the 4 phases, you are here */
+.px .px-phases { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: 0; border-top: 1.5px solid #0B0B0C; max-width: 46rem; }
+.px .px-phases li { flex: 1 1 0; min-width: 6.5rem; padding: .55rem .6rem .55rem 0; font-family: var(--mono); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(11,11,12,.45); border-top: 4px solid transparent; margin-top: -2.75px; }
+.px .px-phases li.is-past { color: rgba(11,11,12,.7); }
+.px .px-phases li.is-here { color: #0B0B0C; font-weight: 700; border-top-color: #D01E98; }
+.px .px-next-phase { margin-top: 1rem !important; }
+.px .px-next-phase b { color: #D01E98; }
+@media (max-width: 900px) {
+  .px .px-result.px-res-steps .px-pat-h { font-size: clamp(2.2rem, 9.5vw, 3rem) !important; }
+  .px .px-phases li { min-width: 0; font-size: .62rem; letter-spacing: .04em; padding-right: .3rem; }
+}

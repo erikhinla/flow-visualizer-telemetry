@@ -268,8 +268,8 @@ export function isAudienceId(value: unknown): value is AudienceId {
 }
 
 export const PROFILE_WORD: Record<ProfileId, string> = {
-  FRAGMENTED: 'Runs on memory',
-  STALLED: 'Stuck in handoffs',
-  SCALING: 'Moving, with rework',
-  COMPOUNDING: 'Running clean',
+  FRAGMENTED: 'AI Aware',
+  STALLED: 'AI-Ready',
+  SCALING: 'AI-Integrated',
+  COMPOUNDING: 'Agentic',
 };

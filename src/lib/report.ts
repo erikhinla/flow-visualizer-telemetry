@@ -6,7 +6,7 @@ import { stageFor } from './stage';
 import type { PressureId, ProfileId } from './types';
 
 /** Full PROOF report, built only from the 15 answers. Same scoring as the result screen. */
-/** Report wording for the Runs on memory profile line (plainer than the on-screen copy). */
+/** Report wording for the AI Aware phase line (plainer than the on-screen copy). */
 const FRAGMENTED_LINE: Record<AudienceId, string> = {
   agency: 'Campaigns depend on people, not a shared record.',
   consulting: 'Engagements depend on people, not a shared record.',
