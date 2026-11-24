@@ -94,9 +94,9 @@ const PHASE_TRUTH: Record<ProfileId, string> = {
 };
 /** What the next phase looks like, so there is something to reach for. */
 const NEXT_LOOKS: Record<ProfileId, string> = {
-  FRAGMENTED: 'AI-Ready: the brief, approvals and feedback in one place anyone can open.',
-  STALLED: 'AI-Integrated: work and AI output move from Account to Creative to Production with nobody chasing.',
-  SCALING: 'Agentic: agents carry the handoffs, and your people make the calls.',
+  FRAGMENTED: 'AI-Ready. The brief, approvals and feedback in one place anyone can open.',
+  STALLED: 'AI-Integrated. Work and AI output move from Account to Creative to Production with nobody chasing.',
+  SCALING: 'Agentic. Agents carry the handoffs, and your people make the calls.',
   COMPOUNDING: 'Stay Agentic as you add people, clients and tools.',
 };
 const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = BANDS.map((b, i) => ({ id: b.id, n: i + 1, name: RESULT_NAME[b.id] }));
@@ -345,7 +345,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <p className="px-res-sub px-pat-lede">{PHASE_TRUTH[score.profile]}</p>
             <ol className="px-phases" aria-label="The 4 phases of AI-Aligned BizOps">
               {LEVELS.map((l) => (
-                <li key={l.id} className={l.n === lvl.n ? 'is-here' : l.n < lvl.n ? 'is-past' : undefined} aria-current={l.n === lvl.n ? 'step' : undefined}>{l.name}</li>
+                <li key={l.id} className={l.n === lvl.n ? 'is-here' : l.n < lvl.n ? 'is-past' : undefined} aria-current={l.n === lvl.n ? 'step' : undefined}>{l.name.split('-').map((part, i, all) => (<span key={i}>{part}{i < all.length - 1 ? '-' : ''}{i < all.length - 1 ? <wbr /> : null}</span>))}</li>
               ))}
             </ol>
             <div className="px-res-box">
@@ -474,7 +474,7 @@ function Estimate({ phone = false }: { phone?: boolean }) {
 const NB = '\u00a0';
 function tidyText(t: string): string {
   return t
-    .replace(/([A-Za-z])-(?=[A-Za-z])/g, '$1\u2011')
+    .replace(/([A-Za-z])-(?=[A-Za-z])/g, '$1-\u2060')
     .replace(/(\d[\d,.]*%?) (?=[A-Za-z$\d(])/g, '$1' + NB)
     .replace(/\b(of|to|at|adds|Q|from|all) (?=[$]?\d)/g, '$1' + NB)
     .replace(/\b(an?|per) (hour|year|week|month|person)\b/g, '$1' + NB + '$2')

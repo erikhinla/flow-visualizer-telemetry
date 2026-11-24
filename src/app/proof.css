@@ -2939,3 +2939,12 @@ body:has(.app-main) {
   .px .px-result.px-res-steps .px-pat-h { font-size: clamp(2.2rem, 9.5vw, 3rem) !important; }
   .px .px-phases li { min-width: 0; font-size: .62rem; letter-spacing: .04em; padding-right: .3rem; }
 }
+
+/* phase strip: 4 equal columns, long names break at the hyphen; audience picker shows its full label on phones */
+.px .px-phases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.px .px-phases li { min-width: 0; overflow-wrap: normal; word-break: normal; line-height: 1.25; }
+@media (max-width: 900px) {
+  .px .px-phases li { font-size: .6rem; letter-spacing: .03em; }
+  .px-select select { max-width: 14.5rem; font-size: .78rem; padding-right: 1.6rem; }
+}
+.px .px-phases { column-gap: .6rem; }
