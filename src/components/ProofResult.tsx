@@ -329,7 +329,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
       <div className="px-res-panel" ref={panel} key={current} data-on={phone ? shown : undefined}>
         {current === 'Your result' ? (
           <div className="px-res-screen px-pat">
-            <p className="px-res-label">Your result · {lvl.name}</p>
+            <p className="px-res-label">Your result</p>
             <h1 id="px-done" className="px-res-h px-lvl-h px-pat-h" tabIndex={-1}>{RESULT_HEAD[score.profile]}</h1>
             <p className="px-res-sub px-pat-lede">{audience.profile[score.profile]}</p>
             <div className="px-res-box">
