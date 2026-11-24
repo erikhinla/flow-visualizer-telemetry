@@ -21,9 +21,7 @@ export { REVIEW_URL };
 const FACT_URL = 'https://transformby10x.ai/fact/';
 
 /** On phones each results screen shows one layer at a time. Next reveals the next layer. */
-const LAYERS: Readonly<Record<string, number>> = {
-  'What the answers show': 2,
-};
+const LAYERS: Readonly<Record<string, number>> = {};
 
 /** Counts from zero to a real computed value. Phones only; reduced motion shows the value at once. */
 export function useCountUp(target: number, on: boolean, ms = 1200): number {
@@ -80,13 +78,26 @@ const PATTERN_LINE: Record<ProfileId, string> = {
 type Score = NonNullable<ReturnType<typeof scoreMap>>;
 
 /** The four patterns in score order, one per band in math.ts BANDS. The pattern word is the result headline. */
-const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = BANDS.map((b, i) => ({ id: b.id, n: i + 1, name: PROFILE_WORD[b.id] }));
+/** Plain result names and headlines. The internal pattern ids stay the same. */
+const RESULT_NAME: Record<ProfileId, string> = {
+  FRAGMENTED: 'Runs on memory',
+  STALLED: 'Stuck in handoffs',
+  SCALING: 'Moving, with rework',
+  COMPOUNDING: 'Running clean',
+};
+const RESULT_HEAD: Record<ProfileId, string> = {
+  FRAGMENTED: 'Your work runs on people’s memory.',
+  STALLED: 'Your work gets stuck between teams.',
+  SCALING: 'Work moves, but gets redone along the way.',
+  COMPOUNDING: 'Your work moves cleanly. Keep it that way.',
+};
+const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = BANDS.map((b, i) => ({ id: b.id, n: i + 1, name: RESULT_NAME[b.id] }));
 const levelOf = (id: ProfileId) => LEVELS.find((l) => l.id === id)!;
 
 /** Phone results order: pattern and where it stalls, then what it costs, then the detail. */
-const PHONE_SCREENS = ['Your pattern', 'What it costs', 'How it was scored', 'What moves the score', 'Where to start', 'What happens next'] as const;
+const PHONE_SCREENS = ['Your result', 'What it’s costing', 'Where to start', 'Want help'] as const;
 /** Screens that carry their own Review card. Every other screen shows the Review strip above the nav. */
-const OWN_CTA: readonly string[] = ['Where to start', 'What happens next'];
+const OWN_CTA: readonly string[] = ['Want help'];
 /** Example inputs for the cost screen until the visitor types their own. */
 const COST_DEFAULTS = { team: 6, salary: 90000, hours: 5 } as const;
 const CORE_LINE = "AI creates faster than human-speed handoffs. Context can't keep up.";
@@ -182,30 +193,22 @@ function OfferCard({ id, lead = false, title, back, children }: { id: string; le
 }
 
 
-/** Last results screen: the Review is the one primary step, FACT the main offer, BACK a quiet parallel option. */
+/** Last results screen: the Review is the one ask. FACT and BACK are one quiet line each. */
 function NextSteps() {
   return (
     <div className="px-ns">
       <div className="px-oc-head">
         <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Want me to go over this with you?</h2>
+        <p className="px-res-sub px-oc-sub px-ns-sub">We go through your answers together, and I show you where to start.</p>
       </div>
       <section className="px-ns-review" aria-label="PROOF Review">
-        <p className="px-ns-review-line">$127.</p>
+        <p className="px-ns-review-line">PROOF Review · $127</p>
         <div className="px-ns-cta">
           <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Book a PROOF Review <span aria-hidden="true">→</span></a>
         </div>
       </section>
-      <section className="px-ns-fact" aria-label="FACT">
-        <p className="px-ns-fact-name">FACT</p>
-        <p className="px-ns-fact-full">Friction Assessment Context Telemetry <Tip label="About FACT measurements">{TIP_FACT_ALL_NINE}</Tip></p>
-        <p className="px-ns-fact-line">Measures all 9 in your real work: where time is lost, what it costs, and what to change first.</p>
-        <a className="px-ns-link" href="https://transformby10x.ai/fact/">See FACT</a>
-      </section>
-      <section className="px-ns-back" aria-label="BACK">
-        <p className="px-ns-back-line"><b>BACK</b> Set it up yourself. A pack written from your answers: folders, files and handoff rules your team puts in place.</p>
-        <p className="px-ns-back-price">Intro $74 for the first 50, then $347.</p>
-        <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See BACK</a>
-      </section>
+      <p className="px-ns-more">Running a team? FACT measures this in your team’s real work. <a className="px-ns-link" href={FACT_URL}>See FACT</a></p>
+      <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See BACK</a></p>
     </div>
   );
 }
@@ -263,7 +266,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
   const nextBand = nextLvl ? BANDS.find((b) => b.id === nextLvl.id)! : null;
   const phoneScreens: readonly string[] = PHONE_SCREENS;
   // Desktop follows the same readiness-first order as phones, in its own layout. Offers only on the last screen.
-  const deskScreens = ['Your pattern', 'What it costs', 'What the answers show', 'How it was scored', 'What moves the score', 'Where to start', 'What happens next'];
+  const deskScreens: readonly string[] = PHONE_SCREENS;
   const phone = usePhone();
   const screens = phone ? phoneScreens : deskScreens;
   const [step, setStep] = useState(0);
@@ -324,141 +327,45 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
     <section ref={root} className="px-result px-res px-res-steps" aria-labelledby="px-done">
       <p className="px-res-badge"><span>{lvl.name}</span><span> · {score.raw} of {RAW_MAX}</span> <Tip label={`About ${lvl.name}`}>{TIP_LEVEL[score.profile]}</Tip></p>
       <div className="px-res-panel" ref={panel} key={current} data-on={phone ? shown : undefined}>
-        {current === 'Your pattern' ? (
+        {current === 'Your result' ? (
           <div className="px-res-screen px-pat">
-            <p className="px-res-label">Result · PROOF</p>
-            <h1 id="px-done" className="px-res-h px-lvl-h px-pat-h" tabIndex={-1}>{lvl.name}.</h1>
+            <p className="px-res-label">Your result · {lvl.name}</p>
+            <h1 id="px-done" className="px-res-h px-lvl-h px-pat-h" tabIndex={-1}>{RESULT_HEAD[score.profile]}</h1>
             <p className="px-res-sub px-pat-lede">{audience.profile[score.profile]}</p>
-            <ol className="px-lvl-scale" aria-label="The 4 patterns">
-              {LEVELS.map((l) => {
-                const b = BANDS.find((x) => x.id === l.id)!;
-                return (
-                  <li key={l.id} className={l.n === lvl.n ? 'is-here' : l.n < lvl.n ? 'is-past' : undefined} aria-current={l.n === lvl.n ? 'step' : undefined}>
-                    <span>{l.name}</span>
-                    <small>{b.from} to {b.to}</small>
-                    <Tip label={`About ${l.name}`}>{TIP_LEVEL[l.id]}</Tip>
-                  </li>
-                );
-              })}
-            </ol>
             <div className="px-res-box">
-              <p className="px-res-label">Where it stalls <Tip label="About stage of work">{TIP_STAGE}</Tip></p>
+              <p className="px-res-label">Where it stalls</p>
               <p className="px-res-value px-res-big">{stage ?? 'No single stage'}</p>
-              <p className="px-res-sub">{first ? `${first}.` : 'The friction is spread across the route.'} {PATTERN_LINE[score.profile]}</p>
-              {low ? <p className="px-res-sub px-res-low"><b>{low}</b></p> : null}
+              <p className="px-res-sub">{first ? `${first}.` : 'It shows up all over, not in one place.'}</p>
             </div>
-            <div className="px-res-score">
-              <p className="px-res-label">Your Map score <Tip label="About the Map score">{TIP_MAP_SCORE}</Tip></p>
-              <p className="px-res-score-num"><b><CountUp value={score.raw} on /></b> <span>of {RAW_MAX} · {lvl.name} is {band.from} to {band.to}</span></p>
-            </div>
+            <details className="px-res-how">
+              <summary>How this was scored</summary>
+              <p className="px-res-sub">You scored {score.raw} of {RAW_MAX}. Each of the 15 answers is worth 0, 1 or 2 points. 0 to 7: {RESULT_NAME.FRAGMENTED}. 8 to 14: {RESULT_NAME.STALLED}. 15 to 22: {RESULT_NAME.SCALING}. 23 to 30: {RESULT_NAME.COMPOUNDING}.</p>
+            </details>
           </div>
         ) : null}
 
-        {current === 'How it was scored' ? (
-          <div className="px-res-screen">
-            <h2 className="px-res-h" tabIndex={-1}>How it was scored</h2>
-            <p className="px-res-sub">15 answers, each worth 0, 1 or 2 points. Every question weighs the same, so each of the five PROOF sections is worth 6 of {RAW_MAX}. <Tip label="About the scoring method">{TIP_SCORING}</Tip></p>
-            <ul className="px-dims" aria-label="Points by dimension">
-              {dims.map((d, di) => (
-                <li key={d.name} className={d.points === minPts ? 'is-low' : undefined}>
-                  <span className="px-dims-name"><b>{d.letter}</b> {d.name} <Tip label={`About ${d.name}`}>{TIP_DIMENSION[di]}</Tip></span>
-                  <span className="px-dims-pts"><CountUp value={d.points} on /> of {d.max}</span>
-                  <i aria-hidden="true"><em style={{ width: `${(100 * d.points) / d.max}%` }} /></i>
-                </li>
-              ))}
-            </ul>
-            <p className="px-res-sub">Total <b>{score.raw} of {RAW_MAX}</b>, the Map score <Tip label="About the Map score">{TIP_MAP_SCORE}</Tip>. The bands: 0 to 7 Fragmented, 8 to 14 Stalled, 15 to 22 Scaling, 23 to 30 Compounding.</p>
-          </div>
-        ) : null}
-
-        {current === 'What it costs' ? (
+        {current === 'What it’s costing' ? (
           <div className="px-res-screen">
             <Estimate phone={phone} />
-          </div>
-        ) : null}
-
-        {current === 'What moves the score' ? (
-          <div className="px-res-screen">
-            <h2 className="px-res-h" tabIndex={-1}>{nextLvl ? `What moves you to ${nextLvl.name}` : 'What keeps you Compounding'}</h2>
-            <p className="px-res-sub">
-              {nextLvl && nextBand
-                ? `${nextLvl.name} starts at ${nextBand.from} points. That is ${gap} more than today. Each answer moved from 0 to 2 adds 2 points.`
-                : 'The score is in the top band. The work is keeping the context connected as the team and the AI output grow.'}
-            </p>
-            {weakest.every((d) => d.points >= d.max) ? null : (
-              <div className="px-res-box">
-                <p className="px-res-label">Weakest section{weakest.length > 1 ? 's' : ''}</p>
-                <p className="px-res-sub">{weakest.map((d) => `${d.name} (${d.points} of ${d.max})`).join(', ')}</p>
-              </div>
-            )}
-            {listAnswers.length ? (
-              <div className="px-res-box">
-                <p className="px-res-label">{nextLvl ? 'Lowest answers' : 'Lowest answers to keep watching'}</p>
-                <ul className="px-res-list px-next-list">
-                  {listAnswers.slice(0, 3).map((a) => (
-                    <li key={a.q}><b>Q{String(a.q).padStart(2, '0')} · {a.value} of 2</b> {a.text}</li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
           </div>
         ) : null}
 
         {current === 'Where to start' ? (
           <div className="px-res-screen px-rx">
             <h2 className="px-res-h" tabIndex={-1}>Where to start</h2>
-            <p className="px-res-sub">{nextLvl ? `${lvl.name} today, ${gap} points from ${nextLvl.name}. Here is what is slowing the work, from your own answers.` : `${lvl.name} today. Here is what to watch as the team grows, from your own answers.`}</p>
-            <div className="px-rx-grid">
-              <div className="px-rx-main">
-                <div className="px-rx-cols" aria-hidden="true"><p className="px-res-label">What’s holding you back</p><p className="px-res-label">What fixes it</p></div>
-                <ol className="px-rx-list">
-                  {rxPick.map((a) => (
-                    <li key={a.q} className="px-rx-item">
-                      <div className="px-rx-gap">
-                        <p className="px-rx-meta">Q{String(a.q).padStart(2, '0')} · {dims[Math.floor((a.q - 1) / 3)]?.name} · {a.value} of 2</p>
-                        <p className="px-rx-gaptext">{RX[a.q].gap}</p>
-                      </div>
-                      <ul className="px-rx-keys" aria-label="What fixes it">
-                        {RX[a.q].keys.map((k) => (
-                          <li key={k.name + k.does}><p className="px-rx-kdoes">{k.does}</p><p className="px-rx-kname"><span>{k.kind}</span> <code>{k.name}</code></p></li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-              <aside className="px-rx-next px-rv-card" aria-label="Recommended next step">
-                <a className="px-res-quiet" href={REVIEW_URL} target="_blank" rel="noopener">PROOF Review · $127 <span aria-hidden="true">→</span></a>
-                <a className="px-rv-or" href="https://transformby10x.ai/back/">Or see BACK</a>
-                <Link className="px-rv-or px-rv-dept" href="/visualizer?from=map">See your answers in one dept <span aria-hidden="true">→</span></Link>
-                <a className="px-rv-or px-rv-dept" href={deptPageHref(getDepartment(session.departmentId).name)}>The {getDepartment(session.departmentId).name} dept page <span aria-hidden="true">→</span></a>
-              </aside>
-            </div>
+            <p className="px-res-sub">Three fixes, picked from your answers.</p>
+            <ol className="px-rx-list px-start-list">
+              {rxPick.map((a) => (
+                <li key={a.q} className="px-rx-item">
+                  <p className="px-rx-gaptext"><b>{RX[a.q].gap}</b></p>
+                  <p className="px-rx-kdoes">{RX[a.q].keys[0].does}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         ) : null}
 
-        {current === 'What the answers show' ? (
-          <div className="px-res-screen">
-            <p className="px-res-label">15 answers · {PROFILE_WORD[score.profile]} · <CountUp value={score.raw} on /> of {RAW_MAX}</p>
-            <h2 className="px-res-h" tabIndex={-1}>What the answers show</h2>
-            <div className="px-res-box" data-layer={0}>
-              <p className="px-res-feel">{audience.profile[score.profile]}</p>
-              <p className="px-res-story">{story}</p>
-            </div>
-            {score.pressures.length ? (
-              <div className="px-res-box" data-layer={1}>
-                <p className="px-res-label">Where work stalls</p>
-                <ul className="px-res-list">
-                  {score.pressures.map((id) => (
-                    <li key={id}>{audience.pressure[id]}</li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-
-        {current === 'What happens next' ? (
+        {current === 'Want help' ? (
           <div className="px-res-screen">
             <NextSteps />
           </div>
@@ -513,7 +420,7 @@ function Estimate({ phone = false }: { phone?: boolean }) {
   return (
     <section className="px-est" aria-labelledby="px-est-h">
       <div className="px-est-head">
-        <h2 id="px-est-h">What it costs <Tip label="About Context Repair Cost">{TIP_REPAIR_COST}</Tip></h2>
+        <h2 id="px-est-h">What it’s costing you</h2>
         <p data-layer={0}>{own ? 'Your numbers. Paid time, not savings or return on investment.' : 'Example for a team of 6. Change the three numbers to see yours.'}</p>
       </div>
       <div className="px-est-fields" data-layer={0}>
@@ -525,7 +432,7 @@ function Estimate({ phone = false }: { phone?: boolean }) {
         {e ? (
           <>
             <p className="px-est-result">
-              {own ? "That's" : 'A team like this pays'} <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year {own ? 'in paid time spent' : 'for time spent'} finding, checking and redoing work. <Tip label="About the annual Context Repair Cost">{TIP_ANNUAL}</Tip>
+              {own ? "That's" : 'A team like this pays'} <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year {own ? 'in paid time spent' : 'for time spent'} finding, checking and redoing work. 
             </p>
             <p className="px-est-plain">
               {num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks.
@@ -553,11 +460,7 @@ function Estimate({ phone = false }: { phone?: boolean }) {
         )}
       </div>
       <p className="px-est-note" data-layer={1}>This is an estimate of paid time, not money saved.</p>
-      {phone ? null : (
-        <p className="px-est-bridge" data-layer={1}>
-          PROOF covers 3 of the 9 measurements <Tip label="About the 3 of 9 measurements">{TIP_THREE_OF_NINE}</Tip>: 01 Map score and 08 + 09 Context Repair Cost. <a href={FACT_URL}>FACT measures all 9 in your real work.</a>
-        </p>
-      )}
+      <p className="px-est-bridge" data-layer={1}>For a team, <a href={FACT_URL}>FACT measures this in your real work.</a></p>
     </section>
   );
 }

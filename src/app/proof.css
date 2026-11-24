@@ -2848,3 +2848,22 @@ body:has(.app-main) {
 .px .px-ns-review-line { font-size: 1.25rem; font-weight: 700; color: #0B0B0C; margin: 0 0 .8rem; }
 .px .px-ns-review { justify-content: flex-start !important; align-self: start; }
 .px .px-ns-review .px-ns-cta { margin-top: 0; }
+/* 2026-11-24: 4-screen results. */
+.px .px-ns-sub { max-width: 46ch; }
+.px .px-ns-more { margin: .9rem 0 0; font-size: .95rem; line-height: 1.45; color: rgba(11,11,12,.75); max-width: 60ch; }
+.px .px-ns-more .px-ns-link { margin-left: .35em; }
+.px .px-start-list { list-style: decimal; padding-left: 1.4em; display: grid; gap: 1.1rem; max-width: 62ch; }
+.px .px-start-list .px-rx-item { display: block; border: 0; padding: 0; }
+.px .px-start-list .px-rx-gaptext { font-size: 1.15rem; margin: 0 0 .25rem; }
+.px .px-start-list .px-rx-kdoes { margin: 0; color: rgba(11,11,12,.75); }
+.px .px-res-how > summary { cursor: pointer; font-family: var(--mono); font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(11,11,12,.62); min-height: 44px; display: flex; align-items: center; }
+.px .px-ns { display: flex !important; flex-direction: column; align-items: flex-start; gap: .4rem; }
+.px .px-ns .px-ns-review { width: 100%; max-width: 560px; min-height: 0 !important; }
+.px .px-start-list .px-rx-gaptext { font-size: clamp(1.15rem, 1.6vw, 1.6rem) !important; line-height: 1.25; }
+.px .px-start-list .px-rx-kdoes { font-size: clamp(1rem, 1.1vw, 1.15rem) !important; line-height: 1.45; }
+.px .px-start-list { gap: 1.6rem; }
+.px .px-ns { align-items: stretch !important; }
+.px .px-ns > .px-oc-head { width: 100%; max-width: none; }
+.px .px-ns .px-ns-h { writing-mode: horizontal-tb; width: auto; max-width: 18ch; }
+@media (max-width: 900px) { .px .px-res-steps .px-pat-h { font-size: clamp(1.7rem, 7.4vw, 2.3rem) !important; line-height: 1.02; word-break: normal !important; overflow-wrap: normal !important; hyphens: none !important; } }
+@media (min-width: 901px) { .px .px-res-steps .px-pat-h { font-size: clamp(2.6rem, 4.4vw, 4.2rem) !important; word-break: normal !important; } }

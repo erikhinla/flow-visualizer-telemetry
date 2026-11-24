@@ -14,12 +14,12 @@ const MEMORY: Record<AudienceId, string> = {
 export function stageFor(audienceId: AudienceId, id: PressureId): string {
   switch (id) {
     case 'start':
-      return 'Starting the work';
+      return 'Kickoff';
     case 'handoff':
-      return 'Handoffs';
+      return 'Handoffs between teams';
     case 'next':
     case 'priorities':
-      return 'Deciding what comes next';
+      return 'Knowing what’s next';
     case 'memory':
     case 'scattered':
       return MEMORY[audienceId];
@@ -30,24 +30,24 @@ export function stageFor(audienceId: AudienceId, id: PressureId): string {
       return 'Follow-up';
     case 'ownership':
     case 'informal-owner':
-      return 'Ownership';
+      return 'Who owns it';
     case 'decisions':
-      return 'Decisions under pressure';
+      return 'Deadline calls';
     case 'key-person':
-      return 'When one person is out';
+      return 'When someone’s out';
     case 'pipeline':
     case 'partial-pipe':
-      return 'Seeing live work';
+      return 'Seeing where jobs stand';
     case 'repeat':
     case 'sometimes-repeat':
-      return 'Rework';
+      return 'Redoing work';
     case 'learning':
     case 'loop':
-      return 'Learning from finished work';
+      return 'Learning from past jobs';
     case 'ai':
     case 'tools':
       return 'AI in the work';
     case 'shape':
-      return 'Day-to-day rhythm';
+      return 'Day to day';
   }
 }

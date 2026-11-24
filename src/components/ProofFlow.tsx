@@ -435,6 +435,7 @@ function Processing() {
 
 /** Section words in the bar. Status only, not links: current magenta, done white, upcoming muted, all lit on results. */
 function Sections({ stage, current }: { stage: string; current: number }) {
+  if (stage === 'result') return null;
   const state = (i: number) =>
     stage === 'result' || stage === 'processing' ? 'is-lit' : stage === 'ask' ? (i < current ? 'is-done' : i === current ? 'is-now' : 'is-next') : undefined;
   return (
@@ -518,7 +519,7 @@ function LivePanel(props: LiveProps) {
   return (
     <div className="px-live">
       <div className="px-live-block">
-        <p className="px-live-label">Running Map score</p>
+        <p className="px-live-label">Running score</p>
         <p className="px-live-num">
           <b>{live.raw}</b> <span>of {RAW_MAX} points</span>
         </p>
@@ -568,11 +569,11 @@ function LiveBar(props: LiveProps) {
         )}
       </ol>
       <p className="px-term-range">
-        Map score range <b>{live.floor}</b> to <b>{live.ceiling}</b> of {RAW_MAX}
+        Score range <b>{live.floor}</b> to <b>{live.ceiling}</b> of {RAW_MAX}
       </p>
       <div className="px-mbar-row">
         <p className="px-mbar-score">
-          Running Map score <b>{live.raw}</b> of {RAW_MAX}
+          Running score <b>{live.raw}</b> of {RAW_MAX}
         </p>
         <button type="button" className="px-mbar-toggle" aria-expanded={open} aria-controls="px-mbar-drawer" onClick={() => setOpen(!open)}>
           {open ? 'Close' : 'Details'}

@@ -71,14 +71,14 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
       'PROOF Refresh is set up. Each month a reminder arrives with a link to retake PROOF. Retake it with the same team in mind, then buy the full report or compare the result screen to last month.',
       'The first retake can happen now.',
       'To cancel, reply to this email.',
-    ], { label: 'Retake PROOF', url: v.RETAKE_URL }),
+    ], { label: 'Take PROOF again', url: v.RETAKE_URL }),
   },
   refresh_monthly: {
     name: 'TBTX order: PROOF Refresh monthly reminder', subject: "Time for this month's PROOF", vars: ['RETAKE_URL'], plain: true,
     render: (v) => simpleMail("Time for this month's PROOF", [
       'The monthly PROOF Refresh payment went through. This is the reminder to retake PROOF.',
       'Answer for the work as it runs today. Compare where work stalls and the pattern with last month to see what moved.',
-    ], { label: 'Retake PROOF', url: v.RETAKE_URL }),
+    ], { label: 'Take PROOF again', url: v.RETAKE_URL }),
   },
   // The fixed-price purchase that used these two is retired. FACT is scoped on the PROOF Review, not bought from a link.
   // If a payment still arrives on the old Stripe link, the buyer gets a plain receipt and Erik gets a notice.

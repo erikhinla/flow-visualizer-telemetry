@@ -117,29 +117,29 @@ export const QUESTIONS: readonly Question[] = [
 ];
 
 export const PRESSURE_LABEL: Record<PressureId, string> = {
-  start: 'Jobs stall before the work starts',
-  handoff: 'Momentum drops between tools, people, or the client',
-  next: 'The next deliverable is figured out in the moment',
-  priorities: 'Priorities exist, but only informally',
-  memory: 'The brief, approvals and feedback only live in memory',
-  scattered: 'Project files are loosely organized',
-  tools: "The team doesn't use AI tools yet",
-  learning: 'What a campaign taught the team leaves with the campaign',
-  followup: 'Leads, RFPs (requests for proposals), or client asks fall through or wait on memory',
-  'loose-followup': 'Follow-up has a loose process',
-  ownership: 'Ownership is unclear when a deliverable must move',
-  'informal-owner': "Ownership depends on who's available",
-  ai: 'AI is in the work without operating rules',
-  decisions: 'Deadline decisions have no written rule',
-  revenue: 'The process still depends on someone remembering to follow up',
-  'some-manual': 'Parts of the process still depend on manual follow-up',
-  repeat: 'The team remakes or hunts for work that already exists',
-  'sometimes-repeat': 'Repeat production still shows up',
-  'key-person': 'When one person is out, client work stops or slows sharply',
-  pipeline: "Live jobs and approvals can't be seen",
-  'partial-pipe': 'Live work is only partly visible',
-  loop: "Shipped work doesn't change how the next job runs",
-  shape: 'The agency is described as chaotic or reactive',
+  start: 'Jobs sit before anyone starts them',
+  handoff: 'Work stops when it moves from one person or team to the next',
+  next: "Nobody's sure what's next until someone asks",
+  priorities: "Priorities live in people's heads",
+  memory: "The brief, approvals and feedback live in people's heads and inboxes",
+  scattered: 'Files are spread across drives, inboxes and chat',
+  tools: "The team isn't using AI tools yet",
+  learning: 'What a campaign taught you leaves when it ends',
+  followup: 'Leads, RFPs and client asks slip unless someone remembers',
+  'loose-followup': 'Follow-up happens when someone remembers',
+  ownership: "Nobody's sure who has it when work changes hands",
+  'informal-owner': "Who owns it depends on who's around",
+  ai: 'AI is in the work, with no rules for using it',
+  decisions: 'Deadline calls get made on the fly',
+  revenue: 'Too much depends on someone remembering to follow up',
+  'some-manual': 'Some follow-up still runs on memory',
+  repeat: 'The team remakes work that already exists',
+  'sometimes-repeat': 'Work still gets remade sometimes',
+  'key-person': 'When one person is out, client work stops',
+  pipeline: "You can't see where jobs and approvals stand",
+  'partial-pipe': 'You can only partly see where jobs stand',
+  loop: "Finished work doesn't change how the next job runs",
+  shape: 'Most days are spent reacting',
 };
 
 /** Shown when a finished scan selected no pressure. A label, not a finding. */
@@ -154,10 +154,10 @@ export const ARCHETYPE_LABEL: Record<ArchetypeId, string> = {
 };
 
 export const PROFILE_COPY: Record<ProfileId, string> = {
-  FRAGMENTED: 'Campaigns are held together by people, not a shared record.',
-  STALLED: 'Work stalls between brief, production, approval and launch.',
-  SCALING: 'The same work gets redone and re-checked more than it should.',
-  COMPOUNDING: 'The agency is mostly connected, so new tools can plug in cleanly.',
+  FRAGMENTED: "Briefs, approvals and feedback live in people's heads and inboxes. When someone's out, the work waits.",
+  STALLED: 'Work leaves Account fine, then waits: on Creative, on approval, on the client. Launch dates slip in the gaps.',
+  SCALING: 'Jobs get done, but versions get remade and re-checked on the way from Creative to Production.',
+  COMPOUNDING: 'Briefs, files and approvals are in one place, so the next job starts from the last one.',
 };
 
 export const PROFILE_HOURS: Record<ProfileId, { low: number; high: number }> = {

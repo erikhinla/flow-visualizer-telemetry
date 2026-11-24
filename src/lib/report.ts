@@ -6,7 +6,7 @@ import { stageFor } from './stage';
 import type { PressureId, ProfileId } from './types';
 
 /** Full PROOF report, built only from the 15 answers. Same scoring as the result screen. */
-/** Report wording for the Fragmented profile line (plainer than the on-screen copy). */
+/** Report wording for the Runs on memory profile line (plainer than the on-screen copy). */
 const FRAGMENTED_LINE: Record<AudienceId, string> = {
   agency: 'Campaigns depend on people, not a shared record.',
   consulting: 'Engagements depend on people, not a shared record.',
@@ -118,7 +118,7 @@ export function buildReport(audienceId: AudienceId, answers: MapAnswers, retakeU
     if (f && !fixes.includes(f)) fixes.push(f);
     if (fixes.length === 3) break;
   }
-  if (!fixes.length) fixes.push('Keep the shared record current as the team grows. Retake PROOF each month to catch new places where work stalls.');
+  if (!fixes.length) fixes.push('Keep the shared record current as the team grows. Take PROOF again each month to catch new places where work stalls.');
 
   const answered = QUESTIONS.map((q, i) => {
     const c = q.choices.find((x) => x.id === answers.optionIds[i])!;
