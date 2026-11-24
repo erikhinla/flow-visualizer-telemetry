@@ -84,9 +84,9 @@ const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = BANDS.
 const levelOf = (id: ProfileId) => LEVELS.find((l) => l.id === id)!;
 
 /** Phone results order: pattern and where it stalls, then what it costs, then the detail. */
-const PHONE_SCREENS = ['Your pattern', 'What it costs', 'How it was scored', 'What moves the score', 'What to fix first', 'What happens next'] as const;
+const PHONE_SCREENS = ['Your pattern', 'What it costs', 'How it was scored', 'What moves the score', 'Where to start', 'What happens next'] as const;
 /** Screens that carry their own Review card. Every other screen shows the Review strip above the nav. */
-const OWN_CTA: readonly string[] = ['What to fix first', 'What happens next'];
+const OWN_CTA: readonly string[] = ['Where to start', 'What happens next'];
 /** Example inputs for the cost screen until the visitor types their own. */
 const COST_DEFAULTS = { team: 6, salary: 90000, hours: 5 } as const;
 const CORE_LINE = "AI creates faster than human-speed handoffs. Context can't keep up.";
@@ -187,16 +187,12 @@ function NextSteps() {
   return (
     <div className="px-ns">
       <div className="px-oc-head">
-        <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Now make it specific.</h2>
-        <p className="px-res-sub px-oc-sub px-ns-sub">PROOF shows the pattern. The Review makes it specific to your business: where work stalls, what it costs, and what to fix first.</p>
+        <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Want me to go over this with you?</h2>
       </div>
       <section className="px-ns-review" aria-label="PROOF Review">
-        <p className="px-res-label">Your next step</p>
-        <p className="px-ns-review-name">PROOF Review</p>
-        <p className="px-ns-review-line">A Review with Erik. Your results come with you. You leave knowing what is slowing the business down and the first thing to change.</p>
+        <p className="px-ns-review-line">$127.</p>
         <div className="px-ns-cta">
-          <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
-          <p className="px-rv-free">No charge.</p>
+          <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Book a PROOF Review <span aria-hidden="true">→</span></a>
         </div>
       </section>
       <section className="px-ns-fact" aria-label="FACT">
@@ -208,7 +204,7 @@ function NextSteps() {
       <section className="px-ns-back" aria-label="BACK">
         <p className="px-ns-back-line"><b>BACK</b> Set it up yourself. A pack written from your answers: folders, files and handoff rules your team puts in place.</p>
         <p className="px-ns-back-price">Intro $74 for the first 50, then $347.</p>
-        <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See Back</a>
+        <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See BACK</a>
       </section>
     </div>
   );
@@ -267,7 +263,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
   const nextBand = nextLvl ? BANDS.find((b) => b.id === nextLvl.id)! : null;
   const phoneScreens: readonly string[] = PHONE_SCREENS;
   // Desktop follows the same readiness-first order as phones, in its own layout. Offers only on the last screen.
-  const deskScreens = ['Your pattern', 'What it costs', 'What the answers show', 'How it was scored', 'What moves the score', 'What to fix first', 'What happens next'];
+  const deskScreens = ['Your pattern', 'What it costs', 'What the answers show', 'How it was scored', 'What moves the score', 'Where to start', 'What happens next'];
   const phone = usePhone();
   const screens = phone ? phoneScreens : deskScreens;
   const [step, setStep] = useState(0);
@@ -408,9 +404,9 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           </div>
         ) : null}
 
-        {current === 'What to fix first' ? (
+        {current === 'Where to start' ? (
           <div className="px-res-screen px-rx">
-            <h2 className="px-res-h" tabIndex={-1}>What to fix first</h2>
+            <h2 className="px-res-h" tabIndex={-1}>Where to start</h2>
             <p className="px-res-sub">{nextLvl ? `${lvl.name} today, ${gap} points from ${nextLvl.name}. Here is what is slowing the work, from your own answers.` : `${lvl.name} today. Here is what to watch as the team grows, from your own answers.`}</p>
             <div className="px-rx-grid">
               <div className="px-rx-main">
@@ -432,11 +428,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
                 </ol>
               </div>
               <aside className="px-rx-next px-rv-card" aria-label="Recommended next step">
-                <p className="px-res-label">Your next step</p>
-                <p className="px-rx-lead">See where work stalls and what it costs.</p>
-                <p className="px-rx-body">A Review with Erik, built on your answers.</p>
-                <a className="px-oc-btn is-fill px-rx-cta" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
-                <p className="px-rv-free">No charge.</p>
+                <a className="px-res-quiet" href={REVIEW_URL} target="_blank" rel="noopener">PROOF Review · $127 <span aria-hidden="true">→</span></a>
                 <a className="px-rv-or" href="https://transformby10x.ai/back/">Or see BACK</a>
                 <Link className="px-rv-or px-rv-dept" href="/visualizer?from=map">See your answers in one dept <span aria-hidden="true">→</span></Link>
                 <a className="px-rv-or px-rv-dept" href={deptPageHref(getDepartment(session.departmentId).name)}>The {getDepartment(session.departmentId).name} dept page <span aria-hidden="true">→</span></a>
@@ -474,13 +466,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
       </div>
 
       {OWN_CTA.includes(current) ? null : (
-        <aside className="px-res-cta" aria-label="Your next step">
-          <p className="px-res-cta-line"><b>PROOF Review.</b> Built on your answers<span className="px-res-cta-more">: where work stalls, what it costs, and what to fix first</span>.</p>
-          <div className="px-res-cta-act">
-            <a className="px-oc-btn is-fill px-res-cta-btn" href={REVIEW_URL} target="_blank" rel="noopener">Open Calendar <span aria-hidden="true">→</span></a>
-            <p className="px-rv-free">No charge.</p>
-          </div>
-        </aside>
+        <p className="px-res-cta px-res-cta--quiet"><a className="px-res-quiet" href={REVIEW_URL} target="_blank" rel="noopener">PROOF Review · $127 <span aria-hidden="true">→</span></a></p>
       )}
 
       <nav className="px-res-nav" aria-label="Result screens">

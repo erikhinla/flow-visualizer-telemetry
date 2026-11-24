@@ -2838,3 +2838,13 @@ body:has(.app-main) {
 /* t875: tagline B under the wordmark, No charge under the button */
 .px .px-door-desc.px-door-tag { text-transform: none; letter-spacing: 0; }
 .px .px-door-free { opacity: .8; }
+
+/* 2026-11-24: PROOF Review as one quiet line on result screens; NEXT is the only primary. Shows on phones and desktop. */
+.px .px-result.px-res-steps > .px-res-cta--quiet, .px .px-res-cta--quiet { display: block !important; border-top: 1px solid rgba(11,11,12,0.18); padding: .55rem 0; margin: 0; text-align: left; }
+.px .px-res-quiet { display: inline-flex; align-items: center; gap: .4em; min-height: 44px; font-family: var(--mono); font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(11,11,12,0.62); text-decoration: none; }
+.px .px-res-quiet:hover, .px .px-res-quiet:focus-visible { color: #0B0B0C; text-decoration: underline; text-underline-offset: .2em; }
+.px .px-rx-next .px-res-quiet { margin-bottom: .4rem; }
+.px .px-res-navbtn { min-height: 44px; }
+.px .px-ns-review-line { font-size: 1.25rem; font-weight: 700; color: #0B0B0C; margin: 0 0 .8rem; }
+.px .px-ns-review { justify-content: flex-start !important; align-self: start; }
+.px .px-ns-review .px-ns-cta { margin-top: 0; }

@@ -74,10 +74,9 @@ ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
 ${h2('How this was scored')}${p(v.SCORING)}
 ${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost where work stalls, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
 ${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
-${h2('Your next step')}${p('The PROOF Review is a working session with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first.')}
-<p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${ink};color:#F6F6F2;text-decoration:none;padding:15px 24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:14px;display:inline-block">Open Calendar</a></p>
-<p style="${mono};margin:0 0 18px">No charge.</p>
-${p(`Retake PROOF: ${v.RETAKE_URL}`)}
+${h2('Your next step')}${p('Want me to go over this with you? PROOF Review, $127.')}
+<p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${ink};color:#F6F6F2;text-decoration:none;padding:15px 24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:14px;display:inline-block">Book a PROOF Review</a></p>
+${p(`Take PROOF again: ${v.RETAKE_URL}`)}
 <p style="font-size:13px;margin-top:24px;border-top:1.5px solid ${ink};padding-top:12px">Questions about this report: reply to this email or write to erik@transformby10x.ai.</p>
 <table style="width:100%;border-collapse:collapse;margin-top:18px" cellpadding="0"><tr><td style="width:30px;height:14px;background:#00AEEF"></td><td style="width:30px;background:#D01E98"></td><td style="width:30px;background:#FFE600"></td><td style="width:30px;background:#0B0B0C"></td><td style="${mono};text-align:right">TransformBy10X &middot; <span style="color:${m}">approved to send</span></td></tr></table>
 </div></body></html>`;
@@ -88,8 +87,8 @@ ${p(`Retake PROOF: ${v.RETAKE_URL}`)}
     'WHERE THE WORK STALLS', v.STALLS_TEXT, '',
     'WHAT TO CHANGE FIRST', v.FIXES_TEXT, '',
     'THE 15 ANSWERS', v.ANSWERS_TEXT, '',
-    'YOUR NEXT STEP', 'The PROOF Review is a working session with Erik on this result. You leave knowing where work stalls in your business, what it costs, and what to fix first. No charge.',
-    `Open Calendar: ${v.REVIEW_URL}`, '', `Retake PROOF: ${v.RETAKE_URL}`,
+    'YOUR NEXT STEP', 'Want me to go over this with you? PROOF Review, $127.',
+    `Book a PROOF Review: ${v.REVIEW_URL}`, '', `Take PROOF again: ${v.RETAKE_URL}`,
   ].join('\n');
   return { html, text };
 }
