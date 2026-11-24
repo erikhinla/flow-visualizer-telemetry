@@ -207,8 +207,11 @@ function NextSteps() {
           <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Book a PROOF Review <span aria-hidden="true">→</span></a>
         </div>
       </section>
-      <p className="px-ns-more">Running a team? FACT measures this in your team’s real work. <a className="px-ns-link" href={FACT_URL}>See FACT</a></p>
-      <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See BACK</a></p>
+      <details className="px-res-how px-ns-other">
+        <summary>Not ready for a call?</summary>
+        <p className="px-ns-more">Running a team? FACT measures this in your team’s real work. <a className="px-ns-link" href={FACT_URL}>See FACT</a></p>
+        <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See BACK</a></p>
+      </details>
     </div>
   );
 }
@@ -353,12 +356,14 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
         {current === 'Where to start' ? (
           <div className="px-res-screen px-rx">
             <h2 className="px-res-h" tabIndex={-1}>Where to start</h2>
-            <p className="px-res-sub">Three fixes, picked from your answers.</p>
+            <p className="px-res-sub">Three fixes from your answers. Tap one to see it.</p>
             <ol className="px-rx-list px-start-list">
               {rxPick.map((a) => (
                 <li key={a.q} className="px-rx-item">
-                  <p className="px-rx-gaptext"><b>{RX[a.q].gap}</b></p>
-                  <p className="px-rx-kdoes">{RX[a.q].keys[0].does}</p>
+                  <details className="px-start-item">
+                    <summary className="px-rx-gaptext"><b>{RX[a.q].gap}</b></summary>
+                    <p className="px-rx-kdoes">The fix: {RX[a.q].keys[0].does}</p>
+                  </details>
                 </li>
               ))}
             </ol>
@@ -421,46 +426,31 @@ function Estimate({ phone = false }: { phone?: boolean }) {
     <section className="px-est" aria-labelledby="px-est-h">
       <div className="px-est-head">
         <h2 id="px-est-h">What it’s costing you</h2>
-        <p data-layer={0}>{own ? 'Your numbers. Paid time, not savings or return on investment.' : 'Example for a team of 6. Change the three numbers to see yours.'}</p>
       </div>
-      <div className="px-est-fields" data-layer={0}>
-        {field('People on the team', team, setTeam, 'e.g. 6', 'people')}
-        {field('Average salary', salary, setSalary, 'e.g. 90000', '$')}
-        {field('Hours a week each person spends finding, checking, or rebuilding work', hours, setHours, 'e.g. 5', 'h')}
-      </div>
-      <div aria-live="polite" data-layer={1}>
+      <div aria-live="polite">
         {e ? (
-          <>
-            <p className="px-est-result">
-              {own ? "That's" : 'A team like this pays'} <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year {own ? 'in paid time spent' : 'for time spent'} finding, checking and redoing work. 
-            </p>
-            <p className="px-est-plain">
-              {num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks.
-            </p>
-            <details className="px-res-how">
-              <summary>Show the math</summary>
-              <ol className="px-est-steps">
-                <li>
-                  <span className="px-eq">Hourly cost = {usd0.format(s)} ÷ {num(HOURS_PER_YEAR)} = <b>{usd2.format(e.hourly)}</b> <Tip label="About the hourly Context Repair Cost">{TIP_HOURLY}</Tip></span>
-                  <small>What one paid hour costs. 2,080 is 40 hours over 52 weeks.</small>
-                </li>
-                <li>
-                  <span className="px-eq">Weekly = {num(h)} × {num(t)} × {usd2.format(e.hourly)} = <b>{usd2.format(e.weekly)}</b></span>
-                  <small>Paid hours each week spent fixing work that showed up without the brief, file or decision.</small>
-                </li>
-                <li>
-                  <span className="px-eq">Yearly = {usd2.format(e.weekly)} × {WEEKS_PER_YEAR} = <b className="px-est-total">{usd0.format(e.annual)}</b></span>
-                  <small>Equal to {num(Math.round(e.salaryShare * 1000) / 10)}% of one {usd0.format(s)} salary.</small>
-                </li>
-              </ol>
-            </details>
-          </>
+          <p className="px-est-result">
+            {own ? 'Your team pays' : 'A team of 6 pays'} <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year for time spent finding, checking and redoing work.
+          </p>
         ) : (
           <p className="px-est-result is-empty">Enter three numbers to see the figure.</p>
         )}
       </div>
-      <p className="px-est-note" data-layer={1}>This is an estimate of paid time, not money saved.</p>
-      <p className="px-est-bridge" data-layer={1}>For a team, <a href={FACT_URL}>FACT measures this in your real work.</a></p>
+      <details className="px-res-how px-est-own" open={own}>
+        <summary>{own ? 'Your numbers' : 'Use your own numbers'}</summary>
+        <div className="px-est-fields">
+          {field('People on the team', team, setTeam, 'e.g. 6', 'people')}
+          {field('Average salary', salary, setSalary, 'e.g. 90000', '$')}
+          {field('Hours a week each person spends finding, checking, or rebuilding work', hours, setHours, 'e.g. 5', 'h')}
+        </div>
+      </details>
+      {e ? (
+        <details className="px-res-how">
+          <summary>Show the math</summary>
+          <p className="px-est-plain">{num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks = {usd0.format(e.annual)} a year. Paid time, not money saved.</p>
+          <p className="px-est-plain">For a team, <a href={FACT_URL}>FACT measures this in your real work.</a></p>
+        </details>
+      ) : null}
     </section>
   );
 }

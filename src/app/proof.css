@@ -2917,3 +2917,14 @@ body:has(.app-main) {
   .px .px-start-list > li { padding-top: .8rem !important; }
 }
 .px .px-result.px-res-steps .px-res-screen { overflow-y: auto; }
+/* Nested copy: one idea visible, the rest one tap away */
+.px .px-start-item > summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.px .px-start-item > summary::-webkit-details-marker { display: none; }
+.px .px-start-item > summary::after { content: "+"; font-family: var(--mono); color: #D01E98; font-size: 1.2rem; }
+.px .px-start-item[open] > summary::after { content: "–"; }
+.px .px-start-item .px-rx-kdoes { margin-top: .5rem !important; }
+.px .px-res-how > summary::after { content: " +"; color: #D01E98; }
+.px .px-res-how[open] > summary::after { content: " –"; }
+.px .px-est-own .px-est-fields { margin-top: .6rem; }
+.px .px-res-steps .px-est-result { margin-top: 1rem; }
+.px .px-result.px-res-steps .px-pat { padding-top: 1.4rem; }
