@@ -15,6 +15,7 @@ import { NINE, TIP_ANNUAL, TIP_DIMENSION, TIP_FACT_ALL_NINE, TIP_HOURLY, TIP_LEV
 import { KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPrice';
 
 import { REVIEW_URL } from '../lib/links';
+import { trackClick } from '../lib/clicks';
 import { deptPageHref } from '../lib/brand';
 import { getDepartment } from '../lib/departments';
 /** Which PROOF word a question (1-based) belongs to: Process, Review, Observing, Operational, Friction. */
@@ -215,13 +216,13 @@ function NextSteps() {
       <section className="px-ns-review" aria-label="PROOF Review">
         <p className="px-ns-review-line">PROOF Review · $127</p>
         <div className="px-ns-cta">
-          <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener">Book a PROOF Review <span aria-hidden="true">→</span></a>
+          <a className="px-oc-btn is-fill px-ns-btn" href={REVIEW_URL} target="_blank" rel="noopener" onClick={() => trackClick('review_click')}>Book a PROOF Review <span aria-hidden="true">→</span></a>
         </div>
       </section>
       <details className="px-res-how px-ns-other">
         <summary>Not ready for a call?</summary>
-        <p className="px-ns-more">Running a team? FACT measures this in your team’s real work. <a className="px-ns-link" href={FACT_URL}>See FACT</a></p>
-        <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/">See BACK</a></p>
+        <p className="px-ns-more">Running a team? FACT measures this in your team’s real work. <a className="px-ns-link" href={FACT_URL} onClick={() => trackClick('fact_click')}>See FACT</a></p>
+        <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/" onClick={() => trackClick('back_click')}>See BACK</a></p>
       </details>
     </div>
   );
@@ -395,7 +396,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
       </div>
 
       {OWN_CTA.includes(current) ? null : (
-        <p className="px-res-cta px-res-cta--quiet"><a className="px-res-quiet" href={REVIEW_URL} target="_blank" rel="noopener">PROOF Review · $127 <span aria-hidden="true">→</span></a></p>
+        <p className="px-res-cta px-res-cta--quiet"><a className="px-res-quiet" href={REVIEW_URL} target="_blank" rel="noopener" onClick={() => trackClick('review_click_quiet')}>PROOF Review · $127 <span aria-hidden="true">→</span></a></p>
       )}
 
       <nav className="px-res-nav" aria-label="Result screens">
