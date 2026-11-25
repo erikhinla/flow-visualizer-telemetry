@@ -305,3 +305,10 @@ export function suggestDepartment(pressures: readonly PressureId[]): DepartmentI
   if (!first) return null;
   return PRESSURE_DEPARTMENT[first];
 }
+
+/**
+ * The order PROOF asks the 15 questions in, three per word:
+ * Process, Review, Observing, Operational, Friction (Erik, 2026-11-24).
+ * Values stay stored by question index, so scores, codes and saved results are unchanged.
+ */
+export const ASK_ORDER: readonly number[] = [0, 1, 2, 4, 13, 8, 12, 6, 5, 9, 10, 11, 3, 7, 14];

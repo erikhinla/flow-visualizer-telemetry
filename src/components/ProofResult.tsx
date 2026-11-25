@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent as RPointerEvent, type ReactNode } from 'react';
 import { AUDIENCES, PROFILE_WORD, type AudienceId } from '../lib/audiences';
-import { BANDS, HOURS_PER_YEAR, RAW_MAX, WEEKS_PER_YEAR, estimate, liveMath } from '../lib/math';
+import { BANDS, HOURS_PER_YEAR, RAW_MAX, WEEKS_PER_YEAR, estimate, liveMath, DIMENSIONS } from '../lib/math';
 import { QUESTIONS } from '../lib/questionnaire';
 import { useSession } from './SessionProvider';
 import { narrative } from '../lib/narrative';
@@ -17,6 +17,9 @@ import { KeystonesPrice, checkoutHref, useKeystonesOffer } from './KeystonesPric
 import { REVIEW_URL } from '../lib/links';
 import { deptPageHref } from '../lib/brand';
 import { getDepartment } from '../lib/departments';
+/** Which PROOF word a question (1-based) belongs to: Process, Review, Observing, Operational, Friction. */
+const sectionOf = (q: number) => DIMENSIONS.findIndex((d) => (d.questions as readonly number[]).includes(q - 1));
+
 export { REVIEW_URL };
 const FACT_URL = 'https://transformby10x.ai/fact/';
 
@@ -330,7 +333,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
   // Prescription: top 3 gaps from the lowest answers, one per section first, then the next lowest.
   const rxPool = listAnswers.length ? listAnswers : allAnswers;
   const rxPick: typeof allAnswers = [];
-  for (const x of rxPool) if (rxPick.length < 3 && !rxPick.some((y) => Math.floor((y.q - 1) / 3) === Math.floor((x.q - 1) / 3))) rxPick.push(x);
+  for (const x of rxPool) if (rxPick.length < 3 && !rxPick.some((y) => sectionOf(y.q) === sectionOf(x.q))) rxPick.push(x);
   for (const x of rxPool) if (rxPick.length < 3 && !rxPick.includes(x)) rxPick.push(x);
   const low = lowLine(session.values, dims.map((d) => d.name));
 

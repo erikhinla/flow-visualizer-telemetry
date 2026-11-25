@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { trace } from '../lib/diagnostics';
 import { AUDIENCES, AUDIENCE_ORDER, isAudienceId, type AudienceId } from '../lib/audiences';
-import { QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
+import { ASK_ORDER, QUESTIONS, isComplete, scoreMap } from '../lib/questionnaire';
 import { Result } from './ProofResult';
 import { tidyAll } from '../lib/tidy';
 import { encodeProof } from '../lib/proof-code';
@@ -138,7 +138,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       if (q.get('start') === '1') setStage('ask');
       return;
     }
-    const open = session.values.findIndex((value) => value === null);
+    const open = ASK_ORDER.findIndex((qi) => session.values[qi] === null);
     if (session.mapCompleted && open === -1) setStage('result');
     else {
       setCursor(open === -1 ? 0 : open);
@@ -153,9 +153,10 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
     (choice: Choice, phone: boolean) => {
       const values = [...session.values];
       const optionIds = [...session.optionIds];
-      setLast(cursor);
-      values[cursor] = choice.value;
-      optionIds[cursor] = choice.id;
+      const qi = ASK_ORDER[cursor];
+      setLast(qi);
+      values[qi] = choice.value;
+      optionIds[qi] = choice.id;
       const done = values.every((value) => value !== null);
       setSession((current) => ({ ...current, values, optionIds, mapCompleted: done || current.mapCompleted }));
       if (done) { trace({ name: 'map-complete' }); countFinish(); }
@@ -202,7 +203,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       const n = Number(event.key);
       if (n >= 1 && n <= 4) {
         event.preventDefault();
-        choose(QUESTIONS[cursor].choices[n - 1]);
+        choose(QUESTIONS[ASK_ORDER[cursor]].choices[n - 1]);
       }
     };
     window.addEventListener('keydown', onKey);
@@ -218,7 +219,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   const score = useMemo(() => (ready ? scoreMap(answers) : null), [ready, session.values, session.optionIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const begin = () => {
-    const open = session.values.findIndex((value) => value === null);
+    const open = ASK_ORDER.findIndex((qi) => session.values[qi] === null);
     setCursor(open === -1 ? 0 : open);
     setStage(open === -1 && score ? 'result' : 'ask');
   };
@@ -286,19 +287,19 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             <div className="px-ask-main">
               <LiveBar cursor={cursor} values={session.values} optionIds={session.optionIds} label={(id) => audience.pressure[id]} />
               <div className="px-progress" aria-hidden="true">
-                {QUESTIONS.map((item, index) => (
-                  <i key={item.id} className={session.values[index] !== null ? 'on' : index === cursor ? 'now' : undefined} />
+                {ASK_ORDER.map((qi, step) => (
+                  <i key={QUESTIONS[qi].id} className={session.values[qi] !== null ? 'on' : step === cursor ? 'now' : undefined} />
                 ))}
               </div>
               <p className="px-count">
                 [ {String(cursor + 1).padStart(2, '0')} / 15 ]
               </p>
               <h1 id="px-q" ref={headingRef} tabIndex={-1} className="px-question">
-                {tie(audience.questions[cursor])}
+                {tie(audience.questions[ASK_ORDER[cursor]])}
               </h1>
               <div className="px-options" role="group" aria-labelledby="px-q">
-                {QUESTIONS[cursor].choices.map((choice, index) => {
-                  const selected = session.optionIds[cursor] === choice.id;
+                {QUESTIONS[ASK_ORDER[cursor]].choices.map((choice, index) => {
+                  const selected = session.optionIds[ASK_ORDER[cursor]] === choice.id;
                   const cls = 'px-option' + (selected ? ' is-selected' : '') + (picked === choice.id ? ' is-picked' : '');
                   return (
                     <button
@@ -309,7 +310,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
                       aria-pressed={selected}
                       onClick={() => choose(choice)}
                     >
-                      <span>{tie(audience.choices[cursor][index])}</span>
+                      <span>{tie(audience.choices[ASK_ORDER[cursor]][index])}</span>
                       <kbd>[{index + 1}]</kbd>
                     </button>
                   );
@@ -492,7 +493,8 @@ function liveView({ values, optionIds, label }: LiveProps) {
   // Friction order matches scoreMap: 0-point pressures first, then 1-point pressures.
   const zeros: string[] = [];
   const ones: string[] = [];
-  QUESTIONS.forEach((question, index) => {
+  ASK_ORDER.forEach((index) => {
+    const question = QUESTIONS[index];
     const value = values[index];
     if (value === null || value === undefined) return;
     const pressure = question.choices.find((item) => item.id === optionIds[index])?.pressure;
@@ -504,11 +506,12 @@ function liveView({ values, optionIds, label }: LiveProps) {
   const friction = [...zeros, ...ones].slice(0, 4);
   // Phone terminal: one line per answered question that scored under 2, newest last. Real answers only.
   const log: Array<{ q: number; text: string; pts: number }> = [];
-  QUESTIONS.forEach((question, index) => {
+  ASK_ORDER.forEach((index) => {
+    const question = QUESTIONS[index];
     const value = values[index];
     if (value === null || value === undefined || value >= 2) return;
     const pressure = question.choices.find((item) => item.id === optionIds[index])?.pressure;
-    if (pressure) log.push({ q: index + 1, text: label(pressure), pts: value });
+    if (pressure) log.push({ q: ASK_ORDER.indexOf(index) + 1, text: label(pressure), pts: value });
   });
   return { live, friction, log };
 }
@@ -533,7 +536,7 @@ function LivePanel(props: LiveProps) {
       </div>
       <div className="px-live-block">
         <p className="px-live-label">This question measures</p>
-        <p className="px-live-note px-live-measure">{MEASURES[cursor]}</p>
+        <p className="px-live-note px-live-measure">{MEASURES[ASK_ORDER[cursor]]}</p>
       </div>
       {friction.length ? (
         <div className="px-live-block">
@@ -586,7 +589,7 @@ function LiveBar(props: LiveProps) {
         <div id="px-mbar-drawer" className="px-mbar-drawer">
           <p className="px-live-note">{SCORE_DIRECTION}</p>
           <p className="px-live-label">This question measures</p>
-          <p className="px-live-note">{MEASURES[cursor]}</p>
+          <p className="px-live-note">{MEASURES[ASK_ORDER[cursor]]}</p>
           {friction.length ? (
             <>
               <p className="px-live-label">Workflow Friction so far</p>
