@@ -260,19 +260,16 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
         {!ready ? (
           <p className="px-loading">Opening PROOF</p>
         ) : stage === 'intro' ? (
-          <section className="px-intro px-door" aria-labelledby="px-title">
-            <video className="px-door-film" autoPlay muted loop playsInline preload="auto" poster={`${BASE}/brand/door-hall-poster.jpg`} aria-hidden="true">
-              <source src={`${BASE}/brand/door-hall.mp4`} type="video/mp4" />
-            </video>
-            <div className="px-door-scrim" aria-hidden="true" />
+          <section className="px-intro px-door px-door2" aria-labelledby="px-title">
             <div className="px-door-hero">
-              <h1 id="px-title" className="px-door-title">
-                <img className="px-door-lockup" src={`${BASE}/brand/proof-lockup-word.png`} alt="PROOF: Process, Review, Observing, Operational, Friction" width={817} height={181} />
-              </h1>
-              <p className="px-door-desc px-door-tag">{PROOF_TAGLINE}</p>
-              <button type="button" className="px-door-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'SEE PROOF'}>
-                <img src={`${BASE}/brand/orb-see-proof.png`} alt="" width={483} height={482} />
+              <h1 id="px-title" className="px-door2-head">Is your workflow built for AI speed?</h1>
+              <p className="px-door2-free">Find out free</p>
+              <button type="button" className="px-door2-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'Start PROOF'}>
+                <img src={`${BASE}/brand/proof-sphere.webp`} alt="" width={600} height={600} />
               </button>
+              <p className="px-door2-word">PROOF</p>
+              <p className="px-door2-kind">AI workflow diagnostic</p>
+              <p className="px-door2-line">Momentum stops where context drops</p>
               {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : null}
             </div>
           </section>

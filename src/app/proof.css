@@ -2948,3 +2948,17 @@ body:has(.app-main) {
   .px-select select { max-width: 14.5rem; font-size: .78rem; padding-right: 1.6rem; }
 }
 .px .px-phases { column-gap: .6rem; }
+
+/* Door matches the homepage (transformby10x.ai), Erik 2026-11-24: headline, Find out free, orb with no label, PROOF, AI workflow diagnostic, Momentum stops where context drops. */
+.px .px-door2 { display: flex; align-items: flex-start; justify-content: center; min-height: calc(100svh - 140px); background: var(--paper, #F6F6F2); }
+.px .px-door2 .px-door-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; padding: clamp(28px, 6vh, 64px) 16px clamp(28px, 5vh, 48px); max-width: 1200px; margin: 0 auto; }
+.px .px-door2-head { font-family: var(--font-tight), var(--display); font-weight: 800; font-size: clamp(2.7rem, 6vw, 5.4rem); line-height: .92; letter-spacing: -.05em; color: #0B0B0C; margin: 0; max-width: 14ch; text-wrap: balance; }
+.px .px-door2-free { font-family: var(--mono); font-size: .82rem; letter-spacing: .04em; color: rgba(11,11,12,.66); margin: clamp(12px, 2vh, 20px) 0 0; }
+.px .px-door2-orb { all: unset; cursor: pointer; display: block; width: clamp(150px, 19vw, 220px); aspect-ratio: 1; margin-top: clamp(18px, 3.5vh, 36px); border-radius: 50%; filter: drop-shadow(0 18px 30px rgba(208,30,152,.28)); transition: transform .25s ease; }
+.px .px-door2-orb img { width: 100%; height: 100%; display: block; }
+.px .px-door2-orb:hover { transform: scale(1.04); }
+.px .px-door2-orb:focus-visible { outline: 3px solid #D01E98; outline-offset: 6px; }
+.px .px-door2-word { font-family: var(--font-tight), var(--display); font-weight: 800; font-size: clamp(2.2rem, 4.4vw, 3.4rem); line-height: 1; letter-spacing: -.04em; color: #0B0B0C; margin: clamp(10px, 1.6vh, 16px) 0 0; }
+.px .px-door2-kind { font-family: var(--mono); font-size: .84rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(11,11,12,.66); margin: 10px 0 0; }
+.px .px-door2-line { font-family: var(--mono); font-size: .84rem; letter-spacing: .12em; text-transform: uppercase; color: #D01E98; margin: 12px 0 0; }
+@media (prefers-reduced-motion: reduce) { .px .px-door2-orb { transition: none; } .px .px-door2-orb:hover { transform: none; } }

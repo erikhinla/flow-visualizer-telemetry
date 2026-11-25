@@ -1,5 +1,5 @@
 /** PROOF tagline under the wordmark. One variable: swap here, rebuild, every surface follows. Erik picked B on 2026-11-19. */
-export const PROOF_TAGLINE = 'Your friction, found in 15 answers.';
+export const PROOF_TAGLINE = 'AI Workflow Diagnostic';
 /** Header form for a department, e.g. "Production Dept". Body copy and labels use the plain name. */
 export const deptHeader = (name: string) => `${name} Dept`;
 

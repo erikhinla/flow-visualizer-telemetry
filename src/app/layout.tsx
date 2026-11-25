@@ -45,7 +45,7 @@ const tight = Inter_Tight({
 export const metadata: Metadata = {
   title: `PROOF · ${PROOF_TAGLINE}`,
   description:
-    "AI tools made more work, not less. When context lives in the system, not in people’s heads, talented teams stop burning out. From TransformBy10X.",
+    'Is your workflow built for AI speed? Find out free in 15 answers, no email. Momentum stops where context drops. From TransformBy10X.',
   ...(process.env.NEXT_PUBLIC_PROOF_NOINDEX ? { robots: { index: false, follow: false } } : {}),
 };
 
