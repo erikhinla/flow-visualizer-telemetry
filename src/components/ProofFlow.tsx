@@ -273,7 +273,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               <button type="button" className="px-door-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'SEE PROOF'}>
                 <img src={`${BASE}/brand/orb-see-proof.png`} alt="" width={483} height={482} />
               </button>
-              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : <p className="px-door-status px-door-free">No charge.</p>}
+              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : null}
             </div>
           </section>
         ) : stage === 'ask' ? (
@@ -345,7 +345,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       </div>
 
       <footer className="px-foot">
-        <p className="px-foot-line">15 answers. No charge. No email.</p>
+        <p className="px-foot-line">15 answers. Free. No email.</p>
         <button type="button" className="px-foot-link" onClick={() => setSheet(sheet === 'privacy' ? null : 'privacy')} aria-expanded={sheet === 'privacy'}>
           Privacy
         </button>
