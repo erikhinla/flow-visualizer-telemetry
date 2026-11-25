@@ -34,7 +34,7 @@ const FIX: Record<string, string> = {
   'key-person': 'Write down what only one person knows about each client: contacts, preferences and open approvals. Keep it in the job record.',
   pipeline: 'Put live jobs and pending approvals on one board the whole team can see, updated when the status changes.',
   repeat: "Keep masters and past decisions in one place that's easy to search, named the same way on every job.",
-  shape: 'Pick the first place work stalls in this report and fix it before adding any new tool or process.',
+  shape: 'Start with the first place your team loses time in this report, before adding any new tool or process.',
 };
 const FIX_GROUP: Record<PressureId, string> = {
   start: 'start', handoff: 'handoff', next: 'next', priorities: 'next', memory: 'memory', scattered: 'memory',
@@ -62,17 +62,17 @@ export function renderReport(v: ReportVars): { html: string; text: string } {
   const p = (t: string) => `<p style="margin:0 0 10px">${t}</p>`;
   const html = `<!doctype html><html><body style="margin:0;background:#E6E6E0"><div style="max-width:680px;margin:0 auto;padding:30px 24px;font-family:'Inter Tight',Helvetica,Arial,sans-serif;color:${ink};font-size:16px;line-height:1.5;background:#F6F6F2">
 <img src="https://transformby10x.ai/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><p style="${mono};margin:14px 0 0;padding-top:12px;border-top:1.5px solid ${ink}">PROOF report &middot; <span style="color:${m}">final proof</span></p>
-<h1 style="font-size:44px;line-height:.95;letter-spacing:-.04em;margin:16px 0 8px">Where the work stalls.</h1>
+<h1 style="font-size:44px;line-height:.95;letter-spacing:-.04em;margin:16px 0 8px">Where your team loses time.</h1>
 ${p(v.AUDIENCE_LINE)}
 <table style="width:100%;border-collapse:collapse;margin:16px 0" cellpadding="8"><tr>
 <td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">SCORE</div><div style="font-size:24px;font-weight:700">${v.SCORE}</div></td>
-<td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">PATTERN</div><div style="display:inline-block;margin-top:4px;border:2px solid ${m};color:${m};padding:3px 8px;font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${v.PATTERN}</div></td>
-<td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">STALL POINT</div><div style="font-size:18px;font-weight:700">${v.STALL_POINT}</div></td></tr></table>
+<td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">PHASE</div><div style="display:inline-block;margin-top:4px;border:2px solid ${m};color:${m};padding:3px 8px;font-size:20px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${v.PATTERN}</div></td>
+<td style="border:1.5px solid ${ink};background:#FFFFFF"><div style="${mono}">WHERE TIME GOES</div><div style="font-size:18px;font-weight:700">${v.STALL_POINT}</div></td></tr></table>
 ${h2('What the answers show')}${p(v.PATTERN_LINE)}${p(v.PROFILE_LINE)}${p(v.STORY)}
-${h2('Where the work stalls')}${v.STALLS_HTML}
+${h2('Where your team loses time')}${v.STALLS_HTML}
 ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
 ${h2('How this was scored')}${p(v.SCORING)}
-${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost where work stalls, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
+${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
 ${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
 ${h2('Your next step')}${p('Want me to go over this with you? PROOF Review, $127.')}
 <p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${ink};color:#F6F6F2;text-decoration:none;padding:15px 24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:14px;display:inline-block">Book a PROOF Review</a></p>
@@ -84,7 +84,7 @@ ${p(`Take PROOF again: ${v.RETAKE_URL}`)}
     'PROOF REPORT', v.AUDIENCE_LINE, '',
     `Score: ${v.SCORE}`, `Pattern: ${v.PATTERN}`, `Stall point: ${v.STALL_POINT}`, '',
     'WHAT THE ANSWERS SHOW', v.PATTERN_LINE, v.PROFILE_LINE, v.STORY, '',
-    'WHERE THE WORK STALLS', v.STALLS_TEXT, '',
+    'WHERE YOUR TEAM LOSES TIME', v.STALLS_TEXT, '',
     'WHAT TO CHANGE FIRST', v.FIXES_TEXT, '',
     'THE 15 ANSWERS', v.ANSWERS_TEXT, '',
     'YOUR NEXT STEP', 'Want me to go over this with you? PROOF Review, $127.',
@@ -118,7 +118,7 @@ export function buildReport(audienceId: AudienceId, answers: MapAnswers, retakeU
     if (f && !fixes.includes(f)) fixes.push(f);
     if (fixes.length === 3) break;
   }
-  if (!fixes.length) fixes.push('Keep the shared record current as the team grows. Take PROOF again each month to catch new places where work stalls.');
+  if (!fixes.length) fixes.push('Keep the shared record current as the team grows. Take PROOF again each month to see where time goes next.');
 
   const answered = QUESTIONS.map((q, i) => {
     const c = q.choices.find((x) => x.id === answers.optionIds[i])!;

@@ -77,7 +77,7 @@ export const TEMPLATES: Record<TemplateKey, Def> = {
     name: 'TBTX order: PROOF Refresh monthly reminder', subject: "Time for this month's PROOF", vars: ['RETAKE_URL'], plain: true,
     render: (v) => simpleMail("Time for this month's PROOF", [
       'The monthly PROOF Refresh payment went through. This is the reminder to retake PROOF.',
-      'Answer for the work as it runs today. Compare where work stalls and the pattern with last month to see what moved.',
+      'Answer for the work as it runs today. Compare your phase and where time goes with last month to see what moved.',
     ], { label: 'Take PROOF again', url: v.RETAKE_URL }),
   },
   // The fixed-price purchase that used these two is retired. FACT is scoped on the PROOF Review, not bought from a link.

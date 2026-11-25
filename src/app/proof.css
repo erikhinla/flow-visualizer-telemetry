@@ -2962,3 +2962,39 @@ body:has(.app-main) {
 .px .px-door2-kind { font-family: var(--mono); font-size: .84rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(11,11,12,.66); margin: 10px 0 0; }
 .px .px-door2-line { font-family: var(--mono); font-size: .84rem; letter-spacing: .12em; text-transform: uppercase; color: #D01E98; margin: 12px 0 0; }
 @media (prefers-reduced-motion: reduce) { .px .px-door2-orb { transition: none; } .px .px-door2-orb:hover { transform: none; } }
+
+/* Result screens: center when there is room, scroll from the top when there is not.
+   justify-content:center on an overflowing scroll box pushed the headline above the visible area. */
+.px .px-res-screen { justify-content: flex-start !important; }
+.px .px-res-screen > :first-child { margin-top: auto; }
+.px .px-res-screen > :last-child { margin-bottom: auto; }
+
+/* Short windows (laptops): the whole first screen fits without scrolling. */
+@media (min-width: 901px) and (max-height: 820px) {
+  .px .px-res-screen .px-lvl-h.px-pat-h { font-size: clamp(2.6rem, 6.2vh, 3.6rem) !important; line-height: .95; }
+  .px .px-res-screen .px-pat-lede { margin-top: 6px !important; }
+  .px .px-res-screen .px-phases { margin-top: 14px !important; }
+  .px .px-res-screen .px-res-box { margin-top: 16px !important; padding-top: 12px !important; }
+  .px .px-res-screen .px-res-big { font-size: clamp(1.4rem, 3.6vh, 2rem) !important; }
+  .px .px-res-screen .px-next-phase { margin-top: 10px !important; }
+  .px .px-res-screen .px-res-h { font-size: clamp(2.2rem, 6vh, 3.4rem); }
+}
+@media (min-width: 901px) and (max-height: 820px) {
+  .px.px--result .px-foot { display: none !important; }
+  .px .px-res-screen .px-res-box { border-top: 0 !important; }
+  .px .px-res-screen .px-res-box::before { display: none !important; }
+  .px .px-res-screen .px-phases li { padding-top: 6px !important; padding-bottom: 0 !important; }
+}
+@media (min-width: 901px) and (max-height: 700px) {
+  .px .px-res-screen.px-pat > .px-res-label:first-child { display: none; }
+  .px .px-res-screen.px-pat > .px-lvl-h { margin-top: auto; }
+}
+
+/* Headings get focus for screen readers when a screen changes; no box drawn around them. */
+.px h1[tabindex="-1"]:focus, .px h2[tabindex="-1"]:focus, .px [tabindex="-1"]:focus-visible { outline: none !important; box-shadow: none !important; }
+
+/* Question side panel: scrolls inside itself instead of running under the footer; short laptops drop the measure note. */
+.px .px-ask-side { overflow-y: auto; }
+@media (min-width: 901px) and (max-height: 820px) {
+  .px .px-ask-side .px-live-block:has(.px-live-measure) { display: none; }
+}

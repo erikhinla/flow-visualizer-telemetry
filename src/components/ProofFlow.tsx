@@ -264,13 +264,13 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             <div className="px-door-hero">
               <h1 id="px-title" className="px-door2-head">Is your workflow built for AI speed?</h1>
               <p className="px-door2-free">Find out free</p>
-              <button type="button" className="px-door2-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'Start PROOF'}>
+              <button type="button" className="px-door2-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See your result' : 'Start PROOF'}>
                 <img src={`${BASE}/brand/proof-sphere.webp`} alt="" width={600} height={600} />
               </button>
               <p className="px-door2-word">PROOF</p>
               <p className="px-door2-kind">AI workflow diagnostic</p>
               <p className="px-door2-line">Momentum stops where context drops</p>
-              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See the pattern</p> : null}
+              {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See your result</p> : null}
             </div>
           </section>
         ) : stage === 'ask' ? (
@@ -403,7 +403,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   );
 }
 
-const PROCESS_LINES = ['15 answers locked', 'Scoring the Map', 'Locating where work stalls', 'Building the PROOF result'] as const;
+const PROCESS_LINES = ['15 answers in', 'Adding up your score', 'Finding where your team loses time', 'Building your result'] as const;
 
 /** Both viewports. A short status beat while the result opens. Input is locked because no answers render. */
 function Processing() {
@@ -458,7 +458,7 @@ function Arrow({ back = false }: { back?: boolean }) {
 
 /** What each question measures, read from the question and its four choices. */
 const MEASURES: readonly string[] = [
-  'Where work stops moving: at the start, at handoffs, or at the finish.',
+  'Where work stops moving: at the start, when it changes hands, or at the finish.',
   'Whether the next piece of work is set by a system or worked out as it goes.',
   'Whether approvals, feedback, and notes sit in one shared record or in memory and messages.',
   'How many AI tools are in use, and whether they connect to each other.',
@@ -482,7 +482,7 @@ type LiveProps = {
   label: (id: import('../lib/types').PressureId) => string;
 };
 
-const SCORE_DIRECTION = 'Higher means work moves smoother, with less Workflow Friction.';
+const SCORE_DIRECTION = 'Higher means less chasing, checking and redoing.';
 
 function liveView({ values, optionIds, label }: LiveProps) {
   // Running score from liveMath (src/lib/math.ts), the same arithmetic as scoreMap.
@@ -537,9 +537,9 @@ function LivePanel(props: LiveProps) {
       </div>
       {friction.length ? (
         <div className="px-live-block">
-          <p className="px-live-label">Workflow Friction so far</p>
+          <p className="px-live-label">Where time is going so far</p>
           <ul className="px-live-list">
-            {friction.map((text) => (
+            {friction.slice(-3).map((text) => (
               <li key={text}>{text}</li>
             ))}
           </ul>
@@ -555,7 +555,7 @@ function LiveBar(props: LiveProps) {
   const [open, setOpen] = useState(false);
   return (
     <div className="px-mbar">
-      <ol className="px-term" aria-label="Friction found so far">
+      <ol className="px-term" aria-label="Flagged so far">
         {log.length ? (
           log.slice(-3).map((line) => (
             <li key={line.q}>
@@ -564,7 +564,7 @@ function LiveBar(props: LiveProps) {
           ))
         ) : (
           <li className="is-idle">
-            <span aria-hidden="true">&gt;</span> {live.answered ? 'No friction flagged yet' : 'Waiting for the first answer'}
+            <span aria-hidden="true">&gt;</span> {live.answered ? 'Nothing flagged yet' : 'Waiting for the first answer'}
           </li>
         )}
       </ol>
@@ -589,9 +589,9 @@ function LiveBar(props: LiveProps) {
           <p className="px-live-note">{MEASURES[ASK_ORDER[cursor]]}</p>
           {friction.length ? (
             <>
-              <p className="px-live-label">Workflow Friction so far</p>
+              <p className="px-live-label">Where time is going so far</p>
               <ul className="px-live-list">
-                {friction.map((text) => (
+                {friction.slice(-3).map((text) => (
                   <li key={text}>{text}</li>
                 ))}
               </ul>

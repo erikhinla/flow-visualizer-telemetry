@@ -14,9 +14,9 @@ const MEMORY: Record<AudienceId, string> = {
 export function stageFor(audienceId: AudienceId, id: PressureId): string {
   switch (id) {
     case 'start':
-      return 'Kickoff';
+      return 'Getting work started';
     case 'handoff':
-      return 'Handoffs between teams';
+      return 'When work changes hands';
     case 'next':
     case 'priorities':
       return 'Knowing what’s next';
@@ -30,9 +30,9 @@ export function stageFor(audienceId: AudienceId, id: PressureId): string {
       return 'Follow-up';
     case 'ownership':
     case 'informal-owner':
-      return 'Who owns it';
+      return 'Knowing who has it';
     case 'decisions':
-      return 'Deadline calls';
+      return 'Last-minute calls';
     case 'key-person':
       return 'When someone’s out';
     case 'pipeline':

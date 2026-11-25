@@ -12,20 +12,20 @@ export const TIP_LEVEL: Record<ProfileId, string> = {
 
 /** Keyed by dimension index (Process, Review, Observing, Operational, Friction). */
 export const TIP_DIMENSION: readonly string[] = [
-  '3 questions, 6 of 30 points (20% of the score). Questions 1 to 3: where momentum is lost, how the next deliverable is known, and where briefs, approvals and feedback are kept.',
+  '3 questions, 6 of 30 points (20% of the score). Questions 1 to 3: where work slows down, how the next deliverable is known, and where briefs, approvals and feedback are kept.',
   '3 questions, 6 of 30 points (20% of the score). Questions 4 to 6: how many AI tools the work runs through, what happens to what the team learned, and what happens when a request gets missed.',
   '3 questions, 6 of 30 points (20% of the score). Questions 7 to 9: how clear ownership is when work moves, how AI is used today, and how decisions get made close to a deadline.',
   '3 questions, 6 of 30 points (20% of the score). Questions 10 to 12: how much depends on someone remembering, how often work gets remade or hunted for, and what happens when a key person is out.',
   '3 questions, 6 of 30 points (20% of the score). Questions 13 to 15: how visible live work and approvals are, how the team gets better at what it ships, and one word for where things stand.',
 ];
 
-export const TIP_SCORING = 'Each answer scores 0, 1 or 2 and every question weighs the same, so the 5 sections count equally. Lower points show where work stalls first.';
+export const TIP_SCORING = 'Each answer scores 0, 1 or 2 and every question weighs the same, so the 5 sections count equally. Lower points show where your team loses time first.';
 export const TIP_REPAIR_COST = 'The paid time spent finding, checking or rebuilding work that arrived without what it needed. It prices hours already spent, not money saved.';
 export const TIP_HOURLY = 'What one paid hour costs: salary divided by 2,080 working hours a year. It turns repair time into a dollar figure.';
 export const TIP_ANNUAL = 'Hourly cost times repair hours times team size times 52 weeks. It shows what carrying context by hand costs over a year.';
 export const TIP_THREE_OF_NINE = 'PROOF runs 01 Map score and 08 + 09 Context Repair Cost from 15 answers. The other 6 need your real work, which FACT measures.';
 export const TIP_FACT_ALL_NINE = 'FACT reads real handoffs in current work and runs all 9 measurements, not the 3 PROOF can run from answers. It ends with what stalls, what it costs, what to change first, and your BACK pack written from all nine.';
-export const TIP_STAGE = 'Where work stalls first, based on your lowest answers. PROOF names a stage of work, never a team or person.';
+export const TIP_STAGE = 'Where your team loses time first, based on your lowest answers. PROOF names a stage of work, never a team or person.';
 
 /** The 9 measurements, one line each, for the FACT card back. */
 export const NINE: ReadonlyArray<readonly [string, string, string]> = [

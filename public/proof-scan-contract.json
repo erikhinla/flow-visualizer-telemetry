@@ -4,7 +4,7 @@
     {
       "id": "q1",
       "number": 1,
-      "text": "Where does campaign work lose momentum most often?",
+      "text": "Where does campaign work slow down most often?",
       "choices": [
         {
           "id": "q1-c1",
@@ -14,7 +14,7 @@
         },
         {
           "id": "q1-c2",
-          "text": "Handoffs, or waiting on the client",
+          "text": "When it changes hands, or waiting on the client",
           "value": 1,
           "pressure": "handoff"
         },
@@ -26,7 +26,7 @@
         },
         {
           "id": "q1-c4",
-          "text": "It rarely loses momentum",
+          "text": "It rarely slows down",
           "value": 2,
           "pressure": null
         }
@@ -225,7 +225,7 @@
       "choices": [
         {
           "id": "q8-c1",
-          "text": "Experiments, with no operating rules",
+          "text": "We’re trying things, with no rules",
           "value": 0,
           "pressure": "ai"
         },
@@ -237,13 +237,13 @@
         },
         {
           "id": "q8-c3",
-          "text": "Workflows run, but they are fragmented",
+          "text": "It runs some jobs, but each is set up differently",
           "value": 1,
           "pressure": null
         },
         {
           "id": "q8-c4",
-          "text": "In use, with rules and a person accountable",
+          "text": "In use, with rules and one person in charge of it",
           "value": 2,
           "pressure": null
         }
@@ -274,7 +274,7 @@
         },
         {
           "id": "q9-c4",
-          "text": "By a written decision rule",
+          "text": "By rules we wrote down",
           "value": 2,
           "pressure": null
         }
@@ -305,7 +305,7 @@
         },
         {
           "id": "q10-c4",
-          "text": "Very little. The system carries most of it",
+          "text": "Very little. Reminders handle most of it",
           "value": 2,
           "pressure": null
         }
@@ -336,7 +336,7 @@
         },
         {
           "id": "q11-c4",
-          "text": "Rarely. Masters and decisions are reusable",
+          "text": "Rarely. We reuse what we’ve already made",
           "value": 2,
           "pressure": null
         }

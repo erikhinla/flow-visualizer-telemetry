@@ -97,16 +97,16 @@ const PHASE_TRUTH: Record<ProfileId, string> = {
 };
 /** What the next phase looks like, so there is something to reach for. */
 const NEXT_LOOKS: Record<ProfileId, string> = {
-  FRAGMENTED: 'AI-Ready. The brief, approvals and feedback in one place anyone can open.',
-  STALLED: 'AI-Integrated. Work and AI output move from Account to Creative to Production with nobody chasing.',
-  SCALING: 'Agentic. Agents carry the handoffs, and your people make the calls.',
-  COMPOUNDING: 'Stay Agentic as you add people, clients and tools.',
+  FRAGMENTED: 'At AI-Ready, anyone can find the brief, the approvals and the feedback, so work keeps moving when someone’s out.',
+  STALLED: 'At AI-Integrated, work and AI output move from Account to Creative to Production without anyone chasing it.',
+  SCALING: 'At Agentic, agents carry the work between teams and your people make the calls.',
+  COMPOUNDING: 'Next: stay Agentic as you add people, clients and tools.',
 };
 const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = BANDS.map((b, i) => ({ id: b.id, n: i + 1, name: RESULT_NAME[b.id] }));
 const levelOf = (id: ProfileId) => LEVELS.find((l) => l.id === id)!;
 
 /** Phone results order: pattern and where it stalls, then what it costs, then the detail. */
-const PHONE_SCREENS = ['Your result', 'What it’s costing', 'Next phase', 'Want help'] as const;
+const PHONE_SCREENS = ['Your result', 'What it’s costing', 'Your next moves', 'Want help'] as const;
 /** Screens that carry their own Review card. Every other screen shows the Review strip above the nav. */
 const OWN_CTA: readonly string[] = ['Want help'];
 /** Example inputs for the cost screen until the visitor types their own. */
@@ -230,25 +230,25 @@ function NextSteps() {
 /** Round 18 draft: each answer maps to the Keystones that fix it (vocabulary from keystones/generator). */
 type Key = { name: string; kind: 'Folder' | 'Markdown file' | 'Script' | 'Protocol'; does: string };
 const K: Record<string, Key> = {
-  handoff: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'Says what “ready” means before work moves on, and who receives it, so the next person starts without chasing.' },
-  keyPerson: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'Moves what the client lead knows into project.md, so the work keeps going when they’re out.' },
-  start: { name: 'START HERE.md', kind: 'Markdown file', does: 'One page in every project that shows where everything lives.' },
-  project: { name: 'project.md', kind: 'Markdown file', does: 'The brief, the next step and who owns it, in one place anyone can open.' },
-  decisions: { name: 'decisions.md', kind: 'Markdown file', does: 'Every call written down once, with who made it and when, so it isn’t made twice.' },
-  folders: { name: 'Project folders', kind: 'Folder', does: 'One home for every file, and each folder names the role that owns it.' },
-  ai: { name: 'AI-CONTEXT.md', kind: 'Markdown file', does: 'The one file every assistant reads first, so answers match no matter who asks.' },
-  skills: { name: 'skills/', kind: 'Folder', does: 'Ready instructions for common jobs, so the output comes back the same way each time.' },
-  changelog: { name: 'change-log.md', kind: 'Markdown file', does: 'A running record of what changed and why, kept after the job ends.' },
-  archive: { name: 'archive_old_versions.py', kind: 'Script', does: 'Moves older versions into _archive and logs each move. The current file is obvious and nothing is lost.' },
-  notify: { name: 'notify.py', kind: 'Script', does: 'Tells the right person when something changes, so nothing waits on memory.' },
-  pending: { name: 'pending_changes.py', kind: 'Script', does: 'Writes PENDING-CHANGES.md, the short list of what’s still open, before each team update.' },
-  agenda: { name: 'round_agenda.py', kind: 'Script', does: 'Builds each review’s agenda from the record, so nobody starts from a blank page.' },
-  change: { name: 'change-protocol.md', kind: 'Protocol', does: 'What happens when something changes, so the whole team hears it once.' },
-  watch: { name: 'watch.py', kind: 'Script', does: 'Checks every project and logs it in WATCH-LOG.md, so status is there when you look.' },
-  rounds: { name: 'review-rounds-protocol.md', kind: 'Protocol', does: 'Each review round ends with notes the next one starts from.' },
+  handoff: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'Everyone knows what “ready” means and who picks it up next, so nobody has to chase.' },
+  keyPerson: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'What the client lead knows is written where the team can see it, so work keeps going when they’re out.' },
+  start: { name: 'START HERE.md', kind: 'Markdown file', does: 'Every project opens to one page that shows where everything is.' },
+  project: { name: 'project.md', kind: 'Markdown file', does: 'The brief, the next step and who owns it sit in one place anyone can open.' },
+  decisions: { name: 'decisions.md', kind: 'Markdown file', does: 'Each call gets made once and written down, so nobody makes it again.' },
+  folders: { name: 'Project folders', kind: 'Folder', does: 'Every file has one home, and everyone knows whose it is.' },
+  ai: { name: 'AI-CONTEXT.md', kind: 'Markdown file', does: 'Every AI tool works from the same facts, so the answers match no matter who asks.' },
+  skills: { name: 'skills/', kind: 'Folder', does: 'Common jobs come back from AI the same way every time.' },
+  changelog: { name: 'change-log.md', kind: 'Markdown file', does: 'What the team learned on a job is still there for the next one.' },
+  archive: { name: 'archive_old_versions.py', kind: 'Script', does: 'The current version is always obvious, and old versions are kept, not lost.' },
+  notify: { name: 'notify.py', kind: 'Script', does: 'The right person hears about a change right away, so nothing waits on someone remembering.' },
+  pending: { name: 'pending_changes.py', kind: 'Script', does: 'Before each team update, you see the short list of what’s still open.' },
+  agenda: { name: 'round_agenda.py', kind: 'Script', does: 'Every review starts with an agenda built from what already happened.' },
+  change: { name: 'change-protocol.md', kind: 'Protocol', does: 'When something changes, the whole team hears it once.' },
+  watch: { name: 'watch.py', kind: 'Script', does: 'You see where every job stands without calling a meeting.' },
+  rounds: { name: 'review-rounds-protocol.md', kind: 'Protocol', does: 'Each review round starts where the last one ended.' },
 };
 export const RX: Record<number, { gap: string; keys: Key[] }> = {
-  1: { gap: 'Work keeps losing speed at the same point.', keys: [K.handoff, K.start] },
+  1: { gap: 'Work slows down at the same step every time.', keys: [K.handoff, K.start] },
   2: { gap: 'People aren’t sure what comes next, so they wait or ask.', keys: [K.project, K.agenda] },
   3: { gap: 'Briefs, approvals and feedback live in heads and chat threads.', keys: [K.project, K.decisions, K.folders] },
   4: { gap: 'Each AI tool works from its own version of the facts.', keys: [K.ai, K.skills] },
@@ -352,11 +352,11 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               ))}
             </ol>
             <div className="px-res-box">
-              <p className="px-res-label">Where it stalls</p>
+              <p className="px-res-label">Where your team loses time</p>
               <p className="px-res-value px-res-big">{stage ?? 'No single stage'}</p>
               <p className="px-res-sub">{first ? `${first}.` : 'It shows up all over, not in one place.'}</p>
             </div>
-            <p className="px-res-sub px-next-phase"><b>Next:</b> {NEXT_LOOKS[score.profile]}</p>
+            <p className="px-res-sub px-next-phase">{NEXT_LOOKS[score.profile]}</p>
             <details className="px-res-how">
               <summary>How this was scored</summary>
               <p className="px-res-sub">You scored {score.raw} of {RAW_MAX}. Each of the 15 answers is worth 0, 1 or 2 points. 0 to 7: {RESULT_NAME.FRAGMENTED}. 8 to 14: {RESULT_NAME.STALLED}. 15 to 22: {RESULT_NAME.SCALING}. 23 to 30: {RESULT_NAME.COMPOUNDING}. {audience.profile[score.profile]}</p>
@@ -370,16 +370,16 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           </div>
         ) : null}
 
-        {current === 'Next phase' ? (
+        {current === 'Your next moves' ? (
           <div className="px-res-screen px-rx">
-            <h2 className="px-res-h" tabIndex={-1}>{nextLvl ? `What gets you to ${nextLvl.name}` : 'What keeps you Agentic'}</h2>
-            <p className="px-res-sub">Three fixes from your answers. Tap one to see it.</p>
+            <h2 className="px-res-h" tabIndex={-1}>Your next three moves</h2>
+            <p className="px-res-sub">{nextLvl ? `Picked from your answers. Each one gets you closer to ${nextLvl.name}. Tap one to see what changes.` : 'Picked from your answers. Each one keeps you Agentic as you grow. Tap one to see what changes.'}</p>
             <ol className="px-rx-list px-start-list">
               {rxPick.map((a) => (
                 <li key={a.q} className="px-rx-item">
                   <details className="px-start-item">
                     <summary className="px-rx-gaptext"><b>{RX[a.q].gap}</b></summary>
-                    <p className="px-rx-kdoes">The fix: {RX[a.q].keys[0].does}</p>
+                    <p className="px-rx-kdoes">{RX[a.q].keys[0].does}</p>
                   </details>
                 </li>
               ))}
@@ -464,8 +464,8 @@ function Estimate({ phone = false }: { phone?: boolean }) {
       {e ? (
         <details className="px-res-how">
           <summary>Show the math</summary>
-          <p className="px-est-plain">{num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks = {usd0.format(e.annual)} a year. Paid time, not money saved.</p>
-          <p className="px-est-plain">For a team, <a href={FACT_URL}>FACT measures this in your real work.</a></p>
+          <p className="px-est-plain">{num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks = {usd0.format(e.annual)} a year. That’s time you already pay for.</p>
+          <p className="px-est-plain"><a href={FACT_URL}>FACT measures this in your team’s real work.</a></p>
         </details>
       ) : null}
     </section>

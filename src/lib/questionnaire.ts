@@ -24,11 +24,11 @@ const q = (
  * Scoring is unchanged. Option ids keep equal-valued choices distinct.
  */
 export const QUESTIONS: readonly Question[] = [
-  q(1, 'Where does campaign work lose momentum most often?', [
+  q(1, 'Where does campaign work slow down most often?', [
     ['Getting the work started', 0, 'start'],
-    ['Handoffs, or waiting on the client', 1, 'handoff'],
+    ['When it changes hands, or waiting on the client', 1, 'handoff'],
     ['Finishing and getting it live', 1, null],
-    ['It rarely loses momentum', 2, null],
+    ['It rarely slows down', 2, null],
   ]),
   q(2, 'How does the team know the next deliverable?', [
     ['We figure it out as we go', 0, 'next'],
@@ -67,28 +67,28 @@ export const QUESTIONS: readonly Question[] = [
     ['Every deliverable has an owner and a clear next step', 2, null],
   ]),
   q(8, 'How is AI used in the work today?', [
-    ['Experiments, with no operating rules', 0, 'ai'],
+    ['We’re trying things, with no rules', 0, 'ai'],
     ['In use, but the output is inconsistent', 1, null],
-    ['Workflows run, but they are fragmented', 1, null],
-    ['In use, with rules and a person accountable', 2, null],
+    ['It runs some jobs, but each is set up differently', 1, null],
+    ['In use, with rules and one person in charge of it', 2, null],
   ]),
   q(9, 'How are decisions made when a deadline is close?', [
     ['Whoever speaks loudest', 0, 'decisions'],
     ['Whoever is available', 0, 'decisions'],
     ['By loose guidelines', 1, null],
-    ['By a written decision rule', 2, null],
+    ['By rules we wrote down', 2, null],
   ]),
   q(10, 'How much of the work still depends on someone remembering to follow up?', [
     ['Almost all of it', 0, 'revenue'],
     ['Most of it', 0, 'revenue'],
     ['Some of it', 1, 'some-manual'],
-    ['Very little. The system carries most of it', 2, null],
+    ['Very little. Reminders handle most of it', 2, null],
   ]),
   q(11, 'How often does the team remake or hunt for work that already exists?', [
     ['Every week', 0, 'repeat'],
     ['Most months', 0, 'repeat'],
     ['Sometimes', 1, 'sometimes-repeat'],
-    ['Rarely. Masters and decisions are reusable', 2, null],
+    ['Rarely. We reuse what we’ve already made', 2, null],
   ]),
   q(12, 'What happens when the person who knows the client best is out?', [
     ['The work stops', 0, 'key-person'],
