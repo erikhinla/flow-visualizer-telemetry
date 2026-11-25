@@ -6,8 +6,8 @@ import { ProofFlow } from '../../components/ProofFlow';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'PROOF · 15 answers',
-  description: '15 answers that show where Workflow Friction shows up in the business.',
+  title: 'PROOF · AI Workflow Diagnostic',
+  description: 'See where work stops moving between people, teams and AI. Progress stops where context drops.',
 };
 
 export default function MapPage() {

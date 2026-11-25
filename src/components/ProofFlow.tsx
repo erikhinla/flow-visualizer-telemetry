@@ -269,7 +269,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
               </button>
               <p className="px-door2-word">PROOF</p>
               <p className="px-door2-kind">AI workflow diagnostic</p>
-              <p className="px-door2-line">Momentum stops where context drops</p>
+              <p className="px-door2-line">Progress stops where context drops</p>
               {answered > 0 && answered < 15 ? <p className="px-door-status">Continue PROOF · {answered}/15</p> : score ? <p className="px-door-status">See your result</p> : null}
             </div>
           </section>
@@ -342,7 +342,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
       </div>
 
       <footer className="px-foot">
-        <p className="px-foot-line">15 answers. Free. No email.</p>
+        <p className="px-foot-line">Keep work moving without re-explaining it.</p>
         <button type="button" className="px-foot-link" onClick={() => setSheet(sheet === 'privacy' ? null : 'privacy')} aria-expanded={sheet === 'privacy'}>
           Privacy
         </button>
@@ -403,7 +403,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
   );
 }
 
-const PROCESS_LINES = ['15 answers in', 'Adding up your score', 'Finding where your team loses time', 'Building your result'] as const;
+const PROCESS_LINES = ['Answers in', 'Adding up the score', 'Finding where time is lost', 'Building the result'] as const;
 
 /** Both viewports. A short status beat while the result opens. Input is locked because no answers render. */
 function Processing() {

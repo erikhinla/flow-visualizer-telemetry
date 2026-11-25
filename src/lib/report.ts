@@ -73,7 +73,7 @@ ${h2('Where your team loses time')}${v.STALLS_HTML}
 ${h2('What to change first')}<ol>${v.FIXES_HTML}</ol>
 ${h2('How this was scored')}${p(v.SCORING)}
 ${h2('What it costs')}${p("PROOF doesn't measure hours. To price the time lost, enter team size, average salary, and weekly hours spent rebuilding context on the PROOF result screen. The figure is an estimate of paid time, not money saved.")}
-${h2('The 15 answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
+${h2('The answers')}<table style="width:100%;border-collapse:collapse;font-size:14px" cellpadding="6">${v.ANSWERS_HTML}</table>
 ${h2('Your next step')}${p('Want me to go over this with you? PROOF Review, $127.')}
 <p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${ink};color:#F6F6F2;text-decoration:none;padding:15px 24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:14px;display:inline-block">Book a PROOF Review</a></p>
 ${p(`Take PROOF again: ${v.RETAKE_URL}`)}
@@ -86,7 +86,7 @@ ${p(`Take PROOF again: ${v.RETAKE_URL}`)}
     'WHAT THE ANSWERS SHOW', v.PATTERN_LINE, v.PROFILE_LINE, v.STORY, '',
     'WHERE YOUR TEAM LOSES TIME', v.STALLS_TEXT, '',
     'WHAT TO CHANGE FIRST', v.FIXES_TEXT, '',
-    'THE 15 ANSWERS', v.ANSWERS_TEXT, '',
+    'THE ANSWERS', v.ANSWERS_TEXT, '',
     'YOUR NEXT STEP', 'Want me to go over this with you? PROOF Review, $127.',
     `Book a PROOF Review: ${v.REVIEW_URL}`, '', `Take PROOF again: ${v.RETAKE_URL}`,
   ].join('\n');
@@ -128,7 +128,7 @@ export function buildReport(audienceId: AudienceId, answers: MapAnswers, retakeU
 
   const pe = (t: string) => `<p style="margin:0 0 10px">${esc(t)}</p>`;
   const vars: ReportVars = {
-    AUDIENCE_LINE: esc(`${audience.label}. 15 of 15 answers.`),
+    AUDIENCE_LINE: esc(`${audience.label}. All 15 questions answered.`),
     SCORE: `${score.raw} of ${RAW_MAX}`,
     PATTERN: esc(PROFILE_WORD[score.profile]),
     STALL_POINT: esc(stage ?? 'None stood out'),

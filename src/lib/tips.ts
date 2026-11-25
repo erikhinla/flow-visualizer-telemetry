@@ -1,7 +1,7 @@
 /** Approved (i) tooltip copy. Source: tooltip-copy.md (Erik, round 7). 02 is "Stage score". */
 import type { ProfileId } from './types';
 
-export const TIP_MAP_SCORE = 'Your 15 answers added up, from 0 to 30. It places you in one of the 4 phases: AI Aware, AI-Ready, AI-Integrated, Agentic.';
+export const TIP_MAP_SCORE = 'Answers added up, from 0 to 30. It places you in one of the 4 phases: AI Aware, AI-Ready, AI-Integrated, Agentic.';
 
 export const TIP_LEVEL: Record<ProfileId, string> = {
   FRAGMENTED: 'Phase 1 of 4 (0 to 7 of 30). Your team uses AI, but the brief, approvals and feedback live with people, so the work moves only as fast as they do.',

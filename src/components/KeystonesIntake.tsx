@@ -233,7 +233,7 @@ export function KeystonesIntake() {
 
   const dateIssues = firstProjectProblems(I.first_project);
   const problems: Record<number, string> = {
-    0: !proofDone ? 'Finish the 15 answers first. The pack is written from them.' : I.agency_name.trim() ? '' : "The agency's name is needed to build the pack.",
+    0: !proofDone ? 'Finish PROOF first. The pack is written from it.' : I.agency_name.trim() ? '' : "The agency's name is needed to build the pack.",
     1: I.departments.length ? '' : 'Pick at least one department.',
     2: I.rounds.length && I.rounds.every((r) => r.name.trim()) ? '' : 'Every round needs a name.',
     5: Object.values(dateIssues)[0] ?? '',
@@ -316,7 +316,7 @@ export function KeystonesIntake() {
       {gate === 'paid' && step === 0 && (
         <section className="ks-step">
           <div className="ks-card">
-            <h2>{proofDone ? 'Carried over from PROOF' : 'First, the 15 answers'}</h2>
+            <h2>{proofDone ? 'Carried over from PROOF' : 'First, PROOF'}</h2>
             {!ready ? <p>Loading the PROOF answers.</p> : proofDone ? (
               <>
                 <p className="ks-hint">All {QUESTIONS.length} answers are in and won&apos;t be asked again.</p>

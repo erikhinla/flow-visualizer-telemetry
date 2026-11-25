@@ -360,7 +360,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
             <p className="px-res-sub px-next-phase">{NEXT_LOOKS[score.profile]}</p>
             <details className="px-res-how">
               <summary>How this was scored</summary>
-              <p className="px-res-sub">You scored {score.raw} of {RAW_MAX}. Each of the 15 answers is worth 0, 1 or 2 points. 0 to 7: {RESULT_NAME.FRAGMENTED}. 8 to 14: {RESULT_NAME.STALLED}. 15 to 22: {RESULT_NAME.SCALING}. 23 to 30: {RESULT_NAME.COMPOUNDING}. {audience.profile[score.profile]}</p>
+              <p className="px-res-sub">You scored {score.raw} of {RAW_MAX}. Each answer is worth 0, 1 or 2 points. 0 to 7: {RESULT_NAME.FRAGMENTED}. 8 to 14: {RESULT_NAME.STALLED}. 15 to 22: {RESULT_NAME.SCALING}. 23 to 30: {RESULT_NAME.COMPOUNDING}. {audience.profile[score.profile]}</p>
             </details>
           </div>
         ) : null}

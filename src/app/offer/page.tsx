@@ -87,7 +87,7 @@ export default function OfferPage() {
         <ol>
           <li>
             <strong>PROOF</strong>
-            15 answers. A profile and an hour band. A suggestion, not a measurement.
+            15 questions. A phase and an hour range. An estimate, not a measurement.
           </li>
           <li>
             <strong>The conversation</strong>
