@@ -33,7 +33,7 @@ const LETTERS = [
   ['P', 'Process'],
   ['R', 'Review'],
   ['O', 'Observing'],
-  ['O', 'Operating'],
+  ['O', 'Operational'],
   ['F', 'Friction'],
 ] as const;
 
@@ -266,7 +266,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             <div className="px-door-scrim" aria-hidden="true" />
             <div className="px-door-hero">
               <h1 id="px-title" className="px-door-title">
-                <img className="px-door-lockup" src={`${BASE}/brand/proof-lockup-word.png`} alt="PROOF: Process, Review, Observing, Operating, Friction" width={817} height={181} />
+                <img className="px-door-lockup" src={`${BASE}/brand/proof-lockup-word.png`} alt="PROOF: Process, Review, Observing, Operational, Friction" width={817} height={181} />
               </h1>
               <p className="px-door-desc px-door-tag">{PROOF_TAGLINE}</p>
               <button type="button" className="px-door-orb" onClick={begin} aria-label={answered > 0 && answered < 15 ? `Continue PROOF, ${answered} of 15 answered` : score ? 'See the pattern' : 'SEE PROOF'}>

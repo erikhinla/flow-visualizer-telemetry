@@ -2,11 +2,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { lowLine } from '../src/components/ProofResult';
 
-const N = ['Process', 'Response', 'Output', 'Operating capacity', 'Friction'];
+const N = ['Process', 'Review', 'Observing', 'Operational', 'Friction'];
 
 test('low line counts 0-point answers and names the section with most', () => {
-  assert.equal(lowLine([2, 2, 2, 0, 0, 1, 2, 2, 2, 0, 0, 0, 2, 1, 2], N), '5 of 15 answers scored low. Most are in Operating capacity.');
-  assert.equal(lowLine([2, 2, 2, 0, 0, 1, 2, 2, 2, 0, 0, 2, 2, 1, 2], N), '4 of 15 answers scored low. Most are in Response and Operating capacity.');
+  assert.equal(lowLine([2, 2, 2, 0, 0, 1, 2, 2, 2, 0, 0, 0, 2, 1, 2], N), '5 of 15 answers scored low. Most are in Operational.');
+  assert.equal(lowLine([2, 2, 2, 0, 0, 1, 2, 2, 2, 0, 0, 2, 2, 1, 2], N), '4 of 15 answers scored low. Most are in Review and Operational.');
 });
 
 test('low line falls back to 1-point answers, and handles all low', () => {

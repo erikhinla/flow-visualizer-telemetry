@@ -15,7 +15,7 @@ export const DIMENSIONS = [
   { letter: 'P', name: 'Process', questions: [0, 1, 2] },
   { letter: 'R', name: 'Review', questions: [3, 4, 5] },
   { letter: 'O', name: 'Observing', questions: [6, 7, 8] },
-  { letter: 'O', name: 'Operating', questions: [9, 10, 11] },
+  { letter: 'O', name: 'Operational', questions: [9, 10, 11] },
   { letter: 'F', name: 'Friction', questions: [12, 13, 14] },
 ] as const;
 

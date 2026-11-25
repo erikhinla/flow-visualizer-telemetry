@@ -10,7 +10,7 @@ export const TIP_LEVEL: Record<ProfileId, string> = {
   COMPOUNDING: 'Phase 4 of 4 (23 to 30 of 30). The brief, files and approvals travel with the work, so agents can carry the handoffs.',
 };
 
-/** Keyed by dimension index (P, R, O Output, O Operating capacity, F). */
+/** Keyed by dimension index (Process, Review, Observing, Operational, Friction). */
 export const TIP_DIMENSION: readonly string[] = [
   '3 questions, 6 of 30 points (20% of the score). Questions 1 to 3: where momentum is lost, how the next deliverable is known, and where briefs, approvals and feedback are kept.',
   '3 questions, 6 of 30 points (20% of the score). Questions 4 to 6: how many AI tools the work runs through, what happens to what the team learned, and what happens when a request gets missed.',
