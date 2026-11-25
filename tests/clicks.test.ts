@@ -121,7 +121,7 @@ describe('leads body', () => {
     };
     const r = parseLeadBody(JSON.stringify(crashPost));
     assert.equal(r.ok, true, JSON.stringify(r));
-    const row = (r as { row: Record<string, unknown> }).row;
+    const row = (r as unknown as { row: Record<string, unknown> }).row;
     assert.equal(row.time, '2026-11-25T06:30:00.000Z', 'ts becomes the row time');
     assert.equal(row.consent, true);
     assert.equal(row.dept, 'Creative');
@@ -136,11 +136,11 @@ describe('leads body', () => {
   });
 
   it('drops unusable score and consent values instead of guessing', () => {
-    const row = (parseLeadBody(JSON.stringify({ email: 'a@b.co', score: 'lots', consent: 'yes', dept: 'd'.repeat(500) })) as { row: Record<string, unknown> }).row;
+    const row = (parseLeadBody(JSON.stringify({ email: 'a@b.co', score: 'lots', consent: 'yes', dept: 'd'.repeat(500) })) as unknown as { row: Record<string, unknown> }).row;
     assert.equal('score' in row, false);
     assert.equal('consent' in row, false);
     assert.ok(String(row.dept).length <= 40, 'dept capped');
-    const clamped = (parseLeadBody(JSON.stringify({ email: 'a@b.co', score: 99999 })) as { row: { score: number } }).row;
+    const clamped = (parseLeadBody(JSON.stringify({ email: 'a@b.co', score: 99999 })) as unknown as { row: { score: number } }).row;
     assert.equal(clamped.score, 1000, 'score clamped');
   });
 

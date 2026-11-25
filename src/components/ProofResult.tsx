@@ -91,25 +91,25 @@ const RESULT_NAME: Record<ProfileId, string> = {
 };
 /** What is true at this phase, in one line: the reason they are here and not one phase up. */
 const PHASE_TRUTH: Record<ProfileId, string> = {
-  FRAGMENTED: 'Your team uses AI. The work still runs on people’s memory.',
-  STALLED: 'The basics are in place. The work still gets stuck between teams.',
-  SCALING: 'AI is in the work and the work moves. It still gets redone along the way.',
+  FRAGMENTED: 'The team uses AI. The work still runs on memory.',
+  STALLED: 'The basics are in place. Work still gets stuck between teams.',
+  SCALING: 'AI is in the work. Work still gets redone.',
   COMPOUNDING: 'Agents carry the handoffs and people make the calls.',
 };
 /** What the next phase looks like, so there is something to reach for. */
 const NEXT_LOOKS: Record<ProfileId, string> = {
-  FRAGMENTED: 'At AI-Ready, anyone can find the brief, the approvals and the feedback, so work keeps moving when someone’s out.',
-  STALLED: 'At AI-Integrated, work and AI output move from Account to Creative to Production without anyone chasing it.',
-  SCALING: 'At Agentic, agents carry the work between teams and your people make the calls.',
-  COMPOUNDING: 'Next: stay Agentic as you add people, clients and tools.',
+  FRAGMENTED: 'Next: AI-Ready. Briefs, approvals and feedback in one place.',
+  STALLED: 'Next: AI-Integrated. Work moves from Account to Creative to Production without chasing.',
+  SCALING: 'Next: Agentic. Agents carry the work. People make the calls.',
+  COMPOUNDING: 'Next: stay Agentic as the team grows.',
 };
 const LEVELS: ReadonlyArray<{ id: ProfileId; n: number; name: string }> = BANDS.map((b, i) => ({ id: b.id, n: i + 1, name: RESULT_NAME[b.id] }));
 const levelOf = (id: ProfileId) => LEVELS.find((l) => l.id === id)!;
 
 /** Phone results order: pattern and where it stalls, then what it costs, then the detail. */
-const PHONE_SCREENS = ['Your result', 'What it’s costing', 'Your next moves', 'Want help'] as const;
+const PHONE_SCREENS = ['Result', 'Cost', 'Start here', 'Help'] as const;
 /** Screens that carry their own Review card. Every other screen shows the Review strip above the nav. */
-const OWN_CTA: readonly string[] = ['Want help'];
+const OWN_CTA: readonly string[] = ['Help'];
 /** Example inputs for the cost screen until the visitor types their own. */
 const COST_DEFAULTS = { team: 6, salary: 90000, hours: 5 } as const;
 const CORE_LINE = "AI creates faster than human-speed handoffs. Context can't keep up.";
@@ -210,8 +210,8 @@ function NextSteps() {
   return (
     <div className="px-ns">
       <div className="px-oc-head">
-        <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Want me to go over this with you?</h2>
-        <p className="px-res-sub px-oc-sub px-ns-sub">We go through your answers together, and I show you where to start.</p>
+        <h2 className="px-res-h px-oc-h px-ns-h" tabIndex={-1}>Want help with this?</h2>
+        <p className="px-res-sub px-oc-sub px-ns-sub">We go through the answers. I show you where to start.</p>
       </div>
       <section className="px-ns-review" aria-label="PROOF Review">
         <p className="px-ns-review-line">PROOF Review · $127</p>
@@ -221,7 +221,7 @@ function NextSteps() {
       </section>
       <details className="px-res-how px-ns-other">
         <summary>Not ready for a call?</summary>
-        <p className="px-ns-more">Running a team? FACT measures this in your team’s real work. <a className="px-ns-link" href={FACT_URL} onClick={() => trackClick('fact_click')}>See FACT</a></p>
+        <p className="px-ns-more">Running a team? FACT measures this in real work. <a className="px-ns-link" href={FACT_URL} onClick={() => trackClick('fact_click')}>See FACT</a></p>
         <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/" onClick={() => trackClick('back_click')}>See BACK</a></p>
       </details>
     </div>
@@ -231,39 +231,39 @@ function NextSteps() {
 /** Round 18 draft: each answer maps to the Keystones that fix it (vocabulary from keystones/generator). */
 type Key = { name: string; kind: 'Folder' | 'Markdown file' | 'Script' | 'Protocol'; does: string };
 const K: Record<string, Key> = {
-  handoff: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'Everyone knows what “ready” means and who picks it up next, so nobody has to chase.' },
-  keyPerson: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'What the client lead knows is written where the team can see it, so work keeps going when they’re out.' },
-  start: { name: 'START HERE.md', kind: 'Markdown file', does: 'Every project opens to one page that shows where everything is.' },
-  project: { name: 'project.md', kind: 'Markdown file', does: 'The brief, the next step and who owns it sit in one place anyone can open.' },
-  decisions: { name: 'decisions.md', kind: 'Markdown file', does: 'Each call gets made once and written down, so nobody makes it again.' },
-  folders: { name: 'Project folders', kind: 'Folder', does: 'Every file has one home, and everyone knows whose it is.' },
-  ai: { name: 'AI-CONTEXT.md', kind: 'Markdown file', does: 'Every AI tool works from the same facts, so the answers match no matter who asks.' },
-  skills: { name: 'skills/', kind: 'Folder', does: 'Common jobs come back from AI the same way every time.' },
-  changelog: { name: 'change-log.md', kind: 'Markdown file', does: 'What the team learned on a job is still there for the next one.' },
-  archive: { name: 'archive_old_versions.py', kind: 'Script', does: 'The current version is always obvious, and old versions are kept, not lost.' },
-  notify: { name: 'notify.py', kind: 'Script', does: 'The right person hears about a change right away, so nothing waits on someone remembering.' },
-  pending: { name: 'pending_changes.py', kind: 'Script', does: 'Before each team update, you see the short list of what’s still open.' },
-  agenda: { name: 'round_agenda.py', kind: 'Script', does: 'Every review starts with an agenda built from what already happened.' },
-  change: { name: 'change-protocol.md', kind: 'Protocol', does: 'When something changes, the whole team hears it once.' },
-  watch: { name: 'watch.py', kind: 'Script', does: 'You see where every job stands without calling a meeting.' },
-  rounds: { name: 'review-rounds-protocol.md', kind: 'Protocol', does: 'Each review round starts where the last one ended.' },
+  handoff: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'Clear “ready” rules and owners, so work moves without chasing.' },
+  keyPerson: { name: 'handoff-protocol.md', kind: 'Protocol', does: 'Client knowledge written down, so work keeps going when someone’s out.' },
+  start: { name: 'START HERE.md', kind: 'Markdown file', does: 'One project page shows where things are.' },
+  project: { name: 'project.md', kind: 'Markdown file', does: 'Brief, next step and owner in one place.' },
+  decisions: { name: 'decisions.md', kind: 'Markdown file', does: 'Decisions written once, not remade.' },
+  folders: { name: 'Project folders', kind: 'Folder', does: 'One home per file, with a clear owner.' },
+  ai: { name: 'AI-CONTEXT.md', kind: 'Markdown file', does: 'AI agents & tools work from the same facts so answers match.' },
+  skills: { name: 'skills/', kind: 'Folder', does: 'Common AI jobs come back the same way.' },
+  changelog: { name: 'change-log.md', kind: 'Markdown file', does: 'Lessons from one job carry to the next.' },
+  archive: { name: 'archive_old_versions.py', kind: 'Script', does: 'Current version is clear. Old versions are kept.' },
+  notify: { name: 'notify.py', kind: 'Script', does: 'Changes reach the right person right away.' },
+  pending: { name: 'pending_changes.py', kind: 'Script', does: 'Open items listed before each team update.' },
+  agenda: { name: 'round_agenda.py', kind: 'Script', does: 'Reviews start from what already happened.' },
+  change: { name: 'change-protocol.md', kind: 'Protocol', does: 'Changes announced once, to the team.' },
+  watch: { name: 'watch.py', kind: 'Script', does: 'Job status visible without a meeting.' },
+  rounds: { name: 'review-rounds-protocol.md', kind: 'Protocol', does: 'Each review round picks up where the last ended.' },
 };
 export const RX: Record<number, { gap: string; keys: Key[] }> = {
-  1: { gap: 'Work slows down at the same step every time.', keys: [K.handoff, K.start] },
-  2: { gap: 'People aren’t sure what comes next, so they wait or ask.', keys: [K.project, K.agenda] },
-  3: { gap: 'Briefs, approvals and feedback live in heads and chat threads.', keys: [K.project, K.decisions, K.folders] },
-  4: { gap: 'Each AI tool works from its own version of the facts.', keys: [K.ai, K.skills] },
-  5: { gap: 'What a job teaches leaves when the job ends.', keys: [K.changelog, K.archive] },
-  6: { gap: 'A missed request waits until someone happens to notice.', keys: [K.notify, K.pending] },
-  7: { gap: 'When work has to move, nobody’s sure who has it.', keys: [K.handoff, K.folders] },
-  8: { gap: 'AI output changes depending on who asked.', keys: [K.ai, K.skills] },
-  9: { gap: 'Deadline calls get made by whoever is around, then made again.', keys: [K.decisions, K.change] },
-  10: { gap: 'Too much depends on someone remembering to follow up.', keys: [K.pending, K.notify] },
-  11: { gap: 'The team remakes or hunts for work that already exists.', keys: [K.folders, K.archive] },
-  12: { gap: 'Work stalls when the person who knows the client is out.', keys: [K.keyPerson, K.project] },
-  13: { gap: 'Seeing where every job stands takes a meeting.', keys: [K.watch, K.start] },
-  14: { gap: 'The team doesn’t get better from one job to the next.', keys: [K.rounds, K.changelog] },
-  15: { gap: 'Most days run on reacting instead of a plan.', keys: [K.project, K.handoff] },
+  1: { gap: 'Work slows at the same step.', keys: [K.handoff, K.start] },
+  2: { gap: 'Next steps are unclear, so people wait or ask.', keys: [K.project, K.agenda] },
+  3: { gap: 'Briefs, approvals and feedback live in heads and chats.', keys: [K.project, K.decisions, K.folders] },
+  4: { gap: 'AI tools work from different facts.', keys: [K.ai, K.skills] },
+  5: { gap: 'Lessons leave when the job ends.', keys: [K.changelog, K.archive] },
+  6: { gap: 'Missed requests wait until someone notices.', keys: [K.notify, K.pending] },
+  7: { gap: 'When work has to move, it’s unclear who has it.', keys: [K.handoff, K.folders] },
+  8: { gap: 'AI output changes with who asked.', keys: [K.ai, K.skills] },
+  9: { gap: 'Deadline calls get made, then remade.', keys: [K.decisions, K.change] },
+  10: { gap: 'Follow-up depends on memory.', keys: [K.pending, K.notify] },
+  11: { gap: 'The team remakes or hunts for existing work.', keys: [K.folders, K.archive] },
+  12: { gap: 'Work stops when the client lead is out.', keys: [K.keyPerson, K.project] },
+  13: { gap: 'Job status takes a meeting.', keys: [K.watch, K.start] },
+  14: { gap: 'The team doesn’t improve job to job.', keys: [K.rounds, K.changelog] },
+  15: { gap: 'Days run on reacting, not a plan.', keys: [K.project, K.handoff] },
 };
 
 export function Result({ audienceId, score, code, restart }: { audienceId: AudienceId; score: Score; restart: () => void; code?: string | null }) {
@@ -342,9 +342,9 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
     <section ref={root} className="px-result px-res px-res-steps" aria-labelledby="px-done">
       <p className="px-res-badge"><span>Phase {lvl.n} · {lvl.name}</span><span> · {score.raw} of {RAW_MAX}</span> <Tip label={`About ${lvl.name}`}>{TIP_LEVEL[score.profile]}</Tip></p>
       <div className="px-res-panel" ref={panel} key={current} data-on={phone ? shown : undefined}>
-        {current === 'Your result' ? (
+        {current === 'Result' ? (
           <div className="px-res-screen px-pat">
-            <p className="px-res-label">Your phase · {lvl.n} of 4</p>
+            <p className="px-res-label">Phase {lvl.n} of 4</p>
             <h1 id="px-done" className="px-res-h px-lvl-h px-pat-h" tabIndex={-1}>{lvl.name}.</h1>
             <p className="px-res-sub px-pat-lede">{PHASE_TRUTH[score.profile]}</p>
             <ol className="px-phases" aria-label="The 4 phases of AI-Aligned BizOps">
@@ -353,9 +353,9 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
               ))}
             </ol>
             <div className="px-res-box">
-              <p className="px-res-label">Where your team loses time</p>
+              <p className="px-res-label">Where time is lost</p>
               <p className="px-res-value px-res-big">{stage ?? 'No single stage'}</p>
-              <p className="px-res-sub">{first ? `${first}.` : 'It shows up all over, not in one place.'}</p>
+              <p className="px-res-sub">{first ? `${first}.` : 'Spread out, not in one place.'}</p>
             </div>
             <p className="px-res-sub px-next-phase">{NEXT_LOOKS[score.profile]}</p>
             <details className="px-res-how">
@@ -365,16 +365,16 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           </div>
         ) : null}
 
-        {current === 'What it’s costing' ? (
+        {current === 'Cost' ? (
           <div className="px-res-screen">
             <Estimate phone={phone} />
           </div>
         ) : null}
 
-        {current === 'Your next moves' ? (
+        {current === 'Start here' ? (
           <div className="px-res-screen px-rx">
-            <h2 className="px-res-h" tabIndex={-1}>Your next three moves</h2>
-            <p className="px-res-sub">{nextLvl ? `Picked from your answers. Each one gets you closer to ${nextLvl.name}. Tap one to see what changes.` : 'Picked from your answers. Each one keeps you Agentic as you grow. Tap one to see what changes.'}</p>
+            <h2 className="px-res-h" tabIndex={-1}>Start here</h2>
+            <p className="px-res-sub">From the answers. Tap one to see what changes.</p>
             <ol className="px-rx-list px-start-list">
               {rxPick.map((a) => (
                 <li key={a.q} className="px-rx-item">
@@ -388,7 +388,7 @@ export function Result({ audienceId, score, code, restart }: { audienceId: Audie
           </div>
         ) : null}
 
-        {current === 'Want help' ? (
+        {current === 'Help' ? (
           <div className="px-res-screen">
             <NextSteps />
           </div>
@@ -443,30 +443,30 @@ function Estimate({ phone = false }: { phone?: boolean }) {
   return (
     <section className="px-est" aria-labelledby="px-est-h">
       <div className="px-est-head">
-        <h2 id="px-est-h">What it’s costing you</h2>
+        <h2 id="px-est-h">What it costs</h2>
       </div>
       <div aria-live="polite">
         {e ? (
           <p className="px-est-result">
-            {own ? 'Your team pays' : 'A team of 6 pays'} <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year for time spent finding, checking and redoing work.
+            {own ? 'This team pays' : 'A team of 6 pays'} <b className="px-est-total"><CountUp value={e.annual} on format={(v) => usd0.format(v)} /></b> a year finding, checking and redoing work.
           </p>
         ) : (
           <p className="px-est-result is-empty">Enter three numbers to see the figure.</p>
         )}
       </div>
       <details className="px-res-how px-est-own" open={own}>
-        <summary>{own ? 'Your numbers' : 'Use your own numbers'}</summary>
+        <summary>{own ? 'Team numbers' : 'Use real numbers'}</summary>
         <div className="px-est-fields">
           {field('People on the team', team, setTeam, 'e.g. 6', 'people')}
           {field('Average salary', salary, setSalary, 'e.g. 90000', '$')}
-          {field('Hours a week each person spends finding, checking, or rebuilding work', hours, setHours, 'e.g. 5', 'h')}
+          {field('Hours a week per person finding, checking or redoing work', hours, setHours, 'e.g. 5', 'h')}
         </div>
       </details>
       {e ? (
         <details className="px-res-how">
           <summary>Show the math</summary>
-          <p className="px-est-plain">{num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks = {usd0.format(e.annual)} a year. That’s time you already pay for.</p>
-          <p className="px-est-plain"><a href={FACT_URL}>FACT measures this in your team’s real work.</a></p>
+          <p className="px-est-plain">{num(h)} hours × {num(t)} people × {usd2.format(e.hourly)} an hour × {WEEKS_PER_YEAR} weeks = {usd0.format(e.annual)} a year. Time already paid for.</p>
+          <p className="px-est-plain"><a href={FACT_URL}>FACT measures this in real work.</a></p>
         </details>
       ) : null}
     </section>
