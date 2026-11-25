@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { VisualizerExperience } from '../../components/VisualizerExperience';
 
+
+/** Render on each request so a deploy shows up at once; the year-long page cache kept old builds live. */
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Dept model · PROOF',
   description:

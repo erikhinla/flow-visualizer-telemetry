@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BOOKING_MAILTO } from '../../lib/offer';
 
+
+/** Render on each request so a deploy shows up at once; the year-long page cache kept old builds live. */
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Talk through the pattern · PROOF',
   description:
