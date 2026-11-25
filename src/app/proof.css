@@ -2998,3 +2998,10 @@ body:has(.app-main) {
 @media (min-width: 901px) and (max-height: 820px) {
   .px .px-ask-side .px-live-block:has(.px-live-measure) { display: none; }
 }
+
+/* Phones: header picker and footer line share the width; nothing pushed off the right edge. */
+@media (max-width: 600px) {
+  .px-select select { max-width: min(15rem, 54vw) !important; font-size: .7rem !important; padding-right: 1.5rem !important; }
+  .px .px-foot { gap: 12px; }
+  .px .px-foot-line { flex: 1 1 auto; min-width: 0; white-space: normal !important; font-size: .68rem !important; line-height: 1.35; }
+}
