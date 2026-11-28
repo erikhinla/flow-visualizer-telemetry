@@ -77,7 +77,7 @@ ${h2('The answers')}<table style="width:100%;border-collapse:collapse;font-size:
 ${h2('Your next step')}${p('Want me to go over this with you? PROOF Review, $127.')}
 <p style="margin:18px 0 6px"><a href="${v.REVIEW_URL}" style="background:${ink};color:#F6F6F2;text-decoration:none;padding:15px 24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:14px;display:inline-block">Book a PROOF Review</a></p>
 ${p(`Take PROOF again: ${v.RETAKE_URL}`)}
-<p style="font-size:13px;margin-top:24px;border-top:1.5px solid ${ink};padding-top:12px">Questions about this report: reply to this email or write to erik@transformby10x.ai.</p>
+<p style="font-size:13px;margin-top:24px;border-top:1.5px solid ${ink};padding-top:12px">Questions about this report: reply to this email or write to erik@transformby10x.com.</p>
 <table style="width:100%;border-collapse:collapse;margin-top:18px" cellpadding="0"><tr><td style="width:30px;height:14px;background:#00AEEF"></td><td style="width:30px;background:#D01E98"></td><td style="width:30px;background:#FFE600"></td><td style="width:30px;background:#0B0B0C"></td><td style="${mono};text-align:right">TransformBy10X &middot; <span style="color:${m}">approved to send</span></td></tr></table>
 </div></body></html>`;
   const text = [

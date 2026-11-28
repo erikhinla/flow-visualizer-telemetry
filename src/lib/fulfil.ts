@@ -6,7 +6,7 @@ import path from 'node:path';
 export const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 const LOG = path.join(DATA_DIR, 'fulfilment-log.json');
 export const PUBLIC_BASE = process.env.PUBLIC_BASE_URL || 'https://transformby10x.com/proof/screen';
-export const ERIK = process.env.NOTIFY_EMAIL || 'erik@transformby10x.ai';
+export const ERIK = process.env.NOTIFY_EMAIL || 'erik@transformby10x.com';
 
 export function verifyStripe(raw: string, header: string | null, secret: string, toleranceSec = 300): boolean {
   if (!header || !secret) return false;

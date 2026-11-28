@@ -15,6 +15,6 @@ export async function GET(req: Request) {
     const zip = await fs.readFile(path.join(DATA_DIR, 'context-gap-toolkit.zip'));
     return new Response(zip, { headers: { 'Content-Type': 'application/zip', 'Content-Disposition': 'attachment; filename="context-gap-toolkit.zip"', 'Cache-Control': 'private, no-store' } });
   } catch {
-    return new Response('The toolkit file is missing. Email erik@transformby10x.ai.', { status: 503 });
+    return new Response('The toolkit file is missing. Email erik@transformby10x.com.', { status: 503 });
   }
 }
