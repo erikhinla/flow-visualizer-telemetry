@@ -116,7 +116,7 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 /** Simple branded email: paragraphs plus optional button. */
 export function simpleMail(title: string, paras: string[], button?: { label: string; url: string }): { html: string; text: string } {
   const html = `<!doctype html><html><body style="margin:0;background:#E9E5DE"><div style="max-width:620px;margin:0 auto;padding:28px 22px;font-family:Helvetica,Arial,sans-serif;color:#1F1F1F;font-size:16px;line-height:1.5;background:#F4F1EA">
-<img src="https://transformby10x.ai/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><h1 style="font-size:30px;line-height:1.05;margin:12px 0 16px">${esc(title)}</h1>
+<img src="https://transformby10x.com/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><h1 style="font-size:30px;line-height:1.05;margin:12px 0 16px">${esc(title)}</h1>
 ${paras.map((t) => `<p style="margin:0 0 12px">${esc(t)}</p>`).join('')}
 ${button ? `<p style="margin:20px 0"><a href="${esc(button.url)}" style="background:#d01e98;color:#fff;text-decoration:none;padding:12px 18px;font-weight:700;display:inline-block">${esc(button.label)}</a></p><p style="font-size:13px">${esc(button.url)}</p>` : ''}
 <p style="font-size:13px;margin-top:24px;border-top:1px solid #1F1F1F;padding-top:10px">Erik Bush, TransformBy10X. Reply to this email with any question.</p></div></body></html>`;
