@@ -5,7 +5,7 @@ import path from 'node:path';
 /** Server-only helpers for paid offers: Stripe signature check, send log, email. */
 export const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 const LOG = path.join(DATA_DIR, 'fulfilment-log.json');
-export const PUBLIC_BASE = process.env.PUBLIC_BASE_URL || 'https://transformby10x.ai/proof/screen';
+export const PUBLIC_BASE = process.env.PUBLIC_BASE_URL || 'https://transformby10x.com/proof/screen';
 export const ERIK = process.env.NOTIFY_EMAIL || 'erik@transformby10x.ai';
 
 export function verifyStripe(raw: string, header: string | null, secret: string, toleranceSec = 300): boolean {
@@ -75,7 +75,7 @@ async function sendMailInner(mail: Mail): Promise<{ ok: boolean; via: string; id
   }
   const key = process.env.RESEND_API_KEY;
   if (key) {
-    const from = (process.env.MAIL_FROM || 'TransformBy10X <erik@transformby10x.ai>').replace(/^['"](.*)['"]$/, '$1');
+    const from = (process.env.MAIL_FROM || 'TransformBy10X <hello@transformby10x.com>').replace(/^['"](.*)['"]$/, '$1');
     const base = { from, to: [mail.to], subject: mail.subject, reply_to: mail.replyTo || ERIK };
     const payload = mail.template?.id
       ? { ...base, template: { id: mail.template.id, variables: mail.template.variables } }

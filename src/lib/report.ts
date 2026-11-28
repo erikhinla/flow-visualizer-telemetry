@@ -61,7 +61,7 @@ export function renderReport(v: ReportVars): { html: string; text: string } {
   const h2 = (t: string) => `<h2 style="font-size:21px;line-height:1.1;letter-spacing:-.02em;margin:30px 0 8px;border-top:1.5px solid ${ink};padding-top:12px">${t}</h2>`;
   const p = (t: string) => `<p style="margin:0 0 10px">${t}</p>`;
   const html = `<!doctype html><html><body style="margin:0;background:#E6E6E0"><div style="max-width:680px;margin:0 auto;padding:30px 24px;font-family:'Inter Tight',Helvetica,Arial,sans-serif;color:${ink};font-size:16px;line-height:1.5;background:#F6F6F2">
-<img src="https://transformby10x.ai/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><p style="${mono};margin:14px 0 0;padding-top:12px;border-top:1.5px solid ${ink}">PROOF report &middot; <span style="color:${m}">final proof</span></p>
+<img src="https://transformby10x.com/offers/k2-tbtx-wordmark-ink.png" alt="tbtx" width="72" height="36" style="display:block;border:0;height:36px;width:auto"><p style="${mono};margin:14px 0 0;padding-top:12px;border-top:1.5px solid ${ink}">PROOF report &middot; <span style="color:${m}">final proof</span></p>
 <h1 style="font-size:44px;line-height:.95;letter-spacing:-.04em;margin:16px 0 8px">Where your team loses time.</h1>
 ${p(v.AUDIENCE_LINE)}
 <table style="width:100%;border-collapse:collapse;margin:16px 0" cellpadding="8"><tr>

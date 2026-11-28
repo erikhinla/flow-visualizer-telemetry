@@ -251,7 +251,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
             ))}
           </select>
         </label>
-        <a className="px-bar-brand" href="https://transformby10x.ai" aria-label="TransformBy10X">
+        <a className="px-bar-brand" href="https://transformby10x.com" aria-label="TransformBy10X">
           <img src={`${BASE}/brand/tbtx-white.png`} alt="TransformBy10X" width={431} height={348} />
         </a>
       </header>
@@ -346,7 +346,7 @@ export function ProofFlow({ startAt = 'intro' }: { startAt?: Stage }) {
         <button type="button" className="px-foot-link" onClick={() => setSheet(sheet === 'privacy' ? null : 'privacy')} aria-expanded={sheet === 'privacy'}>
           Privacy
         </button>
-        <a className="px-foot-brand" href="https://transformby10x.ai" aria-label="TransformBy10X">
+        <a className="px-foot-brand" href="https://transformby10x.com" aria-label="TransformBy10X">
           <img src={`${BASE}/brand/tbtx-black.png`} alt="TransformBy10X" width={431} height={348} />
         </a>
       </footer>

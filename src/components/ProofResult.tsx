@@ -22,7 +22,7 @@ import { getDepartment } from '../lib/departments';
 const sectionOf = (q: number) => DIMENSIONS.findIndex((d) => (d.questions as readonly number[]).includes(q - 1));
 
 export { REVIEW_URL };
-const FACT_URL = 'https://transformby10x.ai/fact/';
+const FACT_URL = 'https://transformby10x.com/fact/';
 
 /** On phones each results screen shows one layer at a time. Next reveals the next layer. */
 const LAYERS: Readonly<Record<string, number>> = {};
@@ -222,7 +222,7 @@ function NextSteps() {
       <details className="px-res-how px-ns-other">
         <summary>Not ready for a call?</summary>
         <p className="px-ns-more">Running a team? FACT measures this in real work. <a className="px-ns-link" href={FACT_URL} onClick={() => trackClick('fact_click')}>See FACT</a></p>
-        <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.ai/back/" onClick={() => trackClick('back_click')}>See BACK</a></p>
+        <p className="px-ns-more">Doing it on your own? BACK is the plan you run yourself. $74 for the first 50, then $347. <a className="px-ns-link px-ns-link--quiet" href="https://transformby10x.com/back/" onClick={() => trackClick('back_click')}>See BACK</a></p>
       </details>
     </div>
   );
